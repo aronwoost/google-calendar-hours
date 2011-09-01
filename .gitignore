@@ -1,0 +1,10 @@
+*.pem
+*.tmproj
+tmtags
+.ftpssh_settings
+.DS_Store?
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.DS_Store
