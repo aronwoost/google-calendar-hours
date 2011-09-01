@@ -5,6 +5,8 @@ $(document).ready(function(){
 	if(authObj) {
 		var authJson = JSON.parse(authObj);
 		console.dir(authJson);
+		
+		fetch(authJson.accessToken);
 	}
 	
 	$("#main").find("#auth").click(function(event){
@@ -12,6 +14,24 @@ $(document).ready(function(){
 		auth();
 	});
 });
+
+var calenders;
+
+function fetch(token) {
+	
+	$.ajax({
+		type: "GET",
+		url: "https://www.google.com/calendar/feeds/default/owncalendars/full?oauth_token="+token+"&alt=jsonc",
+		dataType: "json",
+		success: function (data) {
+			console.dir(data);
+			calenders = data.data.items;
+			
+			$("#calendars").html( $.tmpl("calendersLi", calenders) );
+		}
+	});	
+	
+}
 
 function auth() {
 	
