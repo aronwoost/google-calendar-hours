@@ -1,0 +1,72 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title></title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <script type="text/javascript">
+	
+	$(document).ready(function(){
+		if(getURLParameter("error") == null) {
+			console.log(getURLParameter("error", location.search));
+			$("#main").text("There was a problem with the authentication.")
+		} else {
+			var accessToken = getURLParameter("access_token", window.location.hash);
+			console.log(accessToken);
+			if(accessToken == "null") {
+				$("#main").text("There was a problem with the authentication.");
+			} else {
+				sessionStorage.setItem("auth", JSON.stringify({accessToken:accessToken}));
+				window.location = "/google-calendar-hours";
+			}
+		}
+	});
+	
+	function getURLParameter(name, searchOrHash) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(searchOrHash)||[,null])[1]
+	    );
+	}
+		
+  </script>
+
+</head>
+
+<body>
+
+  <div id="container">
+    <header>
+
+    </header>
+    <div id="main" role="main">
+		test
+    </div>
+    <footer>
+
+    </footer>
+  </div>
+
+  <!--
+
+  <script>
+    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script>
+
+  -->
+
+</body>
+</html>
