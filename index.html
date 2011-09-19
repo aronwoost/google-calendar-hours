@@ -22,8 +22,20 @@
     </header>
     <div id="main" role="main">
 		<a id="auth" href="auth">Auth with Google Calendar</a>
-		<ul id="calendars">
-		</ul>
+		<div id="calendars">
+			<select name="list">
+			</select>
+		</div>
+		<div id="range">
+			<select name="list">
+				<option value='today'>Today</option>
+				<option value='week'>This week</option>
+				<option value='month'>This month</option>
+				<option value='year'>This yeah</option>
+				<option value='total'>Total</option>
+			</select>
+		</div>
+		<div id="sum"></div>
     </div>
     <footer>
 
@@ -36,6 +48,7 @@
   <script type="text/javascript" src="js/gch.js"></script>
   <script type="text/javascript" src="js/jquery.tmpl.min.js"></script>
   <script type="text/javascript" src="js/templates.js"></script>
+  <script type="text/javascript" src="js/date.js"></script>
 
   <!-- 
   <script>

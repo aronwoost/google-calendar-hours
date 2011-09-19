@@ -18,7 +18,7 @@
   <script type="text/javascript">
 	
 	$(document).ready(function(){
-		if(getURLParameter("error") == null) {
+		if(getURLParameter("error", location.search) == null) {
 			console.log(getURLParameter("error", location.search));
 			$("#main").text("There was a problem with the authentication.")
 		} else {
