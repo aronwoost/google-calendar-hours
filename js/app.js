@@ -64,8 +64,8 @@ $(function() {
         apiTokenError: function(model, resp) {
             console.log("apiTokenError");
             console.log(arguments);
-            //$(this.el).find("#calendars").html("<a href='' id='connect'>Connect with Google Calendar</a>");
-			this.model.fetch();
+            $(this.el).find("#calendars").html("<a href='' id='connect'>Connect with Google Calendar</a>");
+			//this.model.fetch();
         },
 
         apiTokenComplete: function(model, resp) {
