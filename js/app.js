@@ -1,3 +1,19 @@
+/*
+TODO
+
+- draw ui on app.initialize() instead of when calendar list is
+  loaded. Therefor we need to bind the calendar selectlist to
+  calendarCollection.models (not possible), or create an event 
+  for that.
+- Set "selectedCalendar" immediately after user input, even if the
+  calendar data is not loaded yet. 
+- show spinner when backend sync
+- implement year
+- implement "week starts sunday/monday"
+
+*/
+
+
 $(function() {
 
     /* APP */
@@ -8,19 +24,31 @@ $(function() {
         events: {
             'change select#calList': 'calendarSelectlistChanged',
             'change select#rangeList': 'rangeSelected',
+            'click #calendars a#prev': 'prevCalendar',
+            'click #calendars a#next': 'nextCalendar',
             'click a#connect': 'connectWithGoogle',
-            'click a#prev': 'changeRangePrev',
-            'click a#reset': 'changeRangeReset',
-            'click a#next': 'changeRangeNext'
+            'click #changeRange a#prev': 'changeRangePrev',
+            'click #changeRange a#reset': 'changeRangeReset',
+            'click #changeRange a#next': 'changeRangeNext'
         },
 
         calendarSelectlistChanged: function(evt) {
-            this.model.setSelectedCalendarByIndex(evt.target.selectedIndex);
+			this.model.setSelectedCalendarByIndex(evt.target.selectedIndex);
         },
 
         rangeSelected: function(evt) {
             this.model.setSelectedRangeByIndex(evt.target.selectedIndex);
         },
+
+		prevCalendar: function(evt) {
+			evt.preventDefault();
+			this.model.changeCalendar(-1);
+		},
+
+		nextCalendar: function(evt) {
+			evt.preventDefault();
+			this.model.changeCalendar(1);
+		},
 
         connectWithGoogle: function(evt) {
             evt.preventDefault();
@@ -50,68 +78,82 @@ $(function() {
         },
 
         initialize: function() {
+			
             this.model.bind('calendarListComplete', this.drawCalendarList, this);
+            this.model.bind('calendarListError', this.calendarListError, this);
             this.model.bind('change:selectedCalendar', this.selectedCalendarChanged, this);
             this.model.get("selectedRange").bind('change:rangeObj', this.selectedCalendarChanged, this);
             //appModel.fetch();
             
-			var apiTokenModel = new ApiTokenModel();
-            apiTokenModel.bind('error', this.apiTokenError, this);
-            apiTokenModel.bind('change', this.apiTokenComplete, this);
-            apiTokenModel.fetch();
+			this.apiTokenModel = new ApiTokenModel();
+            this.apiTokenModel.bind('error', this.apiTokenError, this);
+            this.apiTokenModel.bind('change', this.apiTokenComplete, this);
+            this.apiTokenModel.fetch();
         },
 
         apiTokenError: function(model, resp) {
-            console.log("apiTokenError");
-            console.log(arguments);
+            //console.log("apiTokenError");
+            //console.log(arguments);
             $(this.el).find("#calendars").html("<a href='' id='connect'>Connect with Google Calendar</a>");
 			//this.model.fetch();
         },
 
         apiTokenComplete: function(model, resp) {
-            console.log("apiTokenComplete");
-            console.log(arguments);
+            //console.log("apiTokenComplete");
+            //console.log(arguments);
 
             overrideSync(model.get("accessToken"));
-
             this.model.fetch();
         },
 
+		calendarListError: function(collection) {
+			if(this.apiTokenModel.hasApiToken()) {
+				$(this.el).find("#calendars").html("There was a problem with the Google Authentication<br/><a href='' id='connect'>Reconnect with Google Calendar</a>");
+			} else {
+				//TODO other msg here?
+				$(this.el).find("#calendars").html("There was a problem with the Google Authentication<br/><a href='' id='connect'>Reconnect with Google Calendar</a>");
+			}
+		},
+
         drawCalendarList: function(collection) {
-            $(this.el).find("#calendars").html("<select name='list' id='calList'></select>");
-            _(collection.models).each(function(item) {
-                var optionItem = new CalendarListSelectOptionItem({
-                    model: item
-                });
-
-                $(this.el).find("#calList").append(optionItem.render().el);
-            },
-            this);
+			
+			// prev btn
+			var prevBtn = new CalendarPrevNextBtn({label: "prev"});
+			this.model.bind('change:hasPrevItem', prevBtn.updateView, prevBtn);
+			
+            $(this.el).find("#calendars").append(prevBtn.render().el);
+			
+			// calendar select list 
+			var calendarSelectList = new CalendarSelectList({model:this.model.get("calendarsCollection")});
+            this.model.bind("change:selectedCalendar", calendarSelectList.updateView, calendarSelectList);
+			$(this.el).find("#calendars").append(calendarSelectList.render().el);
+			
+			// next btn
+			var nextBtn = new CalendarPrevNextBtn({label: "next"});
+			this.model.bind('change:hasNextItem', nextBtn.updateView, nextBtn);
+			
+            $(this.el).find("#calendars").append(nextBtn.render().el);
+			
+			//change range selectlist
+			var rangeSelectList = new RangeSelectList();
+			this.model.get("selectedRange").bind('change:range', rangeSelectList.updateView, rangeSelectList);
+            $(this.el).find("#range").append(rangeSelectList.render().el);
+			
+			//change range btns
+			var rangeChangeBtns = new RangeChangeBtns();
+			this.model.get("selectedRange").bind('change:range', rangeChangeBtns.updateView, rangeChangeBtns);
+            $(this.el).find("#changeRange").append(rangeChangeBtns.render().el);
+			
+			//output
+			var output = new Output();
+			this.model.bind('updateOutput', output.updateView, output);
+            $(this.el).find("#output").append(output.render().el);
         },
-
-        selectedCalendarChanged: function(model, collection) {
-
+		
+        selectedCalendarChanged: function(m, collection) {
             $(this.el).find("#range").css("display", "block");
             $(this.el).find("#changeRange").css("display", "block");
             $(this.el).find("#output").css("display", "block");
-
-            var rangeObj = this.model.getSelectedRange();
-            console.log(rangeObj);
-            var hours = this.model.get("selectedCalendar").getHours(rangeObj);
-
-            var html = hours + "<br/>";
-
-            if (rangeObj.type === "day") {
-                html += rangeObj.start.toString('dddd, MMMM d, yyyy');
-            } else if (rangeObj.type === "week") {
-                html += rangeObj.start.toString('dddd, MMMM d, yyyy') + " - " + rangeObj.end.toString('dddd, MMMM d, yyyy');
-            } else if (rangeObj.type === "month") {
-                html += rangeObj.start.toString('MMMM, yyyy');
-            } else if (rangeObj.type === "year") {
-                html += rangeObj.start.toString('dddd, MMMM d, yyyy') + " - " + rangeObj.end.toString('dddd, MMMM d, yyyy');
-            }
-
-            $(this.el).find("#output").html(html);
         }
 
     });

@@ -1,66 +1,51 @@
 /* MODELS */
 
-var CalendarList = Backbone.Model.extend({
+var Calendar = Backbone.Model.extend({
     defaults: {
-        "calendar": null
+        "items": null
     },
-	createCalendar: function(url) {
-		var calendar = new CalendarCollection();
-		calendar.url = url;
-		this.set({calendar: calendar});
-		return calendar;
+	createCalendar: function() {
+		this.url = this.get("eventFeedLink");
+		// override parse, since we want to set the items, when parse is called 
+		this.parse = function(response) {
+			this.set({items:response.data.items});
+		};
 	},
 	hasCalendarData: function() {
-		return this.get("calendar") !== null;
+		return this.get("items") !== null;
 	},
     getTitle: function() {
         return this.get("title");
     },
     getUrl: function() {
         return this.get("eventFeedLink");
-    }
-});
-
-var CalendarListCollection = Backbone.Collection.extend({
-    model: CalendarList,
-    url: "calendars.json",
-	parse: function(response) {
-	    return response.data.items;
-	}
-});
-
-//
-
-var Calendar = Backbone.Model.extend({
-    defaults: function() {
-        return { };
-    }
-});
-
-var CalendarCollection = Backbone.Collection.extend({
-    model: Calendar,
+    },
 	getHours: function(rangeObj) {
+		var start = rangeObj.start,
+			end = rangeObj.end,
+			totalHours = 0;
 		
-		var start = rangeObj.start;
-		var end = rangeObj.end;
-		
-		var totalHours = 0;
-		
-		_(this.models).each(function(calendarItem){
-			calendarItem.get("when").map(function(item){
-				var itemDataStart = new Date(item.start);
-				var itemDataEnd = new Date(item.end);
-				if(itemDataStart > start && itemDataEnd < end) {
-					var diff = new Date(item.end) - new Date(item.start);
-					var hours = diff/1000/60/60;
-					totalHours += hours;
-				}
-			});
-			
+		this.get("items").map(function(calendarItem){
+			if(calendarItem.when) {
+				calendarItem.when.map(function(item){
+					var itemDataStart = new Date(item.start);
+					var itemDataEnd = new Date(item.end);
+					if(itemDataStart > start && itemDataEnd < end) {
+						var diff = new Date(item.end) - new Date(item.start);
+						var hours = diff/1000/60/60;
+						totalHours += hours;
+					}
+				});
+			}
 		}, this);				
 		
 		return totalHours;
-	},
+	}	
+});
+
+var CalendarsCollection = Backbone.Collection.extend({
+    model: Calendar,
+    url: "https://www.google.com/calendar/feeds/default/owncalendars/full",
 	parse: function(response) {
 	    return response.data.items;
 	}
@@ -123,6 +108,7 @@ var RangeModel = Backbone.Model.extend({
 			
 		if(direction === 0) {
 			currentDate = Date.today();
+			this.set({currentDatePointer:currentDate}); //TODO don't know, why I need to set this explicitly
 			this.updateRangeObj();
 			return;
 		}	
@@ -143,8 +129,11 @@ var RangeModel = Backbone.Model.extend({
 var ApiTokenModel = Backbone.Model.extend({
 	sync:TokenSync,
     defaults: {
-		"token":null
-    }
+		"accessToken":null
+    },
+	hasApiToken: function() {
+		return this.get("accessToken") != null;
+	}
 });
 
 //
@@ -153,40 +142,68 @@ var AppModel = Backbone.Model.extend({
     defaults: {
 		"selectedCalendar":null,
 		"selectedRange":new RangeModel(),
-		"calendarsCollection":null
+		"calendarsCollection":null,
+		"hasPrevItem":false,
+		"hasNextItem":false
     },
     initialize: function() {
-		var calendarsCollection = new CalendarListCollection();
-		calendarsCollection.bind('reset', this.loadCalendarsCollectionComplete, this);				
+		var calendarsCollection = new CalendarsCollection();
+		calendarsCollection.bind('reset', this.loadCalendarsCollectionComplete, this);
+		calendarsCollection.bind('error', this.loadCalendarsCollectionError, this);
 		this.set({calendarsCollection: calendarsCollection});
 		this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
+		this.get("selectedRange").bind("change:rangeObj", this.updateOutput, this);
     },
 	fetch: function(){
 		this.get("calendarsCollection").fetch();
 	},
 	loadCalendarsCollectionComplete: function(collection){
 		this.trigger("calendarListComplete", collection);
+	},	
+	loadCalendarsCollectionError: function(collection){
+		this.trigger("calendarListError", collection);
 	},
 	setSelectedCalendarByIndex: function(index) {
+		if(index < 0 || index == this.get("calendarsCollection").length) {
+			return;
+		}
 		var model = this.get("calendarsCollection").at(index);
 		if(model.hasCalendarData()){
 			console.log("has data");
-			this.set({selectedCalendar: model.calendar});
+			this.set({selectedCalendar: model});
+			this.updateOutput();
 		} else {
 			console.log("has no data");
-			var itemCollection = model.createCalendar("test.json");
-			itemCollection.bind('reset', this.calendarDataReady, this);							
-			itemCollection.fetch();
+			model.createCalendar();
+			model.bind('change', this.calendarDataReady, this);				
+			model.bind('error', this.calendarDataError, this);				
+			model.fetch();
 		}
+		this.set({hasPrevItem:(index>0), hasNextItem:(index<this.get("calendarsCollection").length - 1)})
 	},
 	setSelectedRangeByIndex: function(index) {
 		this.get("selectedRange").updateRangeByIndex(index);
+		this.updateOutput();
 	},			
-	calendarDataReady: function(collection) {
-		this.set({selectedCalendar: collection});
+	calendarDataReady: function(model) {
+		this.set({selectedCalendar: model});
+		this.updateOutput();
+	},
+	calendarDataError: function(model, resp) {
+		console.log("calendarDataError");
+		console.log(resp);
+		console.dir(resp.getAllResponseHeaders());
+		console.dir(resp.statusCode());
 	},
 	getSelectedRange: function() {
 		//console.log(this.get("selectedRangeObj"));
 		return this.get("selectedRange").getRangeObj();
+	},
+	changeCalendar: function(offset) {
+		var currentIndex = this.get("calendarsCollection").models.indexOf(this.get("selectedCalendar"));
+		this.setSelectedCalendarByIndex(currentIndex+offset);
+	},
+	updateOutput: function() {
+		this.trigger("updateOutput", {hours:this.get("selectedCalendar").getHours(this.getSelectedRange()), range:this.getSelectedRange()});
 	}
 });
