@@ -57,7 +57,7 @@ var RangeModel = Backbone.Model.extend({
     defaults: {
 		"today":Date.today().getTime(),
 		"currentDatePointer":Date.today(),
-		"range":"month",
+		"range":null,
 		"rangeObj":{}
     },
     initialize: function() {
@@ -180,6 +180,13 @@ var AppModel = Backbone.Model.extend({
 			model.fetch();
 		}
 		this.set({hasPrevItem:(index>0), hasNextItem:(index<this.get("calendarsCollection").length - 1)})
+
+		// set default range, if null (seams this is the first calendar selection evar)
+		var currentRange = this.get("selectedRange").get("range");
+		if(!currentRange) {
+			this.get("selectedRange").set({range:"month"});
+			this.get("selectedRange").updateRangeObj();
+		}
 	},
 	setSelectedRangeByIndex: function(index) {
 		this.get("selectedRange").updateRangeByIndex(index);

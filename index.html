@@ -5,50 +5,66 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
   <title></title>
+
   <meta name="description" content="">
   <meta name="author" content="">
 
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
+  <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/style.css">
   
 </head>
 
 <body>
 
-  <div id="container">
-    <header>
+  <div id="global" style="width:100%">
+  
+    <div id="container" style="width:300px; padding:10px; margin:0px auto;">
+      
+      <div style="padding-bottom: 10px; font-size: 16px; font-weight: bold; color: grey;">Google Calender Hours Calculator</div>
 
-    </header>
-    <div id="main" role="main">
-		<a id="auth" href="auth">Auth with Google Calendar</a>
-		<div id="calendars">
-			<select name="list">
-			</select>
-		</div>
-		<div id="range">
-			<select name="list">
-				<option value='today'>Today</option>
-				<option value='week'>This week</option>
-				<option value='month'>This month</option>
-				<option value='year'>This yeah</option>
-				<option value='total'>Total</option>
-			</select>
-		</div>
-		<div id="sum"></div>
+      <div id="intro" style="width:100%">
+        <div style="padding-bottom: 10px;">
+          <a href="#" onClick="auth();" class="btn large primary">Connect to Google Calendar</a>
+        </div>
+        <div>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu lectus urna. Sed nec enim mauris, ac venenatis eros. Nulla sed dui erat, facilisis feugiat felis. Ut pellentesque lacus vel justo fringilla condimentum fringilla nulla auctor. Pellentesque sagittis posuere elit sed aliquet. In vel dolor non arcu convallis molestie fringilla ut ante. Maecenas posuere imperdiet nulla, a consectetur tortor lacinia iaculis.
+        </div>
+      </div>
+
+      <div id="app" style="display:none">
+
+        <div id="calendars" style="padding-bottom:5px;">
+        </div>
+
+        <div id="range" style="padding-bottom:5px;">
+        </div>
+
+        <div id="changeRange">
+        </div>
+
+        <div id="output">
+        </div>
+
+      </div>
+
     </div>
-    <footer>
-
-    </footer>
+  
   </div>
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script>
+  <script src="js/jquery-1.7.1.js"></script>
 
-  <script type="text/javascript" src="js/gch.js"></script>
   <script type="text/javascript" src="js/jquery.tmpl.min.js"></script>
+  <script type="text/javascript" src="js/jquery.jsonp.js"></script>
   <script type="text/javascript" src="js/templates.js"></script>
   <script type="text/javascript" src="js/date.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/backbone.js"></script>
+  <script type="text/javascript" src="js/sync.js"></script>
+  <script type="text/javascript" src="js/models.js"></script>
+  <script type="text/javascript" src="js/views.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
 
   <!-- 
   <script>
