@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
-  <title></title>
+  <title>Google Calendar Hours Calculator</title>
 
   <meta name="description" content="">
   <meta name="author" content="">
@@ -26,12 +26,17 @@
       <div style="padding-bottom: 10px; font-size: 16px; font-weight: bold; color: grey;">Google Calender Hours Calculator</div>
 
       <div id="intro" style="width:100%">
-        <div style="padding-bottom: 10px;">
+        <p>This web app lets you see how many hours you spend on a calendar by day, week and month. It uses the Google Calendar API so you need to authorize the app with the following link:
+        </p>
+        <p>
           <a href="#" onClick="auth();" class="btn large primary">Connect to Google Calendar</a>
-        </div>
-        <div>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu lectus urna. Sed nec enim mauris, ac venenatis eros. Nulla sed dui erat, facilisis feugiat felis. Ut pellentesque lacus vel justo fringilla condimentum fringilla nulla auctor. Pellentesque sagittis posuere elit sed aliquet. In vel dolor non arcu convallis molestie fringilla ut ante. Maecenas posuere imperdiet nulla, a consectetur tortor lacinia iaculis.
-        </div>
+        </p>
+        <p>
+          Note: none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page.
+        </p>
+        <p>
+          The sourcecode of this app is <a href="http://github.com/aronwoost/google-calendar-hours">available on github</a>.
+        </p>
       </div>
 
       <div id="app" style="display:none">
