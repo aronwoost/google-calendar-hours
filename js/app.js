@@ -6,7 +6,7 @@ function getURLParameter(name, searchOrHash) {
 
 function auth() {
     var clientId = "502172359025.apps.googleusercontent.com";
-    var callbackUrl = location.href + "/auth.html";
+    var callbackUrl = location.href + "auth.html";
     var scope = "https://www.google.com/calendar/feeds/";
 
     var regUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
