@@ -1,18 +1,3 @@
-/*
-TODO
-
-- Set "selectedCalendar" immediately after user input, even if the
-  calendar data is not loaded yet. 
-- fire event, when calendar list is received
-- show spinner when backend sync
-- implement year
-- implement "week starts sunday/monday" (TODO html implemented, update AppView.events, pass val to model)
-
-- what if user has no calendars?
-- what if user has calendars but no items set?
-
-*/
-
 function getURLParameter(name, searchOrHash) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
