@@ -108,7 +108,7 @@ $(function() {
             //console.log("apiTokenComplete");
             //console.log(arguments);
 
-            overrideSync(model.get("accessToken"));
+            doAjaxSetup(model.get("accessToken"));
             this.model.fetch();
         },
 
