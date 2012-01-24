@@ -24,7 +24,11 @@
 				$("#info").text("There was a problem with the authentication.");
 			} else {
 				sessionStorage.setItem("auth", JSON.stringify({accessToken:accessToken}));
-				window.location = "/google-calendar-hours";
+        if(location.href.indexOf("aronwoost.github.com") !== -1) {
+				  window.location = "/google-calendar-hours";
+        } else {
+          window.location = "/";
+        }
 			}
 		}
 	});

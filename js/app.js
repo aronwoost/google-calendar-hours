@@ -6,7 +6,7 @@ function getURLParameter(name, searchOrHash) {
 
 function auth() {
     var clientId = "502172359025.apps.googleusercontent.com";
-    var callbackUrl = "http://aronwoost.github.com/google-calendar-hours/auth.html";
+    var callbackUrl = location.href + "/auth.html";
     var scope = "https://www.google.com/calendar/feeds/";
 
     var regUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
@@ -113,12 +113,9 @@ $(function() {
         },
 
 		calendarListError: function(collection) {
-			if(this.apiTokenModel.hasApiToken()) {
-				$(this.el).find("#calendars").html("There was a problem with the Google Authentication<br/><a href='' id='connect'>Reconnect with Google Calendar</a>");
-			} else {
-				//TODO other msg here?
-				$(this.el).find("#calendars").html("There was a problem with the Google Authentication<br/><a href='' id='connect'>Reconnect with Google Calendar</a>");
-			}
+            $("#intro").show();
+            $("#app").hide();
+            //TODO show warning that something went wrong
 		},
 
         drawUi: function(collection) {
