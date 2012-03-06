@@ -29,7 +29,8 @@ $(function() {
             'click a#connect': 'connectWithGoogle',
             'click #changeRange a#prev': 'changeRangePrev',
             'click #changeRange a#reset': 'changeRangeReset',
-            'click #changeRange a#next': 'changeRangeNext'
+            'click #changeRange a#next': 'changeRangeNext',
+            'connectError': 'connectError'
         },
 
         calendarSelectlistChanged: function(evt) {
@@ -83,7 +84,10 @@ $(function() {
 
 			this.drawUi();
 			
-            //this.model.bind('calendarListComplete', this.drawCalendarList, this);
+            this.model.bind('calendarListComplete', this.hideCalendarListSpinner, this);
+            this.model.bind('calendarLoadingStart', this.showCalendarSpinner, this);
+            this.model.bind('connectError', this.connectError, this);
+
             this.model.bind('calendarListError', this.calendarListError, this);
             this.model.bind('change:selectedCalendar', this.selectedCalendarChanged, this);
             this.model.get("selectedRange").bind('change:rangeObj', this.selectedCalendarChanged, this);
@@ -105,9 +109,6 @@ $(function() {
         },
 
         apiTokenComplete: function(model, resp) {
-            //console.log("apiTokenComplete");
-            //console.log(arguments);
-
             doAjaxSetup(model.get("accessToken"));
             this.model.fetch();
         },
@@ -115,11 +116,27 @@ $(function() {
 		calendarListError: function(collection) {
             $("#intro").show();
             $("#app").hide();
-            //TODO show warning that something went wrong
+            //TODO tell user what went wrong
 		},
 
         drawUi: function(collection) {
 			
+            var opts = {
+                lines: 12, // The number of lines to draw
+                length: 1, // The length of each line
+                width: 4, // The line thickness
+                radius: 10, // The radius of the inner circle
+                color: '#000', // #rgb or #rrggbb
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false // Whether to use hardware acceleration
+            };
+
+            var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:20px; top:15px;'></div>");
+            var spinner = spinnerContainer.spin(opts);
+            $(this.el).find("#calendars").append(spinnerContainer);
+                 
             /*
 			// prev btn
 			var prevBtn = new CalendarPrevNextBtn({label: "Prev"});
@@ -155,9 +172,9 @@ $(function() {
             $(this.el).find("#changeRange").append(rangeChangeBtns.render().el);
 			
 			//output
-			var output = new Output();
-			this.model.bind('updateOutput', output.updateView, output);
-            $(this.el).find("#output").append(output.render().el);
+			this.output = new Output();
+			this.model.bind('updateOutput', this.output.updateView, this.output);
+            $(this.el).find("#output").append(this.output.render().el);
 
             $("#intro").hide();
             $("#app").show();
@@ -167,6 +184,20 @@ $(function() {
             $(this.el).find("#range").css("display", "block");
             $(this.el).find("#changeRange").css("display", "block");
             $(this.el).find("#output").css("display", "block");
+        },
+
+        hideCalendarListSpinner: function() {
+            $(this.el).find("#spinnerContainer").remove();
+        },
+
+        showCalendarSpinner: function() {
+            this.output.showSpinner();
+        },
+
+        connectError: function() {
+            console.log("connectError");
+            $("#intro").show();
+            $("#app").hide();            
         }
     });
 

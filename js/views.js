@@ -112,6 +112,24 @@ var Output = Backbone.View.extend({
 
     render: function() {
         return this;
+    },
+
+    showSpinner: function() {
+        var opts = {
+            lines: 12, // The number of lines to draw
+            length: 1, // The length of each line
+            width: 4, // The line thickness
+            radius: 10, // The radius of the inner circle
+            color: '#000', // #rgb or #rrggbb
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false // Whether to use hardware acceleration
+        };
+
+        var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
+        var spinner = spinnerContainer.spin(opts);
+        $(this.el).html(spinnerContainer);    	
     }
 });
 
