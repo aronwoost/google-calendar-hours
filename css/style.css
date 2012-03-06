@@ -4,14 +4,14 @@ div {
 #container {
 }
 
-.btn.small.rangeside {
-  width:23%;
+.btn.rangeside {
+  width:25%;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;  
 }
 
-.btn.small.rangecenter {
+.btn.rangecenter {
   width:50%;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;

@@ -36,6 +36,7 @@ var RangeChangeBtns = Backbone.View.extend({
     render: function() {
     	$(this.el).css("display", "none");
     	$(this.el).css("text-align", "center");
+    	$(this.el).addClass("btn-group");
         $(this.el).html($.tmpl("rangeChangeBtns", {to:""}));
         return this;
     }
