@@ -121,20 +121,8 @@ $(function() {
 
         drawUi: function(collection) {
 			
-            var opts = {
-                lines: 12, // The number of lines to draw
-                length: 1, // The length of each line
-                width: 4, // The line thickness
-                radius: 10, // The radius of the inner circle
-                color: '#000', // #rgb or #rrggbb
-                speed: 1, // Rounds per second
-                trail: 60, // Afterglow percentage
-                shadow: false, // Whether to render a shadow
-                hwaccel: false // Whether to use hardware acceleration
-            };
-
             var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:20px; top:15px;'></div>");
-            var spinner = spinnerContainer.spin(opts);
+            var spinner = spinnerContainer.spin(spinnerOptions);
             $(this.el).find("#calendars").append(spinnerContainer);
                  
             /*
@@ -161,14 +149,12 @@ $(function() {
 			*/
 
 			//change range selectlist
-			var rangeSelectList = new RangeSelectList();
-			this.model.get("selectedRange").bind('change:range', rangeSelectList.updateView, rangeSelectList);
+			var rangeSelectList = new RangeSelectList({model:this.model.get("selectedRange")});
             $(this.el).find("#range").append(rangeSelectList.render().el);
-            rangeSelectList.updateView(null, this.model.get("selectedRange").get("range"));
+            rangeSelectList.update(null, this.model.get("selectedRange").get("range"));
 			
 			//change range btns
-			var rangeChangeBtns = new RangeChangeBtns();
-			this.model.get("selectedRange").bind('change:range', rangeChangeBtns.updateView, rangeChangeBtns);
+			var rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
             $(this.el).find("#changeRange").append(rangeChangeBtns.render().el);
 			
 			//output

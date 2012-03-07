@@ -1,3 +1,15 @@
+var spinnerOptions = {
+    lines: 12, // The number of lines to draw
+    length: 1, // The length of each line
+    width: 4, // The line thickness
+    radius: 10, // The radius of the inner circle
+    color: '#000', // #rgb or #rrggbb
+    speed: 1, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: false, // Whether to render a shadow
+    hwaccel: false // Whether to use hardware acceleration
+};
+
 var CalendarListSelectOptionItem = Backbone.View.extend({
     tagName: 'option',
     initialize: function() {
@@ -12,8 +24,9 @@ var CalendarListSelectOptionItem = Backbone.View.extend({
 var RangeChangeBtns = Backbone.View.extend({
     tagName: 'div',
     initialize: function() {
+        this.model.bind('change:range', this.update, this);
     },
-	updateView: function(model, value) {
+	update: function(model, value) {
 		$(this.el).css("display", "block");
 		switch (value) {
 			case "day":
@@ -87,6 +100,7 @@ var Output = Backbone.View.extend({
     tagName: 'div',
 	
     initialize: function() {
+        console.dir(this.model);
     },
 
 	updateView: function(data) {
@@ -116,20 +130,8 @@ var Output = Backbone.View.extend({
     },
 
     showSpinner: function() {
-        var opts = {
-            lines: 12, // The number of lines to draw
-            length: 1, // The length of each line
-            width: 4, // The line thickness
-            radius: 10, // The radius of the inner circle
-            color: '#000', // #rgb or #rrggbb
-            speed: 1, // Rounds per second
-            trail: 60, // Afterglow percentage
-            shadow: false, // Whether to render a shadow
-            hwaccel: false // Whether to use hardware acceleration
-        };
-
         var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
-        var spinner = spinnerContainer.spin(opts);
+        var spinner = spinnerContainer.spin(spinnerOptions);
         $(this.el).html(spinnerContainer);    	
     }
 });
@@ -138,9 +140,10 @@ var RangeSelectList = Backbone.View.extend({
     tagName: 'div',
 	
     initialize: function() {
+        this.model.bind('change:range', this.update, this);
     },
 
-	updateView: function(model, value) {
+	update: function(model, value) {
 		if(!value) return;
 		$(this.el).css("display", "block");
 		$(this.el).find("#rangeList").val(value);
