@@ -64,7 +64,8 @@ var RangeModel = Backbone.Model.extend({
 		"today":Date.today().getTime(),
 		"currentDatePointer":Date.today(),
 		"range":null,
-		"rangeObj":{}
+		"rangeObj":{},
+		"weekStart":"sunday"
     },
     initialize: function() {
 		this.updateRangeObj();
@@ -94,8 +95,20 @@ var RangeModel = Backbone.Model.extend({
 			d1 = currentDate.clone();
 			d2 = currentDate.clone().add(1).days();
 		} else if(range === "week") {
-			d1 = currentDate.clone().moveToDayOfWeek(0, -1);
-			d2 = currentDate.clone().moveToDayOfWeek(0);
+			if(this.get("weekStart") === "sunday") {
+				if(currentDate.is().sunday()) {
+					d1 = currentDate.clone();
+				} else {
+					d1 = currentDate.clone().sunday().addWeeks(-1);
+				}
+			} else {
+				if(currentDate.is().monday()) {
+					d1 = currentDate.clone();
+				} else {
+					d1 = currentDate.clone().monday().addWeeks(-1);
+				}
+			}
+			d2 = d1.clone().addDays(6).addHours(23).addMinutes(59).addSeconds(59);
 		} else if(range === "month") {
 			d1 = currentDate.clone().moveToFirstDayOfMonth();
 			d2 = currentDate.clone().moveToLastDayOfMonth().add(1).days();
@@ -127,6 +140,10 @@ var RangeModel = Backbone.Model.extend({
 			currentDate.addMonths(direction);
 		}
 		this.updateRangeObj();
+	},
+	updateWeekStart: function(day) {
+		this.set({weekStart:day});
+		this.updateRangeObj();
 	}
 });		
 
@@ -144,9 +161,23 @@ var ApiTokenModel = Backbone.Model.extend({
 
 //
 
+var SelectedCalendar = Backbone.Model.extend({
+    defaults: {
+		"calendar":null
+    },
+	getHours: function(range) {
+		return this.get("calendar").getHours(range);
+	},
+	available: function() {
+		return this.get("calendar") !== null;
+	}
+});
+
+//
+
 var AppModel = Backbone.Model.extend({
     defaults: {
-		"selectedCalendar":null,
+		"selectedCalendar":new SelectedCalendar(),
 		"selectedRange":new RangeModel(),
 		"calendarsCollection":null,
 		"hasPrevItem":false,
@@ -176,7 +207,7 @@ var AppModel = Backbone.Model.extend({
 		}
 		var model = this.get("calendarsCollection").at(index);
 		if(model.hasCalendarData()){
-			this.set({selectedCalendar: model});
+			this.setSelectedCalendar(model);
 			this.updateOutput();
 		} else {
 			this.trigger("calendarLoadingStart");
@@ -199,7 +230,7 @@ var AppModel = Backbone.Model.extend({
 		this.updateOutput();
 	},			
 	calendarDataReady: function(model) {
-		this.set({selectedCalendar: model});
+		this.setSelectedCalendar(model);
 		this.updateOutput();
 	},
 	calendarDataError: function(model, resp) {
@@ -217,10 +248,13 @@ var AppModel = Backbone.Model.extend({
 		this.setSelectedCalendarByIndex(currentIndex+offset);
 	},
 	updateOutput: function() {
-		if(!this.get("selectedCalendar")) return;
+		if(!this.get("selectedCalendar").available()) return;
 		this.trigger("updateOutput", {hours:this.get("selectedCalendar").getHours(this.getSelectedRange()), range:this.getSelectedRange()});
 	},
 	connectError: function (data) {
 		this.trigger("connectError", data);
+	},
+	setSelectedCalendar: function(model) {
+		this.get("selectedCalendar").set({calendar:model})
 	}
 });

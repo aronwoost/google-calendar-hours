@@ -27,9 +27,6 @@ $(function() {
             'click #calendars a#prev': 'prevCalendar',
             'click #calendars a#next': 'nextCalendar',
             'click a#connect': 'connectWithGoogle',
-            'click #changeRange a#prev': 'changeRangePrev',
-            'click #changeRange a#reset': 'changeRangeReset',
-            'click #changeRange a#next': 'changeRangeNext',
             'connectError': 'connectError'
         },
 
@@ -63,21 +60,6 @@ $(function() {
 			window.location = reqUrl;
         },
 
-        changeRangePrev: function(evt) {
-            evt.preventDefault();
-            this.model.get("selectedRange").changeRange( - 1);
-        },
-
-        changeRangeReset: function(evt) {
-            evt.preventDefault();
-            this.model.get("selectedRange").changeRange(0);
-        },
-
-        changeRangeNext: function(evt) {
-            evt.preventDefault();
-            this.model.get("selectedRange").changeRange(1);
-        },
-
         initialize: function() {
 
             this.iceMode = getURLParameter("iceMode");
@@ -103,7 +85,6 @@ $(function() {
             console.log("apiTokenError");
             console.log(arguments);
 
-            // $(this.el).find("#calendars").html("<a href='' id='connect'>Connect with Google Calendar</a>");
             $("#intro").show();
             $("#app").hide();            
         },
@@ -124,29 +105,11 @@ $(function() {
             var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:20px; top:15px;'></div>");
             var spinner = spinnerContainer.spin(spinnerOptions);
             $(this.el).find("#calendars").append(spinnerContainer);
-                 
-            /*
-			// prev btn
-			var prevBtn = new CalendarPrevNextBtn({label: "Prev"});
-			this.model.bind('change:hasPrevItem', prevBtn.updateView, prevBtn);
-			
-            $(this.el).find("#calendars").append(prevBtn.render().el);
-			*/
 
 			// calendar select list 
-			var calendarSelectList = new CalendarSelectList();
-			//var calendarSelectList = new CalendarSelectList({model:this.model.get("calendarsCollection")});
-            this.model.bind("change:selectedCalendar", calendarSelectList.updateView, calendarSelectList);
+            var calendarSelectList = new CalendarSelectList(this.model.get("selectedCalendar"));
             this.model.get("calendarsCollection").bind("reset", calendarSelectList.calendarsReceived, calendarSelectList);
 			$(this.el).find("#calendars").append(calendarSelectList.render().el);
-			
-            /*
-			// next btn
-			var nextBtn = new CalendarPrevNextBtn({label: "Next"});
-			this.model.bind('change:hasNextItem', nextBtn.updateView, nextBtn);
-			
-            $(this.el).find("#calendars").append(nextBtn.render().el);
-			*/
 
 			//change range selectlist
 			var rangeSelectList = new RangeSelectList({model:this.model.get("selectedRange")});
@@ -156,11 +119,16 @@ $(function() {
 			//change range btns
 			var rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
             $(this.el).find("#changeRange").append(rangeChangeBtns.render().el);
+            
+            //output
+            this.output = new Output();
+            this.model.bind('updateOutput', this.output.updateView, this.output);
+            $(this.el).find("#output").append(this.output.render().el);
 			
 			//output
-			this.output = new Output();
-			this.model.bind('updateOutput', this.output.updateView, this.output);
-            $(this.el).find("#output").append(this.output.render().el);
+			this.options = new Options({model:this.model.get("selectedRange")});
+			// this.model.bind('updateOutput', this.output.updateView, this.output);
+            $(this.el).find("#options").append(this.options.render().el);
 
             $("#intro").hide();
             $("#app").show();

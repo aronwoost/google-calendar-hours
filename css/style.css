@@ -29,3 +29,8 @@ div {
 select {
   color:#333;
 }
+
+.radio.inline, .checkbox.inline {
+  margin-left: 7px;
+  margin-bottom: 6px;
+}
