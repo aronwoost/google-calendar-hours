@@ -61,7 +61,6 @@ var CalendarsCollection = Backbone.Collection.extend({
 
 var RangeModel = Backbone.Model.extend({
     defaults: {
-		"today":Date.today().getTime(),
 		"currentDatePointer":Date.today(),
 		"range":null,
 		"rangeObj":{},
@@ -112,6 +111,9 @@ var RangeModel = Backbone.Model.extend({
 		} else if(range === "month") {
 			d1 = currentDate.clone().moveToFirstDayOfMonth();
 			d2 = currentDate.clone().moveToLastDayOfMonth().add(1).days();
+		} else if(range === "year") {
+			d1 = currentDate.clone().moveToMonth(0, -1).moveToFirstDayOfMonth();
+			d2 = currentDate.clone().moveToMonth(0, 1).moveToFirstDayOfMonth();
 		} else if(range === "total") {
 			d1 = 0;
 			d2 = Number.POSITIVE_INFINITY;
@@ -138,6 +140,8 @@ var RangeModel = Backbone.Model.extend({
 			currentDate.addWeeks(direction);
 		} else if(range === "month") {
 			currentDate.addMonths(direction);
+		} else if(range === "year") {
+			currentDate.addYears(direction);
 		}
 		this.updateRangeObj();
 	},

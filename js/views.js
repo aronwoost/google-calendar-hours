@@ -35,13 +35,17 @@ var RangeChangeBtns = Backbone.View.extend({
         'click a#reset': 'changeRangeReset',
         'click a#next': 'changeRangeNext'
     },
+    disablePrevNext: false,
+    disableReset: false,
     initialize: function() {
         this.model.bind('change:range', this.update, this);
     },
 	update: function(model, value) {
 		$(this.el).css("display", "block");
         var middleBtnLabel = btnLabel[value] || "";
-		$(this.el).html($.tmpl("rangeChangeBtns", {to:middleBtnLabel}));
+        this.disablePrevNext = (value === "year" || value === "total");
+        this.disableReset = value === "total";
+		$(this.el).html($.tmpl("rangeChangeBtns", {to:middleBtnLabel, disablePrevNext:this.disablePrevNext, disableReset:this.disableReset}));
 	},
     render: function() {
     	$(this.el).css("display", "none");
@@ -52,14 +56,17 @@ var RangeChangeBtns = Backbone.View.extend({
     },
     changeRangePrev: function(evt) {
         evt.preventDefault();
+        if(this.disablePrevNext) return;
         this.model.changeRange(-1);
     },
     changeRangeReset: function(evt) {
         evt.preventDefault();
+        if(this.disableReset) return;
         this.model.changeRange(0);
     },
     changeRangeNext: function(evt) {
         evt.preventDefault();
+        if(this.disablePrevNext) return;
         this.model.changeRange(1);
     }
 });
@@ -118,12 +125,11 @@ var Output = Backbone.View.extend({
         if (rangeObj.type === "day") {
             html += rangeObj.start.toString('dddd, MMMM d, yyyy');
         } else if (rangeObj.type === "week") {
-            //html += rangeObj.start.toString('dddd, MMMM d, yyyy') + " - " + rangeObj.end.toString('dddd, MMMM d, yyyy');
             html += rangeObj.start.toString('dd.MM.yyyy') + " - " + rangeObj.end.toString('dd.MM.yyyy');
         } else if (rangeObj.type === "month") {
             html += rangeObj.start.toString('MMMM, yyyy');
         } else if (rangeObj.type === "year") {
-            html += rangeObj.start.toString('dddd, MMMM d, yyyy') + " - " + rangeObj.end.toString('dddd, MMMM d, yyyy');
+            html += rangeObj.start.toString('yyyy');
         }
 
         html += "</div>"
@@ -157,7 +163,7 @@ var RangeSelectList = Backbone.View.extend({
 
     render: function() {
     	$(this.el).css("display", "none");
-    	$(this.el).append("<select id='rangeList' style='width:100%'><option value='day'>Day</option><option value='week'>Week</option><option value='month'>Month</option></select>")
+    	$(this.el).append("<select id='rangeList' style='width:100%'><option value='day'>Day</option><option value='week'>Week</option><option value='month'>Month</option><option value='year'>Year</option><option value='total'>Total</option></select>")
         return this;
     }
 });
