@@ -35,17 +35,15 @@ var RangeChangeBtns = Backbone.View.extend({
         'click a#reset': 'changeRangeReset',
         'click a#next': 'changeRangeNext'
     },
-    disablePrevNext: false,
-    disableReset: false,
+    disableBtns: false,
     initialize: function() {
         this.model.bind('change:range', this.update, this);
     },
 	update: function(model, value) {
 		$(this.el).css("display", "block");
         var middleBtnLabel = btnLabel[value] || "";
-        this.disablePrevNext = (value === "year" || value === "total");
-        this.disableReset = value === "total";
-		$(this.el).html($.tmpl("rangeChangeBtns", {to:middleBtnLabel, disablePrevNext:this.disablePrevNext, disableReset:this.disableReset}));
+        this.disableBtns = value === "total";
+		$(this.el).html($.tmpl("rangeChangeBtns", {to:middleBtnLabel, disableBtns:this.disableBtns}));
 	},
     render: function() {
     	$(this.el).css("display", "none");
@@ -56,17 +54,17 @@ var RangeChangeBtns = Backbone.View.extend({
     },
     changeRangePrev: function(evt) {
         evt.preventDefault();
-        if(this.disablePrevNext) return;
+        if(this.disableBtns) return;
         this.model.changeRange(-1);
     },
     changeRangeReset: function(evt) {
         evt.preventDefault();
-        if(this.disableReset) return;
+        if(this.disableBtns) return;
         this.model.changeRange(0);
     },
     changeRangeNext: function(evt) {
         evt.preventDefault();
-        if(this.disablePrevNext) return;
+        if(this.disableBtns) return;
         this.model.changeRange(1);
     }
 });
