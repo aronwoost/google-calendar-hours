@@ -2,9 +2,9 @@
 
 var Calendar = Backbone.Model.extend({
 	sync:GchSync,
-    defaults: {
-        "items": null
-    },
+	defaults: {
+		"items": null
+	},
 	createCalendar: function() {
 		this.url = "https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events";
 		// override parse, since we want to set the items, when parse is called 
@@ -19,12 +19,12 @@ var Calendar = Backbone.Model.extend({
 	hasCalendarData: function() {
 		return this.get("items") !== null;
 	},
-    getTitle: function() {
-        return this.get("summary");
-    },
-    getUrl: function() {
-        return this.get("id");
-    },
+	getTitle: function() {
+		return this.get("summary");
+	},
+	getUrl: function() {
+		return this.get("id");
+	},
 	getHours: function(rangeObj) {
 		var start = rangeObj.start,
 			end = rangeObj.end,
@@ -45,42 +45,42 @@ var Calendar = Backbone.Model.extend({
 });
 
 var CalendarsCollection = Backbone.Collection.extend({
-    model: Calendar,
-    sync: GchSync,
-    url: "https://www.googleapis.com/calendar/v3/users/me/calendarList",
+	model: Calendar,
+	sync: GchSync,
+	url: "https://www.googleapis.com/calendar/v3/users/me/calendarList",
 	parse: function(response) {
 		if(response.error) {
 			this.trigger("connectError", response);
 			return;
 		}
-	    return response.items;
+		return response.items;
 	}
 });
 
 //
 
 var RangeModel = Backbone.Model.extend({
-    defaults: {
+	defaults: {
 		"currentDatePointer":Date.today(),
 		"range":null,
 		"rangeObj":{},
 		"weekStart":"sunday"
-    },
-    initialize: function() {
+	},
+	initialize: function() {
 		this.updateRangeObj();
-    },
+	},
 	updateRangeByIndex: function(index) {
 		switch (index) {
 		   case 0:
-		      this.set({range:"day"}); break;
+			  this.set({range:"day"}); break;
 		   case 1:
-		      this.set({range:"week"}); break;
+			  this.set({range:"week"}); break;
 		   case 2:
-		      this.set({range:"month"}); break;
+			  this.set({range:"month"}); break;
 		   case 3:
-		      this.set({range:"year"}); break;
+			  this.set({range:"year"}); break;
 		   case 4:
-		      this.set({range:"total"}); break;
+			  this.set({range:"total"}); break;
 		}
 		this.updateRangeObj();			
 	},
@@ -155,9 +155,9 @@ var RangeModel = Backbone.Model.extend({
 
 var ApiTokenModel = Backbone.Model.extend({
 	sync:TokenSync,
-    defaults: {
+	defaults: {
 		"accessToken":null
-    },
+	},
 	hasApiToken: function() {
 		return this.get("accessToken") != null;
 	}
@@ -166,9 +166,9 @@ var ApiTokenModel = Backbone.Model.extend({
 //
 
 var SelectedCalendar = Backbone.Model.extend({
-    defaults: {
+	defaults: {
 		"calendar":null
-    },
+	},
 	getHours: function(range) {
 		return this.get("calendar").getHours(range);
 	},
@@ -180,14 +180,14 @@ var SelectedCalendar = Backbone.Model.extend({
 //
 
 var AppModel = Backbone.Model.extend({
-    defaults: {
+	defaults: {
 		"selectedCalendar":new SelectedCalendar(),
 		"selectedRange":new RangeModel(),
 		"calendarsCollection":null,
 		"hasPrevItem":false,
 		"hasNextItem":false
-    },
-    initialize: function() {
+	},
+	initialize: function() {
 		var calendarsCollection = new CalendarsCollection();
 		calendarsCollection.bind('reset', this.loadCalendarsCollectionComplete, this);
 		calendarsCollection.bind('error', this.loadCalendarsCollectionError, this);
@@ -195,7 +195,7 @@ var AppModel = Backbone.Model.extend({
 		this.set({calendarsCollection: calendarsCollection});
 		this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
 		this.get("selectedRange").bind("change:rangeObj", this.updateOutput, this);
-    },
+	},
 	fetch: function(){
 		this.get("calendarsCollection").fetch();
 	},
