@@ -38,10 +38,10 @@ var Calendar = Backbone.Model.extend({
 				var hours = diff/1000/60/60;
 				totalHours += hours;
 			}
-		}, this);				
+		}, this);
 		
 		return totalHours;
-	}	
+	}
 });
 
 var CalendarsCollection = Backbone.Collection.extend({
@@ -71,18 +71,18 @@ var RangeModel = Backbone.Model.extend({
 	},
 	updateRangeByIndex: function(index) {
 		switch (index) {
-		   case 0:
-			  this.set({range:"day"}); break;
-		   case 1:
-			  this.set({range:"week"}); break;
-		   case 2:
-			  this.set({range:"month"}); break;
-		   case 3:
-			  this.set({range:"year"}); break;
-		   case 4:
-			  this.set({range:"total"}); break;
+			case 0:
+				this.set({range:"day"}); break;
+			case 1:
+				this.set({range:"week"}); break;
+			case 2:
+				this.set({range:"month"}); break;
+			case 3:
+				this.set({range:"year"}); break;
+			case 4:
+				this.set({range:"total"}); break;
 		}
-		this.updateRangeObj();			
+		this.updateRangeObj();
 	},
 	updateRangeObj: function() {
 		var range = this.get("range"),
@@ -132,7 +132,7 @@ var RangeModel = Backbone.Model.extend({
 			this.set({currentDatePointer:currentDate}); //TODO don't know, why I need to set this explicitly
 			this.updateRangeObj();
 			return;
-		}	
+		}
 		
 		if(range === "day") {
 			currentDate.addDays(direction);
@@ -149,7 +149,7 @@ var RangeModel = Backbone.Model.extend({
 		this.set({weekStart:day});
 		this.updateRangeObj();
 	}
-});		
+});
 
 //
 
@@ -216,8 +216,8 @@ var AppModel = Backbone.Model.extend({
 		} else {
 			this.trigger("calendarLoadingStart");
 			model.createCalendar();
-			model.bind('change', this.calendarDataReady, this);				
-			model.bind('error', this.calendarDataError, this);	
+			model.bind('change', this.calendarDataReady, this);
+			model.bind('error', this.calendarDataError, this);
 			model.fetch();
 		}
 		this.set({hasPrevItem:(index>0), hasNextItem:(index<this.get("calendarsCollection").length - 1)})
@@ -232,7 +232,7 @@ var AppModel = Backbone.Model.extend({
 	setSelectedRangeByIndex: function(index) {
 		this.get("selectedRange").updateRangeByIndex(index);
 		this.updateOutput();
-	},			
+	},
 	calendarDataReady: function(model) {
 		this.setSelectedCalendar(model);
 		this.updateOutput();

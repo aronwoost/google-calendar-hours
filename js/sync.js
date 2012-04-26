@@ -5,9 +5,7 @@ var TokenSync = function(method, model, resp) {
 	if (lsAuth) {
 		resp.success(JSON.parse(lsAuth));
 	} else {
-		resp.error({
-			msg: "noToken"
-		});
+		resp.error({msg: "noToken"});
 	}
 }
 

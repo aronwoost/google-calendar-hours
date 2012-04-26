@@ -13,7 +13,7 @@ function auth() {
 
 	console.log(regUrl);
 
-	window.location = regUrl;    
+	window.location = regUrl;
 };
 
 $(function() {
@@ -86,7 +86,7 @@ $(function() {
 			console.log(arguments);
 
 			$("#intro").show();
-			$("#app").hide();            
+			$("#app").hide();
 		},
 
 		apiTokenComplete: function(model, resp) {
@@ -151,7 +151,7 @@ $(function() {
 		connectError: function() {
 			console.log("connectError");
 			$("#intro").show();
-			$("#app").hide();            
+			$("#app").hide();
 		}
 	});
 

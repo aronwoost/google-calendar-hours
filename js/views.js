@@ -84,7 +84,7 @@ var CalendarSelectList = Backbone.View.extend({
 	},
 
 	updateView: function(model, value) {
-		$(this.el).val(value.cid);	
+		$(this.el).val(value.cid);
 	},
 
 	render: function() {
@@ -142,7 +142,7 @@ var Output = Backbone.View.extend({
 	showSpinner: function() {
 		var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
 		var spinner = spinnerContainer.spin(spinnerOptions);
-		$(this.el).html(spinnerContainer);    	
+		$(this.el).html(spinnerContainer);
 	}
 });
 
@@ -196,7 +196,7 @@ var Options = Backbone.View.extend({
 		} else {
 			$(this.el).css("display", "none");
 		}
-	},    
+	},
 	render: function() {
 		var model = this.model;
 		$(this.el).html('Week starts on: <label class="radio inline"><input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">Sunday</label><label class="radio inline"><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Monday</label>');
