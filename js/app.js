@@ -18,6 +18,12 @@ function auth() {
 
 $(function() {
 
+	var config = {lastSelectedCalendarIndex:null, lastSelectedRangeIndex:null};
+	var lsConfig = localStorage.getItem("config");
+	if(lsConfig) {
+		config = JSON.parse(lsConfig);
+	}
+
 	var AppView = Backbone.View.extend({
 		el: $("body"),
 
@@ -109,6 +115,7 @@ $(function() {
 			// calendar select list 
 			var calendarSelectList = new CalendarSelectList(this.model.get("selectedCalendar"));
 			this.model.get("calendarsCollection").bind("reset", calendarSelectList.calendarsReceived, calendarSelectList);
+			this.model.bind("calendarSelectionChanged", calendarSelectList.updateView, calendarSelectList);
 			$(this.el).find("#calendars").append(calendarSelectList.render().el);
 
 			//change range selectlist
@@ -155,6 +162,6 @@ $(function() {
 		}
 	});
 
-	var appModel = new AppModel();
+	var appModel = new AppModel({config:config});
 	var app = new AppView({model: appModel});
 });

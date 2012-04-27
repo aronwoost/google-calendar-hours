@@ -83,8 +83,8 @@ var CalendarSelectList = Backbone.View.extend({
 	initialize: function() {
 	},
 
-	updateView: function(model, value) {
-		$(this.el).val(value.cid);
+	updateView: function(cid) {
+		$(this.el).val(cid);
 	},
 
 	render: function() {

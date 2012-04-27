@@ -64,7 +64,8 @@ var RangeModel = Backbone.Model.extend({
 		"currentDatePointer":Date.today(),
 		"range":null,
 		"rangeObj":{},
-		"weekStart":"sunday"
+		"weekStart":"sunday",
+		"rangeIndex":null
 	},
 	initialize: function() {
 		this.updateRangeObj();
@@ -82,6 +83,7 @@ var RangeModel = Backbone.Model.extend({
 			case 4:
 				this.set({range:"total"}); break;
 		}
+		this.set({rangeIndex:index});
 		this.updateRangeObj();
 	},
 	updateRangeObj: function() {
@@ -129,7 +131,7 @@ var RangeModel = Backbone.Model.extend({
 			
 		if(direction === 0) {
 			currentDate = Date.today();
-			this.set({currentDatePointer:currentDate}); //TODO don't know, why I need to set this explicitly
+			this.set({currentDatePointer:currentDate}); //TODO don't understand why I need to set this explicitly
 			this.updateRangeObj();
 			return;
 		}
@@ -174,6 +176,9 @@ var SelectedCalendar = Backbone.Model.extend({
 	},
 	available: function() {
 		return this.get("calendar") !== null;
+	},
+	getCId: function() {
+		return this.get("calendar").cid;
 	}
 });
 
@@ -185,7 +190,8 @@ var AppModel = Backbone.Model.extend({
 		"selectedRange":new RangeModel(),
 		"calendarsCollection":null,
 		"hasPrevItem":false,
-		"hasNextItem":false
+		"hasNextItem":false,
+		"config":null
 	},
 	initialize: function() {
 		var calendarsCollection = new CalendarsCollection();
@@ -201,7 +207,10 @@ var AppModel = Backbone.Model.extend({
 	},
 	loadCalendarsCollectionComplete: function(collection){
 		this.trigger("calendarListComplete", collection);
-	},	
+		if(this.get("config").lastSelectedCalendarIndex) {
+			this.setSelectedCalendarByIndex(this.get("config").lastSelectedCalendarIndex);
+		}
+	},
 	loadCalendarsCollectionError: function(collection){
 		this.trigger("calendarListError", collection);
 	},
@@ -222,11 +231,14 @@ var AppModel = Backbone.Model.extend({
 		}
 		this.set({hasPrevItem:(index>0), hasNextItem:(index<this.get("calendarsCollection").length - 1)})
 
-		// set default range, if null (seams this is the first calendar selection evar)
+		// set default range, if null (seams this is the first calendar selection ever)
 		var currentRange = this.get("selectedRange").get("range");
 		if(!currentRange) {
-			this.get("selectedRange").set({range:"month"});
-			this.get("selectedRange").updateRangeObj();
+			if(this.get("config").lastSelectedRangeIndex !== null) {
+				this.get("selectedRange").updateRangeByIndex(this.get("config").lastSelectedRangeIndex);
+			} else {
+				this.get("selectedRange").updateRangeByIndex(2);
+			}
 		}
 	},
 	setSelectedRangeByIndex: function(index) {
@@ -244,7 +256,6 @@ var AppModel = Backbone.Model.extend({
 		console.dir(resp.statusCode());
 	},
 	getSelectedRange: function() {
-		//console.log(this.get("selectedRangeObj"));
 		return this.get("selectedRange").getRangeObj();
 	},
 	changeCalendar: function(offset) {
@@ -254,11 +265,28 @@ var AppModel = Backbone.Model.extend({
 	updateOutput: function() {
 		if(!this.get("selectedCalendar").available()) return;
 		this.trigger("updateOutput", {hours:this.get("selectedCalendar").getHours(this.getSelectedRange()), range:this.getSelectedRange()});
+		this.trigger("calendarSelectionChanged", this.get("selectedCalendar").getCId());
+
+		this.updateConfig();
 	},
 	connectError: function (data) {
 		this.trigger("connectError", data);
 	},
 	setSelectedCalendar: function(model) {
-		this.get("selectedCalendar").set({calendar:model})
+		this.get("selectedCalendar").set({calendar:model});
+	},
+	updateConfig: function() {
+		var calendarIndex,
+			selectedCalendarCId = this.get("selectedCalendar").getCId(),
+			rangeIndex = this.get("selectedRange").attributes.rangeIndex;
+
+		this.get("calendarsCollection").models.forEach(function(item, index){
+			if(item.cid === selectedCalendarCId) calendarIndex = index;
+		});
+
+		if(this.get("config").lastSelectedCalendarIndex !== calendarIndex || this.get("config").lastSelectedRangeIndex !== rangeIndex) {
+			this.set({config:{lastSelectedRangeIndex:rangeIndex, lastSelectedCalendarIndex:calendarIndex}});
+			localStorage.setItem("config", JSON.stringify(this.get("config")));
+		}
 	}
 });
