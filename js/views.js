@@ -115,8 +115,7 @@ var Output = Backbone.View.extend({
 	},
 
 	updateView: function(data) {
-		//console.log(data);
-		var hours = data.hours;
+		var hours = Math.round(data.hours*100)/100;
 		var rangeObj = data.range;
 		var html = "<div class='hours'>" + hours + "h</div><div class='hoursrange'>";
 
