@@ -88,9 +88,11 @@
 </body>
 
 <script type="text/template" id="rangeChangeBtns">
-
   <a href="" id="prev" class="btn rangeside<% if(disableBtns) { %> disabled <% }; %>">PREV</a> <a href="" id="reset" class="btn rangecenter<% if(disableBtns) { %> disabled <% }; %>">RESET <%= to %></a> <a href="" id="next" class="btn rangeside<% if(disableBtns) { %> disabled <% }; %>">NEXT</a>
+</script>
 
+<script type="text/template" id="calendarListSelectOptionItem">
+  <option value='<%= value %>'><%= text %></option>
 </script>
 
 </html>

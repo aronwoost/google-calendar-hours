@@ -17,15 +17,6 @@ var btnLabel = {
 	year: "to this year"
 }
 
-var CalendarListSelectOptionItem = Backbone.View.extend({
-	tagName: 'option',
-	render: function() {
-		$(this.el).html(this.model.getTitle());
-		$(this.el).attr("value", this.model.cid);
-		return this;
-	}
-});
-
 var RangeChangeBtns = Backbone.View.extend({
 	events: {
 		'click a#prev': 'changeRangePrev',
@@ -86,12 +77,9 @@ var CalendarSelectList = Backbone.View.extend({
 	},
 	calendarsReceived: function(collection) {
 		$(this.el).css("display", "block");
+		var compiled = _.template($('#calendarListSelectOptionItem').html());
 		collection.each(function(item) {
-			var optionItem = new CalendarListSelectOptionItem({
-				model: item
-			});
-
-			$(this.el).append(optionItem.render().el);
+			$(this.el).append(compiled({value:item.cid, text:item.getTitle()}));
 		},
 		this);
 	}
