@@ -39,7 +39,7 @@ var RangeChangeBtns = Backbone.View.extend({
 		$(this.el).css("display", "none");
 		$(this.el).css("text-align", "center");
 		$(this.el).addClass("btn-group");
-		$(this.el).html($.tmpl("rangeChangeBtns", {to:""}));
+		$(this.el).html( _.template($('#rangeChangeBtns').html())({to:"", disableBtns:null}) );
 		return this;
 	},
 	disableBtns: false,
@@ -47,7 +47,7 @@ var RangeChangeBtns = Backbone.View.extend({
 		$(this.el).css("display", "block");
 		var middleBtnLabel = btnLabel[value] || "";
 		this.disableBtns = value === "total";
-		$(this.el).html($.tmpl("rangeChangeBtns", {to:middleBtnLabel, disableBtns:this.disableBtns}));
+		$(this.el).html( _.template($('#rangeChangeBtns').html())({to:middleBtnLabel, disableBtns:this.disableBtns}) );
 	},
 	changeRangePrev: function(evt) {
 		evt.preventDefault();
