@@ -116,26 +116,26 @@ $(function() {
 			var calendarSelectList = new CalendarSelectList(this.model.get("selectedCalendar"));
 			this.model.get("calendarsCollection").bind("reset", calendarSelectList.calendarsReceived, calendarSelectList);
 			this.model.bind("calendarSelectionChanged", calendarSelectList.updateView, calendarSelectList);
-			$(this.el).find("#calendars").append(calendarSelectList.render().el);
+			$(this.el).find("#calendars").append(calendarSelectList.render());
 
 			//change range selectlist
 			var rangeSelectList = new RangeSelectList({model:this.model.get("selectedRange")});
-			$(this.el).find("#range").append(rangeSelectList.render().el);
+			$(this.el).find("#range").append(rangeSelectList.render());
 			rangeSelectList.update(null, this.model.get("selectedRange").get("range"));
 			
 			//change range btns
 			var rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
-			$(this.el).find("#changeRange").append(rangeChangeBtns.render().el);
+			$(this.el).find("#changeRange").append(rangeChangeBtns.render());
 			
 			//output
 			this.output = new Output();
 			this.model.bind('updateOutput', this.output.updateView, this.output);
-			$(this.el).find("#output").append(this.output.render().el);
+			$(this.el).find("#output").append(this.output.render());
 			
 			//output
 			this.options = new Options({model:this.model.get("selectedRange")});
 			// this.model.bind('updateOutput', this.output.updateView, this.output);
-			$(this.el).find("#options").append(this.options.render().el);
+			$(this.el).find("#options").append(this.options.render());
 
 			$("#intro").hide();
 			$("#app").show();

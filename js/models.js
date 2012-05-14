@@ -7,7 +7,8 @@ var Calendar = Backbone.Model.extend({
 	},
 	createCalendar: function() {
 		this.url = "https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events";
-		// override parse, since we want to set the items, when parse is called 
+		// override parse, since we want to set the items, when parse is called
+		// TODO build own collection for this
 		this.parse = function(response) {
 			if(response.error) {
 				this.trigger("connectError", response);
