@@ -36,6 +36,27 @@ $(function() {
 			'connectError': 'connectError'
 		},
 
+		initialize: function() {
+
+			this.iceMode = getURLParameter("iceMode");
+
+			this.drawUi();
+			
+			this.model.bind('calendarListComplete', this.hideCalendarListSpinner, this);
+			this.model.bind('calendarLoadingStart', this.showCalendarSpinner, this);
+			this.model.bind('connectError', this.connectError, this);
+
+			this.model.bind('calendarListError', this.calendarListError, this);
+			this.model.bind('change:selectedCalendar', this.selectedCalendarChanged, this);
+			this.model.get("selectedRange").bind('change:rangeObj', this.selectedCalendarChanged, this);
+			//appModel.fetch();
+			
+			this.apiTokenModel = new ApiTokenModel();
+			this.apiTokenModel.bind('error', this.apiTokenError, this);
+			this.apiTokenModel.bind('change', this.apiTokenComplete, this);
+			this.apiTokenModel.fetch();
+		},
+
 		calendarSelectlistChanged: function(evt) {
 			this.model.setSelectedCalendarByIndex(evt.target.selectedIndex);
 		},
@@ -64,27 +85,6 @@ $(function() {
 			var reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";				
 
 			window.location = reqUrl;
-		},
-
-		initialize: function() {
-
-			this.iceMode = getURLParameter("iceMode");
-
-			this.drawUi();
-			
-			this.model.bind('calendarListComplete', this.hideCalendarListSpinner, this);
-			this.model.bind('calendarLoadingStart', this.showCalendarSpinner, this);
-			this.model.bind('connectError', this.connectError, this);
-
-			this.model.bind('calendarListError', this.calendarListError, this);
-			this.model.bind('change:selectedCalendar', this.selectedCalendarChanged, this);
-			this.model.get("selectedRange").bind('change:rangeObj', this.selectedCalendarChanged, this);
-			//appModel.fetch();
-			
-			this.apiTokenModel = new ApiTokenModel();
-			this.apiTokenModel.bind('error', this.apiTokenError, this);
-			this.apiTokenModel.bind('change', this.apiTokenComplete, this);
-			this.apiTokenModel.fetch();
 		},
 
 		apiTokenError: function(model, resp) {
