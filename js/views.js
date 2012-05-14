@@ -131,22 +131,6 @@ var RangeSelectList = Backbone.View.extend({
 	}
 });
 
-var CalendarPrevNextBtn = Backbone.View.extend({
-	render: function() {
-		$(this.el).html(this.options.label);
-		$(this.el).attr("id", this.options.label);
-		$(this.el).attr("class", "btn small");
-		$(this.el).attr("href", "");
-		return this;
-	},
-	updateView: function(model, value) {
-		if(value) {
-			$(this.el).css("color", "black");
-		} else {
-			$(this.el).css("color", "grey");
-		}
-	}
-});
 var Options = Backbone.View.extend({
 	initialize: function() {
 		this.model.bind('change:range', this.update, this);
