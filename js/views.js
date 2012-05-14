@@ -86,7 +86,7 @@ var CalendarSelectList = Backbone.View.extend({
 	},
 	calendarsReceived: function(collection) {
 		$(this.el).css("display", "block");
-		_(collection.models).each(function(item) {
+		collection.each(function(item) {
 			var optionItem = new CalendarListSelectOptionItem({
 				model: item
 			});
