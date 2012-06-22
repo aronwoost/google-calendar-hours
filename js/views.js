@@ -17,6 +17,51 @@ var btnLabel = {
 	year: "to this year"
 }
 
+var CalendarSelectList = Backbone.View.extend({
+	tagName: 'select',
+	events: {
+		'change': 'removePleaseSelect'
+	},
+	render: function() {
+		var el = $(this.el);
+		el.css("display", "none");
+		el.css("width", "100%");
+		el.attr("id", "calList");
+		el.append("<option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>");
+		return el;
+	},
+	removePleaseSelect: function(evt) {
+		$(this.el).find("#pleaseSelect").remove();
+	},
+	updateView: function(cid) {
+		$(this.el).val(cid);
+	},
+	calendarsReceived: function(collection) {
+		$(this.el).css("display", "block");
+		var compiled = _.template($('#calendarListSelectOptionItem').html());
+		collection.each(function(item) {
+			$(this.el).append(compiled({value:item.cid, text:item.getTitle()}));
+		}, this);
+	}
+});
+
+var RangeSelectList = Backbone.View.extend({
+	initialize: function() {
+		this.model.bind('change:range', this.update, this);
+	},
+	render: function() {
+		var el = $(this.el);
+		el.css("display", "none");
+		el.append("<select id='rangeList' style='width:100%'><option value='day'>Day</option><option value='week'>Week</option><option value='month'>Month</option><option value='year'>Year</option><option value='total'>Total</option></select>")
+		return el;
+	},
+	update: function(model, value) {
+		if(!value) return;
+		$(this.el).css("display", "block");
+		$(this.el).find("#rangeList").val(value);
+	}
+});
+
 var RangeChangeBtns = Backbone.View.extend({
 	events: {
 		'click a#prev': 'changeRangePrev',
@@ -58,34 +103,6 @@ var RangeChangeBtns = Backbone.View.extend({
 	}
 });
 
-var CalendarSelectList = Backbone.View.extend({
-	tagName: 'select',
-	events: {
-		'change': 'removePleaseSelect'
-	},
-	render: function() {
-		var el = $(this.el);
-		el.css("display", "none");
-		el.css("width", "100%");
-		el.attr("id", "calList");
-		el.append("<option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>");
-		return el;
-	},
-	removePleaseSelect: function(evt) {
-		$(this.el).find("#pleaseSelect").remove();
-	},
-	updateView: function(cid) {
-		$(this.el).val(cid);
-	},
-	calendarsReceived: function(collection) {
-		$(this.el).css("display", "block");
-		var compiled = _.template($('#calendarListSelectOptionItem').html());
-		collection.each(function(item) {
-			$(this.el).append(compiled({value:item.cid, text:item.getTitle()}));
-		}, this);
-	}
-});
-
 var Output = Backbone.View.extend({
 	render: function() {
 		return $(this.el);
@@ -113,23 +130,6 @@ var Output = Backbone.View.extend({
 		var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
 		var spinner = spinnerContainer.spin(spinnerOptions);
 		$(this.el).html(spinnerContainer);
-	}
-});
-
-var RangeSelectList = Backbone.View.extend({
-	initialize: function() {
-		this.model.bind('change:range', this.update, this);
-	},
-	render: function() {
-		var el = $(this.el);
-		el.css("display", "none");
-		el.append("<select id='rangeList' style='width:100%'><option value='day'>Day</option><option value='week'>Week</option><option value='month'>Month</option><option value='year'>Year</option><option value='total'>Total</option></select>")
-		return el;
-	},
-	update: function(model, value) {
-		if(!value) return;
-		$(this.el).css("display", "block");
-		$(this.el).find("#rangeList").val(value);
 	}
 });
 
