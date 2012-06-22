@@ -208,10 +208,6 @@ var AppModel = Backbone.Model.extend({
 	getSelectedRange: function() {
 		return this.get("selectedRange").getRangeObj();
 	},
-	changeCalendar: function(offset) {
-		var currentIndex = this.get("calendarsCollection").models.indexOf(this.get("selectedCalendar"));
-		this.setSelectedCalendarByIndex(currentIndex+offset);
-	},
 	updateOutput: function() {
 		var cal = this.get("selectedCalendar");
 		if(!cal) return;

@@ -23,8 +23,6 @@ $(function() {
 		events: {
 			'change select#calList': 'calendarSelectlistChanged',
 			'change select#rangeList': 'rangeSelected',
-			'click #calendars a#prev': 'prevCalendar',
-			'click #calendars a#next': 'nextCalendar',
 			'click a#connect': 'connectWithGoogle',
 			'connectError': 'connectError'
 		},
@@ -64,16 +62,6 @@ $(function() {
 
 		rangeSelected: function(evt) {
 			this.model.setSelectedRangeByIndex(evt.target.selectedIndex);
-		},
-
-		prevCalendar: function(evt) {
-			evt.preventDefault();
-			this.model.changeCalendar(-1);
-		},
-
-		nextCalendar: function(evt) {
-			evt.preventDefault();
-			this.model.changeCalendar(1);
 		},
 
 		connectWithGoogle: function(evt) {
