@@ -19,28 +19,27 @@ var btnLabel = {
 
 var CalendarSelectList = Backbone.View.extend({
 	tagName: 'select',
+	id:"calList",
 	events: {
 		'change': 'removePleaseSelect'
 	},
 	render: function() {
-		var el = $(this.el);
-		el.css("display", "none");
-		el.css("width", "100%");
-		el.attr("id", "calList");
-		el.append("<option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>");
-		return el;
+		this.$el.css("display", "none");
+		this.$el.css("width", "100%");
+		this.$el.append( _.template($('#tmplCalenderSelectList').html())() );
+		return this.$el;
 	},
 	removePleaseSelect: function(evt) {
-		$(this.el).find("#pleaseSelect").remove();
+		this.$el.find("#pleaseSelect").remove();
 	},
 	updateView: function(cid) {
-		$(this.el).val(cid);
+		this.$el.val(cid);
 	},
 	calendarsReceived: function(collection) {
-		$(this.el).css("display", "block");
+		this.$el.css("display", "block");
 		var compiled = _.template($('#calendarListSelectOptionItem').html());
 		collection.each(function(item) {
-			$(this.el).append(compiled({value:item.cid, text:item.getTitle()}));
+			this.$el.append(compiled({value:item.cid, text:item.getTitle()}));
 		}, this);
 	}
 });
@@ -50,15 +49,14 @@ var RangeSelectList = Backbone.View.extend({
 		this.model.bind('change:range', this.update, this);
 	},
 	render: function() {
-		var el = $(this.el);
-		el.css("display", "none");
-		el.append("<select id='rangeList' style='width:100%'><option value='day'>Day</option><option value='week'>Week</option><option value='month'>Month</option><option value='year'>Year</option><option value='total'>Total</option></select>")
-		return el;
+		this.$el.css("display", "none");
+		this.$el.append(_.template($('#tmplRangeSelectList').html())())
+		return this.$el;
 	},
 	update: function(model, value) {
 		if(!value) return;
-		$(this.el).css("display", "block");
-		$(this.el).find("#rangeList").val(value);
+		this.$el.css("display", "block");
+		this.$el.find("#rangeList").val(value);
 	}
 });
 
@@ -72,19 +70,18 @@ var RangeChangeBtns = Backbone.View.extend({
 		this.model.bind('change:range', this.update, this);
 	},
 	render: function() {
-		var el = $(this.el);
-		el.css("display", "none");
-		el.css("text-align", "center");
-		el.addClass("btn-group");
-		el.html( _.template($('#rangeChangeBtns').html())({to:"", disableBtns:null}) );
-		return el;
+		this.$el.css("display", "none");
+		this.$el.css("text-align", "center");
+		this.$el.addClass("btn-group");
+		this.$el.html( _.template($('#rangeChangeBtns').html())({to:"", disableBtns:null}) );
+		return this.$el;
 	},
 	disableBtns: false,
 	update: function(model, value) {
-		$(this.el).css("display", "block");
+		this.$el.css("display", "block");
 		var middleBtnLabel = btnLabel[value] || "";
 		this.disableBtns = value === "total";
-		$(this.el).html( _.template($('#rangeChangeBtns').html())({to:middleBtnLabel, disableBtns:this.disableBtns}) );
+		this.$el.html( _.template($('#rangeChangeBtns').html())({to:middleBtnLabel, disableBtns:this.disableBtns}) );
 	},
 	changeRangePrev: function(evt) {
 		evt.preventDefault();
@@ -105,7 +102,7 @@ var RangeChangeBtns = Backbone.View.extend({
 
 var Output = Backbone.View.extend({
 	render: function() {
-		return $(this.el);
+		return this.$el;
 	},
 	updateView: function(data) {
 		var hours = Math.round(data.hours*100)/100;
@@ -124,37 +121,39 @@ var Output = Backbone.View.extend({
 
 		html += "</div>"
 
-		$(this.el).html(html);
+		this.$el.html(html);
 	},
 	showSpinner: function() {
 		var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
 		var spinner = spinnerContainer.spin(spinnerOptions);
-		$(this.el).html(spinnerContainer);
+		this.$el.html(spinnerContainer);
 	}
 });
 
 var Options = Backbone.View.extend({
+	events: {
+		'change #optionsRadios1': 'changeRadio1',
+		'change #optionsRadios2': 'changeRadio2'
+	},
 	initialize: function() {
 		this.model.bind('change:range', this.update, this);
 	},
 	render: function() {
-		var self = this,
-			el = $(this.el);
-		el.html('Week starts on: <label class="radio inline"><input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">Sunday</label><label class="radio inline"><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Monday</label>');
-		el.find("#optionsRadios1").change(function() {
-			self.model.updateWeekStart("sunday");
-		});
-		el.find("#optionsRadios2").change(function() {
-			self.model.updateWeekStart("monday");
-		});
-		el.css("display", "none");
-		return el;
+		this.$el.html(_.template($('#tmplOptions').html())());
+		this.$el.css("display", "none");
+		return this.$el;
+	},
+	changeRadio1: function(evt){
+		this.model.updateWeekStart("sunday");
+	},
+	changeRadio2: function(evt){
+		this.model.updateWeekStart("monday");
 	},
 	update: function(model, value) {
 		if(value === "week") {
-			$(this.el).css("display", "block");
+			this.$el.css("display", "block");
 		} else {
-			$(this.el).css("display", "none");
+			this.$el.css("display", "none");
 		}
 	}
 });

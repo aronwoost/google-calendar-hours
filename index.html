@@ -86,12 +86,36 @@
 
 </body>
 
+<script type="text/template" id="tmplCalenderSelectList">
+  <option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>
+</script>
+
+<script type="text/template" id="tmplRangeSelectList">
+  <select id='rangeList' style='width:100%'>
+    <option value='day'>Day</option>
+    <option value='week'>Week</option>
+    <option value='month'>Month</option>
+    <option value='year'>Year</option>
+    <option value='total'>Total</option>
+  </select>
+</script>
+
 <script type="text/template" id="rangeChangeBtns">
   <a href="" id="prev" class="btn rangeside<% if(disableBtns) { %> disabled <% }; %>">PREV</a> <a href="" id="reset" class="btn rangecenter<% if(disableBtns) { %> disabled <% }; %>">RESET <%= to %></a> <a href="" id="next" class="btn rangeside<% if(disableBtns) { %> disabled <% }; %>">NEXT</a>
 </script>
 
 <script type="text/template" id="calendarListSelectOptionItem">
   <option value='<%= value %>'><%= text %></option>
+</script>
+
+<script type="text/template" id="tmplOptions">
+  Week starts on: 
+    <label class="radio inline">
+      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">Sunday
+    </label>
+    <label class="radio inline">
+      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Monday
+    </label>
 </script>
 
 </html>
