@@ -1,8 +1,3 @@
-function getURLParameter(name, searchOrHash) {
-	return decodeURI(
-		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-	);
-}
 
 function auth() {
 	var clientId = "502172359025.apps.googleusercontent.com";
@@ -10,8 +5,6 @@ function auth() {
 	var scope = "https://www.google.com/calendar/feeds/";
 
 	var regUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
-
-	console.log(regUrl);
 
 	window.location = regUrl;
 };
@@ -38,8 +31,6 @@ $(function() {
 
 		initialize: function() {
 
-			this.iceMode = getURLParameter("iceMode");
-
 			this.drawUi();
 			
 			this.model.bind('calendarListComplete', this.hideCalendarListSpinner, this);
@@ -51,10 +42,20 @@ $(function() {
 			this.model.get("selectedRange").bind('change:rangeObj', this.selectedCalendarChanged, this);
 			//appModel.fetch();
 			
-			this.apiTokenModel = new ApiTokenModel();
-			this.apiTokenModel.bind('error', this.apiTokenError, this);
-			this.apiTokenModel.bind('change', this.apiTokenComplete, this);
-			this.apiTokenModel.fetch();
+			var auth = JSON.parse(sessionStorage.getItem("auth"));
+
+			if(!auth) {
+				$("#intro").show();
+				$("#app").hide();
+			} else {
+				$.ajaxSetup({
+					beforeSend: function(xhr, settings){ 
+						settings.url += "?access_token=" + auth.accessToken + "";
+					}
+				});
+				this.model.fetch();
+			}
+
 		},
 
 		calendarSelectlistChanged: function(evt) {
@@ -82,22 +83,9 @@ $(function() {
 			var callbackUrl = "http://aronwoost.github.com/google-calendar-hours/auth.html";
 			var scope = "https://www.google.com/calendar/feeds/";
 
-			var reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";				
+			var reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
 
 			window.location = reqUrl;
-		},
-
-		apiTokenError: function(model, resp) {
-			console.log("apiTokenError");
-			console.log(arguments);
-
-			$("#intro").show();
-			$("#app").hide();
-		},
-
-		apiTokenComplete: function(model, resp) {
-			doAjaxSetup(model.get("accessToken"));
-			this.model.fetch();
 		},
 
 		calendarListError: function(collection) {
