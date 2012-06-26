@@ -167,24 +167,20 @@ var AppModel = Backbone.Model.extend({
 	},
 	loadCalendarsCollectionComplete: function(collection){
 		this.trigger("calendarListComplete", collection);
-		if(this.get("config").lastSelectedCalendarIndex) {
-			this.setSelectedCalendarByIndex(this.get("config").lastSelectedCalendarIndex);
+		if(this.get("config").lastSelectedCalendarCid) {
+			this.setSelectedCalendarByCid(this.get("config").lastSelectedCalendarCid);
 		}
 	},
-	setSelectedCalendarByIndex: function(index) {
-		if(index < 0 || index == this.get("calendarsCollection").length) {
-			return;
-		}
-		var model = this.get("calendarsCollection").at(index);
+	setSelectedCalendarByCid: function(cid) {
+		var model = this.get("calendarsCollection").getByCid(cid);
 		if(model.hasCalendarData()){
 			this.set({selectedCalendar:model});
 			this.updateOutput();
 		} else {
-			this.trigger("calendarLoadingStart");
+			this.trigger("calendarLoadingStart", cid);
 			model.fetchEvents();
 			model.bind('eventsReceived', this.calendarDataReady, this);
 			model.bind('connectError', this.connectError, this);
-			model.fetch();
 		}
 
 		// set default range, if null (seams this is the first calendar selection ever)
@@ -196,10 +192,6 @@ var AppModel = Backbone.Model.extend({
 				this.get("selectedRange").updateRangeByIndex(2);
 			}
 		}
-	},
-	setSelectedRangeByIndex: function(index) {
-		this.get("selectedRange").updateRangeByIndex(index);
-		this.updateOutput();
 	},
 	calendarDataReady: function(model) {
 		this.set({selectedCalendar:model});
@@ -219,16 +211,11 @@ var AppModel = Backbone.Model.extend({
 		this.trigger("connectError", data);
 	},
 	updateConfig: function() {
-		var calendarIndex,
-			selectedCalendarCId = this.get("selectedCalendar").cid,
+		var selectedCalendarCid = this.get("selectedCalendar").cid,
 			rangeIndex = this.get("selectedRange").attributes.rangeIndex;
 
-		this.get("calendarsCollection").models.forEach(function(item, index){
-			if(item.cid === selectedCalendarCId) calendarIndex = index;
-		});
-
-		if(this.get("config").lastSelectedCalendarIndex !== calendarIndex || this.get("config").lastSelectedRangeIndex !== rangeIndex) {
-			this.set({config:{lastSelectedRangeIndex:rangeIndex, lastSelectedCalendarIndex:calendarIndex}});
+		if(this.get("config").lastSelectedCalendarCid !== selectedCalendarCid || this.get("config").lastSelectedRangeIndex !== rangeIndex) {
+			this.set({config:{lastSelectedRangeIndex:rangeIndex, lastSelectedCalendarCid:selectedCalendarCid}});
 			localStorage.setItem("config", JSON.stringify(this.get("config")));
 		}
 	}

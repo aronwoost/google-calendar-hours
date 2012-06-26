@@ -27,45 +27,11 @@
       
       <div style="padding-bottom: 10px; font-size: 16px; font-weight: bold; color: grey;">Google Calender Hours Calculator</div>
 
-      <div id="intro" style="width:100%">
-        <p>This web app lets you see how many hours you spend on a calendar by day, week and month. It uses the Google Calendar API so you need to authorize the app with the following link:
-        </p>
-        <p>
-          <a href="#" onClick="auth();" class="btn btn-large btn-primary">Connect to Google Calendar</a>
-        </p>
-        <p>
-          Note: none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page.
-        </p>
-        <p>
-          The sourcecode of this app is <a href="http://github.com/aronwoost/google-calendar-hours">available on github</a>.
-        </p>
-      </div>
-
-      <div id="app" style="display:none">
-
-        <div id="calendars">
-        </div>
-
-        <div id="range">
-        </div>
-
-        <div id="changeRange">
-        </div>
-
-        <div id="output">
-        </div>
-
-        <div id="options">
-        </div>
-
-      </div>
-
     </div>
   
   </div>
 
-  <script src="js/jquery-1.7.1.js"></script>
-
+  <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
   <script type="text/javascript" src="js/spin.min.js"></script>
   <script type="text/javascript" src="js/date.js"></script>
   <script type="text/javascript" src="js/sugarpak.js"></script>
@@ -86,8 +52,26 @@
 
 </body>
 
+<script type="text/template" id="tmplIntro">
+  <p>
+    This web app lets you see how many hours you spend on a calendar by day, week and month. It uses the Google Calendar API so you need to authorize the app with the following link:
+  </p>
+  <p>
+    <a href="#" onClick="auth();" class="btn btn-large btn-primary">Connect to Google Calendar</a>
+  </p>
+  <p>
+    Note: none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page.
+  </p>
+  <p>
+    The sourcecode of this app is <a href="http://github.com/aronwoost/google-calendar-hours">available on github</a>.
+  </p>
+</script>
+
 <script type="text/template" id="tmplCalenderSelectList">
-  <option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>
+  <select id="calList" style="display:none; width:100%;">
+    <option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>
+  </select>
+  <div id='spinnerContainer' style='position:relative; left:20px; top:15px;'></div>
 </script>
 
 <script type="text/template" id="tmplRangeSelectList">
@@ -116,6 +100,11 @@
     <label class="radio inline">
       <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Monday
     </label>
+</script>
+
+<script type="text/template" id="tmplOutput">
+  <div class='hours'><%= hours %>h</div>
+  <div class='hoursrange'><%= range %></div>
 </script>
 
 </html>

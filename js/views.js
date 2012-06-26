@@ -17,34 +17,125 @@ var btnLabel = {
 	year: "to this year"
 }
 
-var CalendarSelectList = Backbone.View.extend({
-	tagName: 'select',
-	id:"calList",
-	events: {
-		'change': 'removePleaseSelect'
+var IntroView = Backbone.View.extend({
+	events:{
+		'click a#connect': 'connectWithGoogle'
 	},
-	render: function() {
-		this.$el.css("display", "none");
+	id:"intro",
+	initialize:function(){
 		this.$el.css("width", "100%");
-		this.$el.append( _.template($('#tmplCalenderSelectList').html())() );
+	},
+	render:function(){
+		this.$el.html( _.template($('#tmplIntro').html())() );
 		return this.$el;
 	},
-	removePleaseSelect: function(evt) {
-		this.$el.find("#pleaseSelect").remove();
+	connectWithGoogle:function(evt){
+		evt.preventDefault();
+		evt.stopPropagation();
+
+		var clientId = "502172359025.apps.googleusercontent.com";
+		var callbackUrl = "http://aronwoost.github.com/google-calendar-hours/auth.html";
+		var scope = "https://www.google.com/calendar/feeds/";
+
+		var reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
+
+		window.location = reqUrl;
 	},
-	updateView: function(cid) {
-		this.$el.val(cid);
-	},
-	calendarsReceived: function(collection) {
+	show:function(){
 		this.$el.css("display", "block");
-		var compiled = _.template($('#calendarListSelectOptionItem').html());
-		collection.each(function(item) {
-			this.$el.append(compiled({value:item.cid, text:item.getTitle()}));
-		}, this);
+	},
+	hide:function(){
+		this.$el.css("display", "none");
 	}
 });
 
+var AppView = Backbone.View.extend({
+	attributes:{
+		id:"app"
+	},
+	initialize: function() {
+		this.model.bind('calendarLoadingStart', this.calendarLoadingStart, this);
+
+		// calendar select list 
+		var calendarSelectList = new CalendarSelectList({model:this.model});
+		this.$el.append(calendarSelectList.render());
+
+		//change range selectlist
+		this.rangeSelectList = new RangeSelectList({model:this.model.get("selectedRange")});
+		this.$el.append(this.rangeSelectList.render());
+		
+		//change range btns
+		this.rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
+		this.$el.append(this.rangeChangeBtns.render());
+		
+		//output
+		this.output = new Output({model:this.model});
+		this.$el.append(this.output.render());
+		
+		//options
+		var options = new Options({model:this.model.get("selectedRange")});
+		this.$el.append(options.render());
+	},
+	render:function(){
+		return this.$el;
+	},
+	calendarLoadingStart:function(){
+		this.output.showSpinner();
+	},
+	show:function(){
+		this.$el.css("display", "block");
+	},
+	hide:function(){
+		this.$el.css("display", "none");
+	}
+});
+
+var CalendarSelectList = Backbone.View.extend({
+	id:"calendars",
+	events: {
+		'change select': 'calendarChanged'
+	},
+	initialize: function(){
+		this.model.get("calendarsCollection").bind("reset", this.calendarsReceived, this);
+		this.model.bind("calendarSelectionChanged", this.updateView, this);
+		this.model.bind("calendarLoadingStart", this.updateView, this);
+	},
+	render: function() {
+		this.$el.html( _.template($('#tmplCalenderSelectList').html())() );
+		this.$el.find("#spinnerContainer").spin(spinnerOptions);
+		return this.$el;
+	},
+	updateView: function(cid) {
+		this.$el.find("#pleaseSelect").remove();
+		this.$el.find("select").val(cid);
+		// seams that that setting the value the first time (sometimes) doesn't work
+		// this makes it sure
+		if(this.$el.find("select").get(0).value===""){
+			var self = this;
+			setTimeout(function(){
+				self.$el.find("select").val(cid);
+			}, 50);
+		}
+	},
+	calendarsReceived: function(collection) {
+		this.$el.find("#spinnerContainer").remove();
+		this.$el.find("select").css("display", "block");
+		var compiled = _.template($('#calendarListSelectOptionItem').html());
+		collection.each(function(item) {
+			this.$el.find("select").append(compiled({value:item.cid, text:item.getTitle()}));
+		}, this);
+	},
+	calendarChanged: function(evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		this.model.setSelectedCalendarByCid(evt.target.value);
+	},
+});
+
 var RangeSelectList = Backbone.View.extend({
+	events:{
+		'change select#rangeList': 'rangeSelected'
+	},
 	initialize: function() {
 		this.model.bind('change:range', this.update, this);
 	},
@@ -57,6 +148,12 @@ var RangeSelectList = Backbone.View.extend({
 		if(!value) return;
 		this.$el.css("display", "block");
 		this.$el.find("#rangeList").val(value);
+	},
+	rangeSelected: function(evt) {
+		this.model.updateRangeByIndex(evt.target.selectedIndex);
+	},
+	show:function(){
+		this.$el.css("display", "block");
 	}
 });
 
@@ -97,36 +194,43 @@ var RangeChangeBtns = Backbone.View.extend({
 		evt.preventDefault();
 		if(this.disableBtns) return;
 		this.model.changeRange(1);
+	},
+	show:function(){
+		this.$el.css("display", "block");
 	}
 });
 
 var Output = Backbone.View.extend({
+	initialize:function(){
+		this.model.bind('updateOutput', this.updateView, this);
+	},
 	render: function() {
 		return this.$el;
 	},
 	updateView: function(data) {
-		var hours = Math.round(data.hours*100)/100;
-		var rangeObj = data.range;
-		var html = "<div class='hours'>" + hours + "h</div><div class='hoursrange'>";
-		
+		var hours = Math.round(data.hours*100)/100,
+			rangeObj = data.range,
+			range = "";
+
 		if (rangeObj.type === "day") {
-			html += rangeObj.start.toString('dddd, MMMM d, yyyy');
+			range = rangeObj.start.toString('dddd, MMMM d, yyyy');
 		} else if (rangeObj.type === "week") {
-			html += rangeObj.start.toString('dd.MM.yyyy') + " - " + rangeObj.end.toString('dd.MM.yyyy');
+			range = rangeObj.start.toString('dd.MM.yyyy') + " - " + rangeObj.end.toString('dd.MM.yyyy');
 		} else if (rangeObj.type === "month") {
-			html += rangeObj.start.toString('MMMM, yyyy');
+			range = rangeObj.start.toString('MMMM, yyyy');
 		} else if (rangeObj.type === "year") {
-			html += rangeObj.start.toString('yyyy');
+			range = rangeObj.start.toString('yyyy');
 		}
 
-		html += "</div>"
-
-		this.$el.html(html);
+		this.$el.html(_.template($('#tmplOutput').html())({hours:hours, range:range}));
 	},
 	showSpinner: function() {
 		var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
 		var spinner = spinnerContainer.spin(spinnerOptions);
 		this.$el.html(spinnerContainer);
+	},
+	show:function(){
+		this.$el.css("display", "block");
 	}
 });
 
