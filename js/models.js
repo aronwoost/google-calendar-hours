@@ -13,7 +13,8 @@ var EventsCollection = Backbone.Collection.extend({
 		}
 		return response.items;
 	},
-	reset:function(){
+	reset:function(models){
+		this.add(models, {silent:true});
 		this.getNextPage();
 	},
 	added:function(){
