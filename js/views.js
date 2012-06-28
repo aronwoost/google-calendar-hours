@@ -33,9 +33,15 @@ var IntroView = Backbone.View.extend({
 		evt.preventDefault();
 		evt.stopPropagation();
 
-		var clientId = "502172359025.apps.googleusercontent.com";
-		var callbackUrl = "http://aronwoost.github.com/google-calendar-hours/auth.html";
-		var scope = "https://www.google.com/calendar/feeds/";
+		var clientId = "502172359025.apps.googleusercontent.com",
+			callbackUrl = "",
+			scope = "https://www.googleapis.com/auth/calendar.readonly";
+
+		if(location.hostname === "aronwoost.github.com") {
+			callbackUrl = "http://aronwoost.github.com/google-calendar-hours/auth.html";
+		} else {
+			callbackUrl = "http://google-calendar-hours.com/auth.html";
+		}
 
 		var reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
 
