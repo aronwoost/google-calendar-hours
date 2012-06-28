@@ -19,7 +19,7 @@ var btnLabel = {
 
 var IntroView = Backbone.View.extend({
 	events:{
-		'click a#connect': 'connectWithGoogle'
+		'click a#authBtn': 'connectWithGoogle'
 	},
 	id:"intro",
 	initialize:function(){
