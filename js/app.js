@@ -20,8 +20,12 @@ $(function() {
 				this.introView.hide();
 
 				$.ajaxSetup({
-					beforeSend: function(xhr, settings){ 
-						settings.url += "?access_token=" + auth.accessToken + "";
+					beforeSend: function(xhr, settings){
+						if(settings.url.indexOf("?") !== -1){
+							settings.url += "&access_token=" + auth.accessToken;
+						} else {
+							settings.url += "?access_token=" + auth.accessToken;
+						}
 					}
 				});
 				this.model.fetch();

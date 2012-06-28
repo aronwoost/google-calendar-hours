@@ -2,15 +2,45 @@
 
 var EventsCollection = Backbone.Collection.extend({
 	model: Backbone.Model,
+	initialize:function(){
+		this.bind('add', this.added, this);
+	},
 	parse: function(response) {
+		if(response.nextPageToken) {
+			this.nextPageToken = response.nextPageToken;
+		} else {
+			this.nextPageToken = null;
+		}
 		return response.items;
+	},
+	reset:function(){
+		this.getNextPage();
+	},
+	added:function(){
+		this.getNextPage();
+	},
+	/*
+	Throttel this call (see underscore docs) so that the fetch is only called
+	once, even though several add events are incomming.
+	*/
+	getNextPage:_.throttle(function(){
+		if(this.nextPageToken){
+			this.url = this.originalUrl + "?pageToken=" + this.nextPageToken;
+			this.fetch({add: true});
+		} else {
+			this.trigger("reset", this);
+		}
+	}, 0),
+	setUrl:function(url){
+		this.originalUrl = url;
+		this.url = url;
 	}
 });
 
 var Calendar = Backbone.Model.extend({
 	initialize:function(){
 		this.eventsCollection = new EventsCollection();
-		this.eventsCollection.url = "https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events";
+		this.eventsCollection.setUrl("https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events");
 		this.eventsCollection.bind('reset', this.eventsReceived, this);
 		this.eventsCollection.bind('error', this.connectError, this);
 	},
