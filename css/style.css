@@ -1,9 +1,3 @@
-div {
-}
-
-#container {
-}
-
 .btn.rangeside {
   width:25%;
   -webkit-box-sizing: border-box;
@@ -33,4 +27,10 @@ select {
 .radio.inline, .checkbox.inline {
   margin-left: 7px;
   margin-bottom: 6px;
+}
+
+@media screen and (max-width: 480px) {
+  #githubbtn {
+    display: none;
+  }
 }
