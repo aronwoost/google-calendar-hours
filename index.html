@@ -31,6 +31,8 @@
   
   </div>
 
+  <a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+
   <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
   <script type="text/javascript" src="js/spin.min.js"></script>
   <script type="text/javascript" src="js/date.js"></script>
@@ -41,29 +43,24 @@
   <script type="text/javascript" src="js/views.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
 
-  <!-- 
   <script>
-    var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+    var _gaq=[['_setAccount','UA-344954-14'],['_trackPageview'],['_trackPageLoadTime']];
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g,s)}(document,'script'));
   </script>
-  -->
 
 </body>
 
 <script type="text/template" id="tmplIntro">
   <p>
-    This web app lets you see how many hours you spend on a calendar by day, week and month. It uses the Google Calendar API so you need to authorize the app with the following link:
+    This web app lets you see how many hours you spend on a calendar. It uses the Google Calendar API so you need to authorize the app with the following link:
   </p>
   <p>
     <a href="#" id="authBtn" class="btn btn-large btn-primary">Connect to Google Calendar</a>
   </p>
   <p>
-    Note: none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data. 
-  </p>
-  <p>
-    The sourcecode of this app is <a href="http://github.com/aronwoost/google-calendar-hours">available on github</a>.
+    <strong>Note:</strong> none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data. 
   </p>
 </script>
 
