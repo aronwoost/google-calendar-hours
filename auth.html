@@ -7,12 +7,12 @@
 
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 
-	<script src="js/jquery-1.7.1.js"></script>
+	<script src="js/libs/jquery-1.7.1.js"></script>
 
 	<link rel="stylesheet" href="css/bootstrap.css">
 
 	<script type="text/javascript">
-	
+
 	$(document).ready(function(){
 		if(getURLParameter("error", location.search) == null) {
 			console.log(getURLParameter("error", location.search));
@@ -32,13 +32,13 @@
 			}
 		}
 	});
-	
+
 	function getURLParameter(name, searchOrHash) {
 		return decodeURI(
 			(RegExp(name + '=' + '(.+?)(&|$)').exec(searchOrHash)||[,null])[1]
 		);
 	}
-		
+
 	</script>
 
 </head>

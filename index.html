@@ -16,29 +16,30 @@
   <link rel="stylesheet" href="css/style.css">
 
   <link rel="dns-prefetch" href="https://www.googleapis.com/">
-  
+
 </head>
 
 <body>
 
   <div id="global" style="width:100%">
-  
+
     <div id="container" style="width:300px; padding:10px; margin:0px auto;">
-      
+
       <div style="padding-bottom: 10px; font-size: 16px; font-weight: bold; color: grey;">Google Calender Hours Calculator</div>
 
     </div>
-  
+
   </div>
 
   <a href="https://github.com/aronwoost" id="githubbtn"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-  <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
-  <script type="text/javascript" src="js/spin.min.js"></script>
-  <script type="text/javascript" src="js/date.js"></script>
-  <script type="text/javascript" src="js/sugarpak.js"></script>
-  <script type="text/javascript" src="js/underscore.js"></script>
-  <script type="text/javascript" src="js/backbone.js"></script>
+  <script type="text/javascript" src="js/libs/jquery-1.7.1.js"></script>
+  <script type="text/javascript" src="js/libs/spin.min.js"></script>
+  <script type="text/javascript" src="js/libs/date.js"></script>
+  <script type="text/javascript" src="js/libs/sugarpak.js"></script>
+  <script type="text/javascript" src="js/libs/underscore.js"></script>
+  <script type="text/javascript" src="js/libs/backbone.js"></script>
+
   <script type="text/javascript" src="js/models.js"></script>
   <script type="text/javascript" src="js/views.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
@@ -60,7 +61,7 @@
     <a href="#" id="authBtn" class="btn btn-large btn-primary">Connect to Google Calendar</a>
   </p>
   <p>
-    <strong>Note:</strong> none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data. 
+    <strong>Note:</strong> none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data.
   </p>
 </script>
 
@@ -90,7 +91,7 @@
 </script>
 
 <script type="text/template" id="tmplOptions">
-  Week starts on: 
+  Week starts on:
     <label class="radio inline">
       <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">Sunday
     </label>
