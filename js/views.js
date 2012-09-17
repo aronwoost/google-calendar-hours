@@ -15,18 +15,20 @@ var btnLabel = {
 	week: "to this week",
 	month: "to this month",
 	year: "to this year"
-}
+};
 
 var IntroView = Backbone.View.extend({
+	template: undefined,
 	events:{
 		'click a#authBtn': 'connectWithGoogle'
 	},
 	id:"intro",
 	initialize:function(){
 		this.$el.css("width", "100%");
+		this.template = _.template($('#tmplIntro').html());
 	},
 	render:function(){
-		this.$el.html( _.template($('#tmplIntro').html())() );
+		this.$el.html(this.template());
 		return this.$el;
 	},
 	connectWithGoogle:function(evt){
@@ -56,22 +58,22 @@ var AppView = Backbone.View.extend({
 	initialize: function() {
 		this.model.bind('calendarLoadingStart', this.calendarLoadingStart, this);
 
-		// calendar select list 
+		// calendar select list
 		var calendarSelectList = new CalendarSelectList({model:this.model});
 		this.$el.append(calendarSelectList.render());
 
 		//change range selectlist
 		this.rangeSelectList = new RangeSelectList({model:this.model.get("selectedRange")});
 		this.$el.append(this.rangeSelectList.render());
-		
+
 		//change range btns
 		this.rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
 		this.$el.append(this.rangeChangeBtns.render());
-		
+
 		//output
 		this.output = new Output({model:this.model});
 		this.$el.append(this.output.render());
-		
+
 		//options
 		var options = new Options({model:this.model.get("selectedRange")});
 		this.$el.append(options.render());
@@ -92,6 +94,7 @@ var AppView = Backbone.View.extend({
 
 var CalendarSelectList = Backbone.View.extend({
 	id:"calendars",
+	template: undefined,
 	events: {
 		'change select': 'calendarChanged'
 	},
@@ -99,9 +102,11 @@ var CalendarSelectList = Backbone.View.extend({
 		this.model.get("calendarsCollection").bind("reset", this.calendarsReceived, this);
 		this.model.bind("calendarSelectionChanged", this.updateView, this);
 		this.model.bind("calendarLoadingStart", this.updateView, this);
+
+		this.template = _.template($('#tmplCalenderSelectList').html());
 	},
 	render: function() {
-		this.$el.html( _.template($('#tmplCalenderSelectList').html())() );
+		this.$el.html(this.template());
 		this.$el.find("#spinnerContainer").spin(spinnerOptions);
 		return this.$el;
 	},
@@ -129,19 +134,21 @@ var CalendarSelectList = Backbone.View.extend({
 		evt.preventDefault();
 		evt.stopPropagation();
 		this.model.setSelectedCalendarByCid(evt.target.value);
-	},
+	}
 });
 
 var RangeSelectList = Backbone.View.extend({
+	template: undefined,
 	events:{
 		'change select#rangeList': 'rangeSelected'
 	},
 	initialize: function() {
 		this.model.bind('change:range', this.update, this);
+		this.template = _.template($('#tmplRangeSelectList').html());
 	},
 	render: function() {
 		this.$el.css("display", "none");
-		this.$el.append(_.template($('#tmplRangeSelectList').html())())
+		this.$el.append(this.template());
 		return this.$el;
 	},
 	update: function(model, value) {
@@ -158,6 +165,7 @@ var RangeSelectList = Backbone.View.extend({
 });
 
 var RangeChangeBtns = Backbone.View.extend({
+	template: undefined,
 	events: {
 		'click a#prev': 'changeRangePrev',
 		'click a#reset': 'changeRangeReset',
@@ -165,12 +173,16 @@ var RangeChangeBtns = Backbone.View.extend({
 	},
 	initialize: function() {
 		this.model.bind('change:range', this.update, this);
+		this.template = _.template($('#rangeChangeBtns').html());
 	},
 	render: function() {
 		this.$el.css("display", "none");
 		this.$el.css("text-align", "center");
 		this.$el.addClass("btn-group");
-		this.$el.html( _.template($('#rangeChangeBtns').html())({to:"", disableBtns:null}) );
+		this.$el.html(this.template({
+			to: '',
+			disableBtns: null
+		}));
 		return this.$el;
 	},
 	disableBtns: false,
@@ -178,7 +190,10 @@ var RangeChangeBtns = Backbone.View.extend({
 		this.$el.css("display", "block");
 		var middleBtnLabel = btnLabel[value] || "";
 		this.disableBtns = value === "total";
-		this.$el.html( _.template($('#rangeChangeBtns').html())({to:middleBtnLabel, disableBtns:this.disableBtns}) );
+		this.$el.html(this.template({
+			to: middleBtnLabel,
+			disableBtns: this.disableBtns
+		}));
 	},
 	changeRangePrev: function(evt) {
 		evt.preventDefault();
@@ -201,8 +216,10 @@ var RangeChangeBtns = Backbone.View.extend({
 });
 
 var Output = Backbone.View.extend({
+	template: undefined,
 	initialize:function(){
 		this.model.bind('updateOutput', this.updateView, this);
+		this.template = _.template($('#tmplOutput').html());
 	},
 	render: function() {
 		return this.$el;
@@ -222,7 +239,11 @@ var Output = Backbone.View.extend({
 			range = rangeObj.start.toString('yyyy');
 		}
 
-		this.$el.html(_.template($('#tmplOutput').html())({hours:hours, range:range}));
+		this.$el.html(this.template({
+			hours: hours,
+			projects: data.projects,
+			range: range
+		}));
 	},
 	showSpinner: function() {
 		var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
@@ -235,15 +256,17 @@ var Output = Backbone.View.extend({
 });
 
 var Options = Backbone.View.extend({
+	template: undefined,
 	events: {
 		'change #optionsRadios1': 'changeRadio1',
 		'change #optionsRadios2': 'changeRadio2'
 	},
 	initialize: function() {
 		this.model.bind('change:range', this.update, this);
+		this.template = _.template($('#tmplOptions').html());
 	},
 	render: function() {
-		this.$el.html(_.template($('#tmplOptions').html())());
+		this.$el.html(this.template());
 		this.$el.css("display", "none");
 		return this.$el;
 	},
