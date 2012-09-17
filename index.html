@@ -103,6 +103,17 @@
 <script type="text/template" id="tmplOutput">
   <div class='hours'><%= hours %>h</div>
   <div class='hoursrange'><%= range %></div>
+  <% if (projects.length > 0) { %>
+  <div class='details'>
+    <ul class="unstyled">
+    <% for (var i=0, l=projects.length;i<l;i++) { %>
+      <li style="margin-bottom:2px;">
+        <span class="label"><%= projects[i].label %></span> <%= projects[i].hours %>h
+      </li>
+    <% } %>
+    </ul>
+  </div>
+  <% } %>
 </script>
 
 </html>
