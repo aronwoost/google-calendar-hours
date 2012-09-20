@@ -67,7 +67,7 @@ var Calendar = Backbone.Model.extend({
 		var start = rangeObj.start,
 			end = rangeObj.end,
 			totalHours = 0;
-		
+
 		this.eventsCollection.map(function(item){
 			var itemDataStart = new Date(item.get("start").dateTime);
 			var itemDataEnd = new Date(item.get("end").dateTime);
@@ -77,7 +77,7 @@ var Calendar = Backbone.Model.extend({
 				totalHours += hours;
 			}
 		}, this);
-		
+
 		return totalHours;
 	}
 });
@@ -94,14 +94,13 @@ var CalendarsCollection = Backbone.Collection.extend({
 
 var RangeModel = Backbone.Model.extend({
 	defaults: {
-		"currentDatePointer":Date.today(),
 		"range":null,
 		"rangeObj":{},
-		"weekStart":"sunday",
 		"rangeIndex":null
 	},
 	initialize: function() {
-		this.updateRangeObj();
+		this.currentDatePointer = Date.today();
+		this.weekStart = "sunday";
 	},
 	rangeIndexMappings: ["day", "week", "month", "year", "total"],
 	updateRangeByIndex: function(index) {
@@ -111,67 +110,64 @@ var RangeModel = Backbone.Model.extend({
 	},
 	updateRangeObj: function() {
 		var range = this.get("range"),
-			d1,
-			d2,
-			currentDate = this.get("currentDatePointer");
-		
+			d1, d2;
+
 		if(range === "day") {
-			d1 = currentDate.clone();
-			d2 = currentDate.clone().add(1).days();
+			d1 = this.currentDatePointer.clone();
+			d2 = this.currentDatePointer.clone().add(1).days();
 		} else if(range === "week") {
-			if(this.get("weekStart") === "sunday") {
-				if(currentDate.is().sunday()) {
-					d1 = currentDate.clone();
+			if(this.weekStart === "sunday") {
+				if(this.currentDatePointer.is().sunday()) {
+					d1 = this.currentDatePointer.clone();
 				} else {
-					d1 = currentDate.clone().sunday().addWeeks(-1);
+					d1 = this.currentDatePointer.clone().sunday().addWeeks(-1);
 				}
 			} else {
-				if(currentDate.is().monday()) {
-					d1 = currentDate.clone();
+				if(this.currentDatePointer.is().monday()) {
+					d1 = this.currentDatePointer.clone();
 				} else {
-					d1 = currentDate.clone().monday().addWeeks(-1);
+					d1 = this.currentDatePointer.clone().monday().addWeeks(-1);
 				}
 			}
 			d2 = d1.clone().addDays(6).addHours(23).addMinutes(59).addSeconds(59);
 		} else if(range === "month") {
-			d1 = currentDate.clone().moveToFirstDayOfMonth();
-			d2 = currentDate.clone().moveToLastDayOfMonth().add(1).days();
+			d1 = this.currentDatePointer.clone().moveToFirstDayOfMonth();
+			d2 = this.currentDatePointer.clone().moveToLastDayOfMonth().add(1).days();
 		} else if(range === "year") {
-			d1 = currentDate.clone().moveToMonth(0, -1).moveToFirstDayOfMonth();
-			d2 = currentDate.clone().moveToMonth(0, 1).moveToFirstDayOfMonth();
+			d1 = this.currentDatePointer.clone().moveToMonth(0, -1).moveToFirstDayOfMonth();
+			d2 = this.currentDatePointer.clone().moveToMonth(0, 1).moveToFirstDayOfMonth();
 		} else if(range === "total") {
 			d1 = 0;
 			d2 = Number.POSITIVE_INFINITY;
 		}
+
 		this.set({rangeObj:{start:d1, end:d2, type:range}});
 	},
 	getRangeObj: function() {
 		return this.get("rangeObj");
 	},
 	changeRange: function(direction) {
-		var range = this.get("range"),
-			currentDate = this.get("currentDatePointer");
-			
+		var range = this.get("range");
+
 		if(direction === 0) {
-			currentDate = Date.today();
-			this.set({currentDatePointer:currentDate}); //TODO don't understand why I need to set this explicitly
+			this.currentDatePointer = Date.today();
 			this.updateRangeObj();
 			return;
 		}
-		
+
 		if(range === "day") {
-			currentDate.addDays(direction);
+			this.currentDatePointer.addDays(direction);
 		} else if(range === "week") {
-			currentDate.addWeeks(direction);
+			this.currentDatePointer.addWeeks(direction);
 		} else if(range === "month") {
-			currentDate.addMonths(direction);
+			this.currentDatePointer.addMonths(direction);
 		} else if(range === "year") {
-			currentDate.addYears(direction);
+			this.currentDatePointer.addYears(direction);
 		}
 		this.updateRangeObj();
 	},
 	updateWeekStart: function(day) {
-		this.set({weekStart:day});
+		this.weekStart = day;
 		this.updateRangeObj();
 	}
 });
