@@ -1,3 +1,5 @@
+/*global RangeModel:true */
+
 describe("RangeModel", function() {
 
 	it('should return day range', function (done) {

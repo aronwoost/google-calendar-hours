@@ -1,3 +1,5 @@
+/*global EventsCollection:true */
+
 describe("EventsCollection", function() {
 
 	var xhr,

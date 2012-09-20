@@ -1,3 +1,5 @@
+/*global CalendarsCollection:true */
+
 describe("CalendarsCollection", function() {
 
 	var xhr,

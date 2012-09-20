@@ -1,3 +1,5 @@
+/*global Calendar:true */
+
 describe("Calendar", function() {
 
 	var xhr,
