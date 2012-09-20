@@ -89,8 +89,7 @@ var Calendar = Backbone.Model.extend({
 						hours: hours,
 						label: title
 					};
-				}
-				else {
+				} else {
 					projects[name].hours += hours;
 				}
 			}
