@@ -26,7 +26,11 @@ var EventsCollection = Backbone.Collection.extend({
 	*/
 	getNextPage:_.throttle(function(){
 		if(this.nextPageToken){
-			this.url = this.originalUrl + "?pageToken=" + this.nextPageToken;
+			if(this.originalUrl.indexOf("?") !== -1){
+				this.url = this.originalUrl + "&pageToken=" + this.nextPageToken;
+			}else{
+				this.url = this.originalUrl + "?pageToken=" + this.nextPageToken;
+			}
 			this.fetch({add: true});
 		} else {
 			this.trigger("reset", this);
