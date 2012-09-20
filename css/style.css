@@ -2,22 +2,22 @@
   width:25%;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
-          box-sizing: border-box;  
+          box-sizing: border-box;
 }
 
 .btn.rangecenter {
   width:50%;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
-          box-sizing: border-box;  
+          box-sizing: border-box;
 }
 
 .hours {
-  font-size:64px; 
-  font-weight:bold; 
-  color:grey; 
-  line-height:normal; 
-  text-align:center;  
+  font-size:64px;
+  font-weight:bold;
+  color:grey;
+  line-height:normal;
+  text-align:center;
 }
 
 select {
@@ -27,6 +27,12 @@ select {
 .radio.inline, .checkbox.inline {
   margin-left: 7px;
   margin-bottom: 6px;
+}
+
+.eventsItem {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media screen and (max-width: 480px) {

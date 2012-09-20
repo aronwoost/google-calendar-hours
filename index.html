@@ -108,7 +108,9 @@
     <ul class="unstyled">
     <% for (var i=0, l=projects.length;i<l;i++) { %>
       <li style="margin-bottom:2px;">
-        <span class="label"><%= projects[i].label %></span> <%= projects[i].hours %>h
+        <p class="eventsItem">
+          <%= projects[i].hours %>h <span class="label"><%= projects[i].label %></span>
+        </p>
       </li>
     <% } %>
     </ul>
