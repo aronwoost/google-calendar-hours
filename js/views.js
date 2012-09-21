@@ -1,3 +1,5 @@
+/*global Backbone:true _:true $:true */
+
 var spinnerOptions = {
 	lines: 12, // The number of lines to draw
 	length: 1, // The length of each line
@@ -152,7 +154,9 @@ var RangeSelectList = Backbone.View.extend({
 		return this.$el;
 	},
 	update: function(model, value) {
-		if(!value) return;
+		if(!value) {
+			return;
+		}
 		this.$el.css("display", "block");
 		this.$el.find("#rangeList").val(value);
 	},
@@ -197,17 +201,23 @@ var RangeChangeBtns = Backbone.View.extend({
 	},
 	changeRangePrev: function(evt) {
 		evt.preventDefault();
-		if(this.disableBtns) return;
+		if(this.disableBtns){
+			return;
+		}
 		this.model.changeRange(-1);
 	},
 	changeRangeReset: function(evt) {
 		evt.preventDefault();
-		if(this.disableBtns) return;
+		if(this.disableBtns){
+			return;
+		}
 		this.model.changeRange(0);
 	},
 	changeRangeNext: function(evt) {
 		evt.preventDefault();
-		if(this.disableBtns) return;
+		if(this.disableBtns){
+			return;
+		}
 		this.model.changeRange(1);
 	},
 	show:function(){

@@ -1,4 +1,4 @@
-/* MODELS */
+/*global Backbone:true _:true */
 
 var EventsCollection = Backbone.Collection.extend({
 	model: Backbone.Model,
@@ -124,8 +124,6 @@ var CalendarsCollection = Backbone.Collection.extend({
 	}
 });
 
-//
-
 var RangeModel = Backbone.Model.extend({
 	defaults: {
 		"range":null,
@@ -211,8 +209,6 @@ var RangeModel = Backbone.Model.extend({
 		return this.weekStart;
 	}
 });
-
-//
 
 var AppModel = Backbone.Model.extend({
 	defaults: {
