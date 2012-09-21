@@ -127,13 +127,13 @@ var CalendarSelectList = Backbone.View.extend({
 		this.$el.find("select").css("display", "block");
 		var compiled = _.template($('#calendarListSelectOptionItem').html());
 		collection.each(function(item) {
-			this.$el.find("select").append(compiled({value:item.cid, text:item.getTitle()}));
+			this.$el.find("select").append(compiled({value:item.id, text:item.getTitle()}));
 		}, this);
 	},
 	calendarChanged: function(evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
-		this.model.setSelectedCalendarByCid(evt.target.value);
+		this.model.setSelectedCalendarById(evt.target.value);
 	}
 });
 
