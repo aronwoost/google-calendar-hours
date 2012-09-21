@@ -11,7 +11,7 @@ Stuff used:
 * [spin.js](http://fgnass.github.com/spin.js/)
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap/) CSS
 
-For the test:
+For the tests:
 * [Mocha](http://visionmedia.github.com/mocha/)
 * [expect.js](https://github.com/LearnBoost/expect.js)
 * [sinon.JS](http://sinonjs.org/)
