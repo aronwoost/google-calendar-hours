@@ -93,10 +93,10 @@
 <script type="text/template" id="tmplOptions">
   Week starts on:
     <label class="radio inline">
-      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">Sunday
+      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" <% if(checked === "sunday") { %> checked="checked" <% }; %> >Sunday
     </label>
     <label class="radio inline">
-      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Monday
+      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" <% if(checked === "monday") { %> checked="monday" <% }; %> >Monday
     </label>
 </script>
 

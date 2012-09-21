@@ -44,6 +44,6 @@ $(function() {
 		config = JSON.parse(lsConfig);
 	}
 
-	var appModel = new AppModel({config:config});
+	var appModel = new AppModel(null, {config:config});
 	var app = new App({model: appModel});
 });

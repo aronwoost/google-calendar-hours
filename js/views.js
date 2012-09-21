@@ -266,7 +266,7 @@ var Options = Backbone.View.extend({
 		this.template = _.template($('#tmplOptions').html());
 	},
 	render: function() {
-		this.$el.html(this.template());
+		this.$el.html(this.template({checked:this.model.getWeekStart()}));
 		this.$el.css("display", "none");
 		return this.$el;
 	},

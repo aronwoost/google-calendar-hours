@@ -175,7 +175,7 @@ var RangeModel = Backbone.Model.extend({
 			d2 = Number.POSITIVE_INFINITY;
 		}
 
-		this.set({rangeObj:{start:d1, end:d2, type:range}});
+		this.set({rangeObj:{start:d1, end:d2, type:range, weekStart:this.weekStart}});
 	},
 	getRangeObj: function() {
 		return this.get("rangeObj");
@@ -201,8 +201,14 @@ var RangeModel = Backbone.Model.extend({
 		this.updateRangeObj();
 	},
 	updateWeekStart: function(day) {
+		if(this.weekStart === day) {
+			return;
+		}
 		this.weekStart = day;
 		this.updateRangeObj();
+	},
+	getWeekStart: function(){
+		return this.weekStart;
 	}
 });
 
@@ -212,15 +218,17 @@ var AppModel = Backbone.Model.extend({
 	defaults: {
 		"selectedCalendar":null,
 		"selectedRange":new RangeModel(),
-		"calendarsCollection":null,
-		"config":null
+		"calendarsCollection":null
 	},
-	initialize: function() {
+	config:null,
+	initialize: function(defaults, options) {
+		this.config = options.config;
 		var calendarsCollection = new CalendarsCollection();
 		calendarsCollection.bind('reset', this.loadCalendarsCollectionComplete, this);
 		calendarsCollection.bind('error', this.connectError, this);
 		this.set({calendarsCollection: calendarsCollection});
 		this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
+		this.get("selectedRange").updateWeekStart(this.config.weekStart || "monday");
 		this.get("selectedRange").bind("change:rangeObj", this.updateOutput, this);
 	},
 	fetch: function(){
@@ -228,8 +236,8 @@ var AppModel = Backbone.Model.extend({
 	},
 	loadCalendarsCollectionComplete: function(collection){
 		this.trigger("calendarListComplete", collection);
-		if(this.get("config").lastSelectedCalendarCid) {
-			this.setSelectedCalendarById(this.get("config").lastSelectedCalendarCid);
+		if(this.config.lastSelectedCalendarCid) {
+			this.setSelectedCalendarById(this.config.lastSelectedCalendarCid);
 		}
 	},
 	setSelectedCalendarById: function(id) {
@@ -250,8 +258,8 @@ var AppModel = Backbone.Model.extend({
 		// set default range, if null (seams this is the first calendar selection ever)
 		var currentRange = this.get("selectedRange").get("range");
 		if(!currentRange) {
-			if(this.get("config").lastSelectedRangeIndex !== null) {
-				this.get("selectedRange").updateRangeByIndex(this.get("config").lastSelectedRangeIndex);
+			if(this.config.lastSelectedRangeIndex !== null) {
+				this.get("selectedRange").updateRangeByIndex(this.config.lastSelectedRangeIndex);
 			} else {
 				this.get("selectedRange").updateRangeByIndex(2);
 			}
@@ -286,11 +294,12 @@ var AppModel = Backbone.Model.extend({
 	},
 	updateConfig: function() {
 		var selectedCalendarId = this.get("selectedCalendar").id,
-			rangeIndex = this.get("selectedRange").attributes.rangeIndex;
+			rangeIndex = this.get("selectedRange").attributes.rangeIndex,
+			weekStart = this.get("selectedRange").getRangeObj().weekStart;
 
-		if(this.get("config").lastSelectedCalendarCid !== selectedCalendarId || this.get("config").lastSelectedRangeIndex !== rangeIndex) {
-			this.set({config:{lastSelectedRangeIndex:rangeIndex, lastSelectedCalendarCid:selectedCalendarId}});
-			localStorage.setItem("config", JSON.stringify(this.get("config")));
+		if(this.config.lastSelectedCalendarCid !== selectedCalendarId || this.config.lastSelectedRangeIndex !== rangeIndex || this.config.weekStart !== weekStart) {
+			this.config = {lastSelectedRangeIndex:rangeIndex, lastSelectedCalendarCid:selectedCalendarId, weekStart:weekStart};
+			localStorage.setItem("config", JSON.stringify(this.config));
 		}
 	}
 });
