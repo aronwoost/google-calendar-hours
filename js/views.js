@@ -115,7 +115,7 @@ var CalendarSelectList = Backbone.View.extend({
 	updateView: function(cid) {
 		this.$el.find("#pleaseSelect").remove();
 		this.$el.find("select").val(cid);
-		// seams that that setting the value the first time (sometimes) doesn't work
+		// seems that setting the value the first time (sometimes) doesn't work
 		// this makes it sure
 		if(this.$el.find("select").get(0).value===""){
 			var self = this;
@@ -227,7 +227,8 @@ var RangeChangeBtns = Backbone.View.extend({
 
 var Output = Backbone.View.extend({
 	template: undefined,
-	initialize:function(){
+	detailsShown: false,
+	initialize: function() {
 		this.model.bind('updateOutput', this.updateView, this);
 		this.template = _.template($('#tmplOutput').html());
 	},
@@ -237,7 +238,8 @@ var Output = Backbone.View.extend({
 	updateView: function(data) {
 		var hours = Math.round(data.hours*100)/100,
 			rangeObj = data.range,
-			range = "";
+			range = "",
+			$showDetails;
 
 		if (rangeObj.type === "day") {
 			range = rangeObj.start.toString('dddd, MMMM d, yyyy');
@@ -254,14 +256,28 @@ var Output = Backbone.View.extend({
 			projects: data.projects,
 			range: range
 		}));
+
+		// add listener onto details collapse thingy to save state
+		$showDetails = this.$('#showDetails');
+		$showDetails.on('show', $.proxy(this.onDetailsShown, this));
+		$showDetails.on('hide', $.proxy(this.onDetailsHidden, this));
+		if (this.detailsShown) {
+			$showDetails.collapse('show');
+		}
 	},
 	showSpinner: function() {
 		var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
 		var spinner = spinnerContainer.spin(spinnerOptions);
 		this.$el.html(spinnerContainer);
 	},
-	show:function(){
+	show: function() {
 		this.$el.css("display", "block");
+	},
+	onDetailsShown: function(evt) {
+		this.detailsShown = true;
+	},
+	onDetailsHidden: function(evt) {
+		this.detailsShown = false;
 	}
 });
 

@@ -29,10 +29,31 @@ select {
   margin-bottom: 6px;
 }
 
+#details {
+  margin-top: 24px;
+}
+
 .eventsItem {
+  margin-bottom: 2px;
+}
+
+.eventsItem > .label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  max-width: 200px;
+  height: 15px;
+  line-height: 15px;
+
+  display: inline-block;
+  vertical-align: top;
+  zoom: 1;
+  *display: inline;
+}
+
+.accordion-heading .accordion-toggle {
+  padding: 3px 7px;
 }
 
 @media screen and (max-width: 480px) {
