@@ -72,6 +72,10 @@ var AppView = Backbone.View.extend({
 		this.rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
 		this.$el.append(this.rangeChangeBtns.render());
 
+		//date picker
+		this.datePicker = new DatePicker({model:this.model.get("selectedRange")});
+		this.$el.append(this.datePicker.render());
+
 		//output
 		this.output = new Output({model:this.model});
 		this.$el.append(this.output.render());
@@ -182,6 +186,7 @@ var RangeChangeBtns = Backbone.View.extend({
 	render: function() {
 		this.$el.css("display", "none");
 		this.$el.css("text-align", "center");
+		this.$el.css("margin-bottom", "9px");
 		this.$el.addClass("btn-group");
 		this.$el.html(this.template({
 			to: '',
@@ -191,7 +196,12 @@ var RangeChangeBtns = Backbone.View.extend({
 	},
 	disableBtns: false,
 	update: function(model, value) {
-		this.$el.css("display", "block");
+		if(model.get("range") === "custom") {
+			this.$el.hide();
+		} else {
+			this.$el.show();
+		}
+
 		var middleBtnLabel = btnLabel[value] || "";
 		this.disableBtns = value === "total";
 		this.$el.html(this.template({
@@ -222,6 +232,33 @@ var RangeChangeBtns = Backbone.View.extend({
 	},
 	show:function(){
 		this.$el.css("display", "block");
+	}
+});
+
+var DatePicker = Backbone.View.extend({
+	initialize: function() {
+		this.$el.hide();
+		if(this.model.get("range") === "custom") {
+			this.$el.show();
+		}
+		this.model.bind('change:range', this.update, this);
+	},
+	render: function() {
+		var self = this;
+		var input = $("<input type='text'>");
+		input.css("width", "290px");
+		this.$el.append(input);
+		this.$el.find("input").daterangepicker({}, function(start, end){
+			self.model.changeRange(null, {start: start.valueOf(), end: end.valueOf()});
+		});
+		return this.$el;
+	},
+	update: function(model) {
+		if(model.get("range") === "custom") {
+			this.$el.show();
+		} else {
+			this.$el.hide();
+		}
 	}
 });
 

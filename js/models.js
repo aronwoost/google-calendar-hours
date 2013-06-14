@@ -132,9 +132,10 @@ var RangeModel = Backbone.Model.extend({
 	},
 	initialize: function() {
 		this.currentDatePointer = Date.today();
+		this.currentDatePointerEnd = Date.today();
 		this.weekStart = "sunday";
 	},
-	rangeIndexMappings: ["day", "week", "month", "year", "total"],
+	rangeIndexMappings: ["day", "week", "month", "year", "total", "custom"],
 	updateRangeByIndex: function(index) {
 		this.set({range:this.rangeIndexMappings[index]});
 		this.set({rangeIndex:index});
@@ -171,6 +172,9 @@ var RangeModel = Backbone.Model.extend({
 		} else if(range === "total") {
 			d1 = 0;
 			d2 = Number.POSITIVE_INFINITY;
+		} else if(range === "custom") {
+			d1 = this.currentDatePointer.clone();
+			d2 = this.currentDatePointerEnd.clone();
 		}
 
 		this.set({rangeObj:{start:d1, end:d2, type:range, weekStart:this.weekStart}});
@@ -178,7 +182,7 @@ var RangeModel = Backbone.Model.extend({
 	getRangeObj: function() {
 		return this.get("rangeObj");
 	},
-	changeRange: function(direction) {
+	changeRange: function(direction, custom) {
 		var range = this.get("range");
 
 		if(direction === 0) {
@@ -195,6 +199,9 @@ var RangeModel = Backbone.Model.extend({
 			this.currentDatePointer.addMonths(direction);
 		} else if(range === "year") {
 			this.currentDatePointer.addYears(direction);
+		} else if(range === "custom") {
+			this.currentDatePointer = new Date(custom.start);
+			this.currentDatePointerEnd = new Date(custom.end);
 		}
 		this.updateRangeObj();
 	},
