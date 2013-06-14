@@ -256,6 +256,10 @@ var DatePicker = Backbone.View.extend({
 	update: function(model) {
 		if(model.get("range") === "custom") {
 			this.$el.show();
+			var input = this.$el.find("input");
+			if(input.val() === "") {
+				input.focus();
+			}
 		} else {
 			this.$el.hide();
 		}
