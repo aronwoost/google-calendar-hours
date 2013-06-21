@@ -6,8 +6,8 @@ $(function() {
 		events: {
 			"connectError": "connectError"
 		},
-		initialize: function() {
-			this.model.bind("connectError", this.connectError, this);
+		initialize: function(model, options) {
+			this.model.bind('connectError', this.connectError, this);
 
 			this.introView = new IntroView();
 			this.$el.find("#container").append(this.introView.render());
@@ -15,7 +15,7 @@ $(function() {
 			var auth = JSON.parse(sessionStorage.getItem("auth"));
 
 			if(auth) {
-				this.appView = new AppView({model:this.model});
+				this.appView = new AppView({model:this.model}, {config:options.config});
 				this.$el.find("#container").append(this.appView.render());
 
 				this.introView.hide();
@@ -46,5 +46,5 @@ $(function() {
 	}
 
 	var appModel = new AppModel(null, {config:config});
-	var app = new App({model: appModel});
+	var app = new App({model: appModel}, {config:config});
 });

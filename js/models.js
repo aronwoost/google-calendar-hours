@@ -141,6 +141,11 @@ var RangeModel = Backbone.Model.extend({
 		this.set({rangeIndex:index});
 		this.updateRangeObj();
 	},
+	updateCustomRange: function(start, end) {
+		this.currentDatePointer = moment(start);
+		this.currentDatePointerEnd = moment(end);
+		this.updateRangeObj();
+	},
 	updateRangeObj: function() {
 		var range = this.get("range"),
 			d1, d2;
@@ -201,8 +206,8 @@ var RangeModel = Backbone.Model.extend({
 		} else if(range === "year") {
 			this.currentDatePointer.add("years", direction);
 		} else if(range === "custom") {
-			this.currentDatePointer = new Date(custom.start);
-			this.currentDatePointerEnd = new Date(custom.end);
+			this.currentDatePointer = custom.start;
+			this.currentDatePointerEnd = custom.end;
 		}
 		this.updateRangeObj();
 	},
@@ -259,11 +264,12 @@ var AppModel = Backbone.Model.extend({
 			model.bind("connectError", this.connectError, this);
 		}
 
-		// set default range, if null (seams this is the first calendar selection ever)
+		// set default range, if null (seams this is app startup)
 		var currentRange = this.get("selectedRange").get("range");
 		if(!currentRange) {
 			if(this.config.lastSelectedRangeIndex !== null) {
 				this.get("selectedRange").updateRangeByIndex(this.config.lastSelectedRangeIndex);
+				this.get("selectedRange").updateCustomRange(this.config.customStart, this.config.customEnd);
 			} else {
 				this.get("selectedRange").updateRangeByIndex(2);
 			}
@@ -299,11 +305,22 @@ var AppModel = Backbone.Model.extend({
 	updateConfig: function() {
 		var selectedCalendarId = this.get("selectedCalendar").id,
 			rangeIndex = this.get("selectedRange").attributes.rangeIndex,
-			weekStart = this.get("selectedRange").getRangeObj().weekStart;
+			weekStart = this.get("selectedRange").getRangeObj().weekStart,
+			customStart = null,
+			customEnd = null;
 
-		if(this.config.lastSelectedCalendarCid !== selectedCalendarId || this.config.lastSelectedRangeIndex !== rangeIndex || this.config.weekStart !== weekStart) {
-			this.config = {lastSelectedRangeIndex:rangeIndex, lastSelectedCalendarCid:selectedCalendarId, weekStart:weekStart};
-			localStorage.setItem("config", JSON.stringify(this.config));
+		if(rangeIndex === 5) {
+			customStart = this.get("selectedRange").getRangeObj().start.toJSON();
+			customEnd = this.get("selectedRange").getRangeObj().end.toJSON();
 		}
+
+		this.config = {
+			lastSelectedRangeIndex:rangeIndex,
+			lastSelectedCalendarCid:selectedCalendarId,
+			weekStart:weekStart,
+			customStart:customStart,
+			customEnd:customEnd
+		};
+		localStorage.setItem("config", JSON.stringify(this.config));
 	}
 });

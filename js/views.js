@@ -57,8 +57,8 @@ var AppView = Backbone.View.extend({
 	attributes:{
 		id:"app"
 	},
-	initialize: function() {
-		this.model.bind("calendarLoadingStart", this.calendarLoadingStart, this);
+	initialize: function(model, options) {
+		this.model.bind('calendarLoadingStart', this.calendarLoadingStart, this);
 
 		// calendar select list
 		var calendarSelectList = new CalendarSelectList({model:this.model});
@@ -73,7 +73,8 @@ var AppView = Backbone.View.extend({
 		this.$el.append(this.rangeChangeBtns.render());
 
 		//date picker
-		this.datePicker = new DatePicker({model:this.model.get("selectedRange")});
+		var config = (options && options.config) || {};
+		this.datePicker = new DatePicker({model:this.model.get("selectedRange")}, {config: config});
 		this.$el.append(this.datePicker.render());
 
 		//output
@@ -236,7 +237,9 @@ var RangeChangeBtns = Backbone.View.extend({
 });
 
 var DatePicker = Backbone.View.extend({
-	initialize: function() {
+	config: null,
+	initialize: function(model, options) {
+		this.config = (options && options.config);
 		this.$el.hide();
 		if(this.model.get("range") === "custom") {
 			this.$el.show();
@@ -246,10 +249,13 @@ var DatePicker = Backbone.View.extend({
 	render: function() {
 		var self = this;
 		var input = $("<input type='text'>");
+		if(this.config.customStart && this.config.customEnd) {
+			input.val(moment(this.config.customStart).format("MM/DD/YYYY")+" - "+moment(this.config.customEnd).format("MM/DD/YYYY"));
+		}
 		input.css("width", "290px");
 		this.$el.append(input);
 		this.$el.find("input").daterangepicker({}, function(start, end){
-			self.model.changeRange(null, {start: start.valueOf(), end: end.valueOf()});
+			self.model.changeRange(null, {start: start, end: end});
 		});
 		return this.$el;
 	},
@@ -290,6 +296,8 @@ var Output = Backbone.View.extend({
 			range = rangeObj.start.format("MMMM, YYYY");
 		} else if (rangeObj.type === "year") {
 			range = rangeObj.start.format("YYYY");
+		} else if (rangeObj.type === "custom") {
+			range = rangeObj.start.format("DD.MM.YYYY") + " - " + rangeObj.end.format("DD.MM.YYYY");
 		}
 
 		this.$el.html(this.template({
