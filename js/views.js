@@ -242,13 +242,13 @@ var Output = Backbone.View.extend({
 			$showDetails;
 
 		if (rangeObj.type === "day") {
-			range = rangeObj.start.toString('dddd, MMMM d, yyyy');
+			range = rangeObj.start.format('dddd, MMMM d, YYYY');
 		} else if (rangeObj.type === "week") {
-			range = rangeObj.start.toString('dd.MM.yyyy') + " - " + rangeObj.end.toString('dd.MM.yyyy');
+			range = rangeObj.start.format('DD.MM.YYYY') + " - " + rangeObj.end.format('DD.MM.YYYY');
 		} else if (rangeObj.type === "month") {
-			range = rangeObj.start.toString('MMMM, yyyy');
+			range = rangeObj.start.format('MMMM, YYYY');
 		} else if (rangeObj.type === "year") {
-			range = rangeObj.start.toString('yyyy');
+			range = rangeObj.start.format('YYYY');
 		}
 
 		this.$el.html(this.template({

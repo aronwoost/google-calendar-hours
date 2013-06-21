@@ -131,7 +131,7 @@ var RangeModel = Backbone.Model.extend({
 		"rangeIndex":null
 	},
 	initialize: function() {
-		this.currentDatePointer = Date.today();
+		this.currentDatePointer = moment().startOf("day");
 		this.weekStart = "sunday";
 	},
 	rangeIndexMappings: ["day", "week", "month", "year", "total"],
@@ -146,31 +146,32 @@ var RangeModel = Backbone.Model.extend({
 
 		if(range === "day") {
 			d1 = this.currentDatePointer.clone();
-			d2 = this.currentDatePointer.clone().add(1).days();
+			d2 = this.currentDatePointer.clone().add("days", 1);
 		} else if(range === "week") {
 			if(this.weekStart === "sunday") {
-				if(this.currentDatePointer.is().sunday()) {
+				//TODO re-check if this works as expected
+				/*if(this.currentDatePointer.is().sunday()) {
 					d1 = this.currentDatePointer.clone();
-				} else {
-					d1 = this.currentDatePointer.clone().sunday().addWeeks(-1);
-				}
+				} else {*/
+					d1 = this.currentDatePointer.clone().day(0);
+				//}
 			} else {
-				if(this.currentDatePointer.is().monday()) {
+				/*if(this.currentDatePointer.is().monday()) {
 					d1 = this.currentDatePointer.clone();
-				} else {
-					d1 = this.currentDatePointer.clone().monday().addWeeks(-1);
-				}
+				} else {*/
+					d1 = this.currentDatePointer.clone().day(1);
+				//}
 			}
-			d2 = d1.clone().addDays(6).addHours(23).addMinutes(59).addSeconds(59);
+			d2 = d1.clone().add("weeks", 1);
 		} else if(range === "month") {
-			d1 = this.currentDatePointer.clone().moveToFirstDayOfMonth();
-			d2 = this.currentDatePointer.clone().moveToLastDayOfMonth().add(1).days();
+			d1 = this.currentDatePointer.clone().startOf("month");
+			d2 = this.currentDatePointer.clone().startOf("month").add("month", 1);
 		} else if(range === "year") {
-			d1 = this.currentDatePointer.clone().moveToMonth(0, -1).moveToFirstDayOfMonth();
-			d2 = this.currentDatePointer.clone().moveToMonth(0, 1).moveToFirstDayOfMonth();
+			d1 = this.currentDatePointer.clone().startOf("year");
+			d2 = d1.clone().add("year", 1);
 		} else if(range === "total") {
-			d1 = 0;
-			d2 = Number.POSITIVE_INFINITY;
+			d1 = moment(0);
+			d2 = moment("Dec 31, 2040");
 		}
 
 		this.set({rangeObj:{start:d1, end:d2, type:range, weekStart:this.weekStart}});
@@ -182,19 +183,19 @@ var RangeModel = Backbone.Model.extend({
 		var range = this.get("range");
 
 		if(direction === 0) {
-			this.currentDatePointer = Date.today();
+			this.currentDatePointer = moment().startOf("day");
 			this.updateRangeObj();
 			return;
 		}
 
 		if(range === "day") {
-			this.currentDatePointer.addDays(direction);
+			this.currentDatePointer.add("days", direction);
 		} else if(range === "week") {
-			this.currentDatePointer.addWeeks(direction);
+			this.currentDatePointer.add("weeks", direction);
 		} else if(range === "month") {
-			this.currentDatePointer.addMonths(direction);
+			this.currentDatePointer.add("months", direction);
 		} else if(range === "year") {
-			this.currentDatePointer.addYears(direction);
+			this.currentDatePointer.add("years", direction);
 		}
 		this.updateRangeObj();
 	},
