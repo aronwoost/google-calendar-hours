@@ -1,9 +1,9 @@
-/*global Backbone:true _:true */
+/*global Backbone:false, _:false, moment:false */
 
 var EventsCollection = Backbone.Collection.extend({
 	model: Backbone.Model,
 	initialize:function(){
-		this.bind('add', this.added, this);
+		this.bind("add", this.added, this);
 	},
 	parse: function(response) {
 		if(response.nextPageToken) {
@@ -46,8 +46,8 @@ var Calendar = Backbone.Model.extend({
 	initialize:function(){
 		this.eventsCollection = new EventsCollection();
 		this.eventsCollection.setUrl("https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events?singleEvents=true");
-		this.eventsCollection.bind('reset', this.eventsReceived, this);
-		this.eventsCollection.bind('error', this.connectError, this);
+		this.eventsCollection.bind("reset", this.eventsReceived, this);
+		this.eventsCollection.bind("error", this.connectError, this);
 	},
 	eventsReceived: function(){
 		this.trigger("eventsReceived", this);
@@ -78,7 +78,7 @@ var Calendar = Backbone.Model.extend({
 				itemDataEnd,
 				diff,
 				hours,
-				title = item.get('summary'),
+				title = item.get("summary"),
 				name = title.toLowerCase().replace(/[^\w.]/g, ""); // TODO normalize
 
 			itemDataStart = new Date(item.get("start").dateTime);
@@ -88,7 +88,7 @@ var Calendar = Backbone.Model.extend({
 				hours = diff/1000/60/60;
 				totalHours += hours;
 
-				if (typeof projects[name] === 'undefined') {
+				if (typeof projects[name] === "undefined") {
 					projects[name] = {
 						hours: hours,
 						label: title
@@ -131,8 +131,8 @@ var RangeModel = Backbone.Model.extend({
 		"rangeIndex":null
 	},
 	initialize: function() {
-		this.currentDatePointer = Date.today();
-		this.currentDatePointerEnd = Date.today();
+		this.currentDatePointer = moment().startOf("day");
+		this.currentDatePointerEnd = moment().startOf("day");
 		this.weekStart = "sunday";
 	},
 	rangeIndexMappings: ["day", "week", "month", "year", "total", "custom"],
@@ -147,31 +147,32 @@ var RangeModel = Backbone.Model.extend({
 
 		if(range === "day") {
 			d1 = this.currentDatePointer.clone();
-			d2 = this.currentDatePointer.clone().add(1).days();
+			d2 = this.currentDatePointer.clone().add("days", 1);
 		} else if(range === "week") {
 			if(this.weekStart === "sunday") {
-				if(this.currentDatePointer.is().sunday()) {
+				//TODO re-check if this works as expected
+				/*if(this.currentDatePointer.is().sunday()) {
 					d1 = this.currentDatePointer.clone();
-				} else {
-					d1 = this.currentDatePointer.clone().sunday().addWeeks(-1);
-				}
+				} else {*/
+					d1 = this.currentDatePointer.clone().day(0);
+				//}
 			} else {
-				if(this.currentDatePointer.is().monday()) {
+				/*if(this.currentDatePointer.is().monday()) {
 					d1 = this.currentDatePointer.clone();
-				} else {
-					d1 = this.currentDatePointer.clone().monday().addWeeks(-1);
-				}
+				} else {*/
+					d1 = this.currentDatePointer.clone().day(1);
+				//}
 			}
-			d2 = d1.clone().addDays(6).addHours(23).addMinutes(59).addSeconds(59);
+			d2 = d1.clone().add("weeks", 1);
 		} else if(range === "month") {
-			d1 = this.currentDatePointer.clone().moveToFirstDayOfMonth();
-			d2 = this.currentDatePointer.clone().moveToLastDayOfMonth().add(1).days();
+			d1 = this.currentDatePointer.clone().startOf("month");
+			d2 = this.currentDatePointer.clone().startOf("month").add("month", 1);
 		} else if(range === "year") {
-			d1 = this.currentDatePointer.clone().moveToMonth(0, -1).moveToFirstDayOfMonth();
-			d2 = this.currentDatePointer.clone().moveToMonth(0, 1).moveToFirstDayOfMonth();
+			d1 = this.currentDatePointer.clone().startOf("year");
+			d2 = d1.clone().add("year", 1);
 		} else if(range === "total") {
-			d1 = 0;
-			d2 = Number.POSITIVE_INFINITY;
+			d1 = moment(0);
+			d2 = moment("Dec 31, 2040");
 		} else if(range === "custom") {
 			d1 = this.currentDatePointer.clone();
 			d2 = this.currentDatePointerEnd.clone();
@@ -186,19 +187,19 @@ var RangeModel = Backbone.Model.extend({
 		var range = this.get("range");
 
 		if(direction === 0) {
-			this.currentDatePointer = Date.today();
+			this.currentDatePointer = moment().startOf("day");
 			this.updateRangeObj();
 			return;
 		}
 
 		if(range === "day") {
-			this.currentDatePointer.addDays(direction);
+			this.currentDatePointer.add("days", direction);
 		} else if(range === "week") {
-			this.currentDatePointer.addWeeks(direction);
+			this.currentDatePointer.add("weeks", direction);
 		} else if(range === "month") {
-			this.currentDatePointer.addMonths(direction);
+			this.currentDatePointer.add("months", direction);
 		} else if(range === "year") {
-			this.currentDatePointer.addYears(direction);
+			this.currentDatePointer.add("years", direction);
 		} else if(range === "custom") {
 			this.currentDatePointer = new Date(custom.start);
 			this.currentDatePointerEnd = new Date(custom.end);
@@ -227,8 +228,8 @@ var AppModel = Backbone.Model.extend({
 	initialize: function(defaults, options) {
 		this.config = options.config;
 		var calendarsCollection = new CalendarsCollection();
-		calendarsCollection.bind('reset', this.loadCalendarsCollectionComplete, this);
-		calendarsCollection.bind('error', this.connectError, this);
+		calendarsCollection.bind("reset", this.loadCalendarsCollectionComplete, this);
+		calendarsCollection.bind("error", this.connectError, this);
 		this.set({calendarsCollection: calendarsCollection});
 		this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
 		this.get("selectedRange").updateWeekStart(this.config.weekStart || "monday");
@@ -254,8 +255,8 @@ var AppModel = Backbone.Model.extend({
 		} else {
 			this.trigger("calendarLoadingStart", id);
 			model.fetchEvents();
-			model.bind('eventsReceived', this.calendarDataReady, this);
-			model.bind('connectError', this.connectError, this);
+			model.bind("eventsReceived", this.calendarDataReady, this);
+			model.bind("connectError", this.connectError, this);
 		}
 
 		// set default range, if null (seams this is the first calendar selection ever)

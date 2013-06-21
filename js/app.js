@@ -1,13 +1,13 @@
-/*global $:true Backbone:true IntroView:true AppView:true AppModel:true*/
+/*global $:false, Backbone:false, IntroView:false, AppView:false, AppModel:false*/
 
 $(function() {
 	var App = Backbone.View.extend({
 		el: $("body"),
 		events: {
-			'connectError': 'connectError'
+			"connectError": "connectError"
 		},
 		initialize: function() {
-			this.model.bind('connectError', this.connectError, this);
+			this.model.bind("connectError", this.connectError, this);
 
 			this.introView = new IntroView();
 			this.$el.find("#container").append(this.introView.render());

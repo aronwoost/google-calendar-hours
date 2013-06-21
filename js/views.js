@@ -1,11 +1,11 @@
-/*global Backbone:true _:true $:true */
+/*global Backbone:false, _:false, $:false */
 
 var spinnerOptions = {
 	lines: 12, // The number of lines to draw
 	length: 1, // The length of each line
 	width: 4, // The line thickness
 	radius: 10, // The radius of the inner circle
-	color: '#000', // #rgb or #rrggbb
+	color: "#000", // #rgb or #rrggbb
 	speed: 1, // Rounds per second
 	trail: 60, // Afterglow percentage
 	shadow: false, // Whether to render a shadow
@@ -22,12 +22,12 @@ var btnLabel = {
 var IntroView = Backbone.View.extend({
 	template: undefined,
 	events:{
-		'click a#authBtn': 'connectWithGoogle'
+		"click a#authBtn": "connectWithGoogle"
 	},
 	id:"intro",
 	initialize:function(){
 		this.$el.css("width", "100%");
-		this.template = _.template($('#tmplIntro').html());
+		this.template = _.template($("#tmplIntro").html());
 	},
 	render:function(){
 		this.$el.html(this.template());
@@ -58,7 +58,7 @@ var AppView = Backbone.View.extend({
 		id:"app"
 	},
 	initialize: function() {
-		this.model.bind('calendarLoadingStart', this.calendarLoadingStart, this);
+		this.model.bind("calendarLoadingStart", this.calendarLoadingStart, this);
 
 		// calendar select list
 		var calendarSelectList = new CalendarSelectList({model:this.model});
@@ -102,14 +102,14 @@ var CalendarSelectList = Backbone.View.extend({
 	id:"calendars",
 	template: undefined,
 	events: {
-		'change select': 'calendarChanged'
+		"change select": "calendarChanged"
 	},
 	initialize: function(){
 		this.model.get("calendarsCollection").bind("reset", this.calendarsReceived, this);
 		this.model.bind("calendarSelectionChanged", this.updateView, this);
 		this.model.bind("calendarLoadingStart", this.updateView, this);
 
-		this.template = _.template($('#tmplCalenderSelectList').html());
+		this.template = _.template($("#tmplCalenderSelectList").html());
 	},
 	render: function() {
 		this.$el.html(this.template());
@@ -131,7 +131,7 @@ var CalendarSelectList = Backbone.View.extend({
 	calendarsReceived: function(collection) {
 		this.$el.find("#spinnerContainer").remove();
 		this.$el.find("select").css("display", "block");
-		var compiled = _.template($('#calendarListSelectOptionItem').html());
+		var compiled = _.template($("#calendarListSelectOptionItem").html());
 		collection.each(function(item) {
 			this.$el.find("select").append(compiled({value:item.id, text:item.getTitle()}));
 		}, this);
@@ -146,11 +146,11 @@ var CalendarSelectList = Backbone.View.extend({
 var RangeSelectList = Backbone.View.extend({
 	template: undefined,
 	events:{
-		'change select#rangeList': 'rangeSelected'
+		"change select#rangeList": "rangeSelected"
 	},
 	initialize: function() {
-		this.model.bind('change:range', this.update, this);
-		this.template = _.template($('#tmplRangeSelectList').html());
+		this.model.bind("change:range", this.update, this);
+		this.template = _.template($("#tmplRangeSelectList").html());
 	},
 	render: function() {
 		this.$el.css("display", "none");
@@ -175,13 +175,13 @@ var RangeSelectList = Backbone.View.extend({
 var RangeChangeBtns = Backbone.View.extend({
 	template: undefined,
 	events: {
-		'click a#prev': 'changeRangePrev',
-		'click a#reset': 'changeRangeReset',
-		'click a#next': 'changeRangeNext'
+		"click a#prev": "changeRangePrev",
+		"click a#reset": "changeRangeReset",
+		"click a#next": "changeRangeNext"
 	},
 	initialize: function() {
-		this.model.bind('change:range', this.update, this);
-		this.template = _.template($('#rangeChangeBtns').html());
+		this.model.bind("change:range", this.update, this);
+		this.template = _.template($("#rangeChangeBtns").html());
 	},
 	render: function() {
 		this.$el.css("display", "none");
@@ -189,7 +189,7 @@ var RangeChangeBtns = Backbone.View.extend({
 		this.$el.css("margin-bottom", "9px");
 		this.$el.addClass("btn-group");
 		this.$el.html(this.template({
-			to: '',
+			to: "",
 			disableBtns: null
 		}));
 		return this.$el;
@@ -270,8 +270,8 @@ var Output = Backbone.View.extend({
 	template: undefined,
 	detailsShown: false,
 	initialize: function() {
-		this.model.bind('updateOutput', this.updateView, this);
-		this.template = _.template($('#tmplOutput').html());
+		this.model.bind("updateOutput", this.updateView, this);
+		this.template = _.template($("#tmplOutput").html());
 	},
 	render: function() {
 		return this.$el;
@@ -283,13 +283,13 @@ var Output = Backbone.View.extend({
 			$showDetails;
 
 		if (rangeObj.type === "day") {
-			range = rangeObj.start.toString('dddd, MMMM d, yyyy');
+			range = rangeObj.start.format("dddd, MMMM d, YYYY");
 		} else if (rangeObj.type === "week") {
-			range = rangeObj.start.toString('dd.MM.yyyy') + " - " + rangeObj.end.toString('dd.MM.yyyy');
+			range = rangeObj.start.format("DD.MM.YYYY") + " - " + rangeObj.end.format("DD.MM.YYYY");
 		} else if (rangeObj.type === "month") {
-			range = rangeObj.start.toString('MMMM, yyyy');
+			range = rangeObj.start.format("MMMM, YYYY");
 		} else if (rangeObj.type === "year") {
-			range = rangeObj.start.toString('yyyy');
+			range = rangeObj.start.format("YYYY");
 		}
 
 		this.$el.html(this.template({
@@ -299,11 +299,11 @@ var Output = Backbone.View.extend({
 		}));
 
 		// add listener onto details collapse thingy to save state
-		$showDetails = this.$('#showDetails');
-		$showDetails.on('show', $.proxy(this.onDetailsShown, this));
-		$showDetails.on('hide', $.proxy(this.onDetailsHidden, this));
+		$showDetails = this.$("#showDetails");
+		$showDetails.on("show", $.proxy(this.onDetailsShown, this));
+		$showDetails.on("hide", $.proxy(this.onDetailsHidden, this));
 		if (this.detailsShown) {
-			$showDetails.collapse('show');
+			$showDetails.collapse("show");
 		}
 	},
 	showSpinner: function() {
@@ -325,12 +325,12 @@ var Output = Backbone.View.extend({
 var Options = Backbone.View.extend({
 	template: undefined,
 	events: {
-		'change #optionsRadios1': 'changeRadio1',
-		'change #optionsRadios2': 'changeRadio2'
+		"change #optionsRadios1": "changeRadio1",
+		"change #optionsRadios2": "changeRadio2"
 	},
 	initialize: function() {
-		this.model.bind('change:range', this.update, this);
-		this.template = _.template($('#tmplOptions').html());
+		this.model.bind("change:range", this.update, this);
+		this.template = _.template($("#tmplOptions").html());
 	},
 	render: function() {
 		this.$el.html(this.template({checked:this.model.getWeekStart()}));
