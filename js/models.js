@@ -3,7 +3,7 @@
 var EventsCollection = Backbone.Collection.extend({
 	model: Backbone.Model,
 	initialize:function(){
-		this.bind('add', this.added, this);
+		this.bind("add", this.added, this);
 	},
 	parse: function(response) {
 		if(response.nextPageToken) {
@@ -46,8 +46,8 @@ var Calendar = Backbone.Model.extend({
 	initialize:function(){
 		this.eventsCollection = new EventsCollection();
 		this.eventsCollection.setUrl("https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events?singleEvents=true");
-		this.eventsCollection.bind('reset', this.eventsReceived, this);
-		this.eventsCollection.bind('error', this.connectError, this);
+		this.eventsCollection.bind("reset", this.eventsReceived, this);
+		this.eventsCollection.bind("error", this.connectError, this);
 	},
 	eventsReceived: function(){
 		this.trigger("eventsReceived", this);
@@ -78,7 +78,7 @@ var Calendar = Backbone.Model.extend({
 				itemDataEnd,
 				diff,
 				hours,
-				title = item.get('summary'),
+				title = item.get("summary"),
 				name = title.toLowerCase().replace(/[^\w.]/g, ""); // TODO normalize
 
 			itemDataStart = new Date(item.get("start").dateTime);
@@ -88,7 +88,7 @@ var Calendar = Backbone.Model.extend({
 				hours = diff/1000/60/60;
 				totalHours += hours;
 
-				if (typeof projects[name] === 'undefined') {
+				if (typeof projects[name] === "undefined") {
 					projects[name] = {
 						hours: hours,
 						label: title
@@ -221,8 +221,8 @@ var AppModel = Backbone.Model.extend({
 	initialize: function(defaults, options) {
 		this.config = options.config;
 		var calendarsCollection = new CalendarsCollection();
-		calendarsCollection.bind('reset', this.loadCalendarsCollectionComplete, this);
-		calendarsCollection.bind('error', this.connectError, this);
+		calendarsCollection.bind("reset", this.loadCalendarsCollectionComplete, this);
+		calendarsCollection.bind("error", this.connectError, this);
 		this.set({calendarsCollection: calendarsCollection});
 		this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
 		this.get("selectedRange").updateWeekStart(this.config.weekStart || "monday");
@@ -248,8 +248,8 @@ var AppModel = Backbone.Model.extend({
 		} else {
 			this.trigger("calendarLoadingStart", id);
 			model.fetchEvents();
-			model.bind('eventsReceived', this.calendarDataReady, this);
-			model.bind('connectError', this.connectError, this);
+			model.bind("eventsReceived", this.calendarDataReady, this);
+			model.bind("connectError", this.connectError, this);
 		}
 
 		// set default range, if null (seams this is the first calendar selection ever)

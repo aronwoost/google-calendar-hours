@@ -4,10 +4,10 @@ $(function() {
 	var App = Backbone.View.extend({
 		el: $("body"),
 		events: {
-			'connectError': 'connectError'
+			"connectError": "connectError"
 		},
 		initialize: function() {
-			this.model.bind('connectError', this.connectError, this);
+			this.model.bind("connectError", this.connectError, this);
 
 			this.introView = new IntroView();
 			this.$el.find("#container").append(this.introView.render());
