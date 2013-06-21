@@ -1,4 +1,4 @@
-/*global Backbone:true _:true $:true */
+/*global Backbone:false, _:false, $:false */
 
 var spinnerOptions = {
 	lines: 12, // The number of lines to draw

@@ -1,4 +1,4 @@
-/*global Backbone:true _:true */
+/*global Backbone:false, _:false, moment:false */
 
 var EventsCollection = Backbone.Collection.extend({
 	model: Backbone.Model,

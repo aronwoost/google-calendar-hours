@@ -1,4 +1,4 @@
-/*global $:true Backbone:true IntroView:true AppView:true AppModel:true*/
+/*global $:false, Backbone:false, IntroView:false, AppView:false, AppModel:false*/
 
 $(function() {
 	var App = Backbone.View.extend({
