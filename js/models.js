@@ -155,18 +155,9 @@ var RangeModel = Backbone.Model.extend({
 			d2 = this.currentDatePointer.clone().add("days", 1);
 		} else if(range === "week") {
 			if(this.weekStart === "sunday") {
-				//TODO re-check if this works as expected
-				/*if(this.currentDatePointer.is().sunday()) {
-					d1 = this.currentDatePointer.clone();
-				} else {*/
-					d1 = this.currentDatePointer.clone().day(0);
-				//}
+				d1 = this.currentDatePointer.clone().day(0);
 			} else {
-				/*if(this.currentDatePointer.is().monday()) {
-					d1 = this.currentDatePointer.clone();
-				} else {*/
-					d1 = this.currentDatePointer.clone().day(1);
-				//}
+				d1 = this.currentDatePointer.clone().day(1);
 			}
 			d2 = d1.clone().add("weeks", 1);
 		} else if(range === "month") {
