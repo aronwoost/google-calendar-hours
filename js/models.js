@@ -33,7 +33,7 @@ var EventsCollection = Backbone.Collection.extend({
 			}
 			this.fetch({add: true});
 		} else {
-			this.trigger("reset", this);
+			this.trigger("sync", this);
 		}
 	}, 0),
 	setUrl:function(url){
@@ -46,7 +46,7 @@ var Calendar = Backbone.Model.extend({
 	initialize:function(){
 		this.eventsCollection = new EventsCollection();
 		this.eventsCollection.setUrl("https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events?singleEvents=true");
-		this.eventsCollection.bind("reset", this.eventsReceived, this);
+		this.eventsCollection.bind("sync", this.eventsReceived, this);
 		this.eventsCollection.bind("error", this.connectError, this);
 	},
 	eventsReceived: function(){
@@ -233,7 +233,7 @@ var AppModel = Backbone.Model.extend({
 	initialize: function(defaults, options) {
 		this.config = options.config;
 		var calendarsCollection = new CalendarsCollection();
-		calendarsCollection.bind("reset", this.loadCalendarsCollectionComplete, this);
+		calendarsCollection.bind("sync", this.loadCalendarsCollectionComplete, this);
 		calendarsCollection.bind("error", this.connectError, this);
 		this.set({calendarsCollection: calendarsCollection});
 		this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
@@ -244,7 +244,6 @@ var AppModel = Backbone.Model.extend({
 		this.get("calendarsCollection").fetch();
 	},
 	loadCalendarsCollectionComplete: function(collection){
-		this.trigger("calendarListComplete", collection);
 		if(this.config.lastSelectedCalendarCid) {
 			this.setSelectedCalendarById(this.config.lastSelectedCalendarCid);
 		}

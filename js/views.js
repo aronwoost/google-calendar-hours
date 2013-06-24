@@ -106,7 +106,7 @@ var CalendarSelectList = Backbone.View.extend({
 		"change select": "calendarChanged"
 	},
 	initialize: function(){
-		this.model.get("calendarsCollection").bind("reset", this.calendarsReceived, this);
+		this.model.get("calendarsCollection").bind("sync", this.calendarsReceived, this);
 		this.model.bind("calendarSelectionChanged", this.updateView, this);
 		this.model.bind("calendarLoadingStart", this.updateView, this);
 
