@@ -238,6 +238,7 @@ var RangeChangeBtns = Backbone.View.extend({
 
 var DatePicker = Backbone.View.extend({
 	config: null,
+	className: "input-prepend",
 	initialize: function(model, options) {
 		this.config = (options && options.config);
 		this.$el.hide();
@@ -250,11 +251,14 @@ var DatePicker = Backbone.View.extend({
 		var self = this;
 		var input = $("<input type='text'>");
 		if(this.config.customStart && this.config.customEnd) {
-			input.val(moment(this.config.customStart).format("MM/DD/YYYY")+" - "+moment(this.config.customEnd).format("MM/DD/YYYY"));
+			input.val(moment(this.config.customStart).format("DD.MM.YYYY")+" - "+moment(this.config.customEnd).format("DD.MM.YYYY"));
 		}
-		input.css("width", "290px");
+		input.css("width", "250px");
+		this.$el.append('<span class="add-on"><i class="icon-calendar"></i></span>');
 		this.$el.append(input);
-		this.$el.find("input").daterangepicker({}, function(start, end){
+		this.$el.find("input").daterangepicker({
+			format: "DD.MM.YYYY"
+		}, function(start, end){
 			self.model.changeRange(null, {start: start, end: end});
 		});
 		return this.$el;
