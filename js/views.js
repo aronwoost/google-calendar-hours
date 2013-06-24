@@ -296,8 +296,6 @@ var Output = Backbone.View.extend({
 			range = rangeObj.start.format("MMMM, YYYY");
 		} else if (rangeObj.type === "year") {
 			range = rangeObj.start.format("YYYY");
-		} else if (rangeObj.type === "custom") {
-			range = rangeObj.start.format("DD.MM.YYYY") + " - " + rangeObj.end.format("DD.MM.YYYY");
 		}
 
 		this.$el.html(this.template({
