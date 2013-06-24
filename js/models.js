@@ -268,7 +268,9 @@ var AppModel = Backbone.Model.extend({
 		if(!currentRange) {
 			if(this.config.lastSelectedRangeIndex !== null) {
 				this.get("selectedRange").updateRangeByIndex(this.config.lastSelectedRangeIndex);
-				this.get("selectedRange").updateCustomRange(this.config.customStart, this.config.customEnd);
+				if(this.config.lastSelectedRangeIndex === 5) {
+					this.get("selectedRange").updateCustomRange(this.config.customStart, this.config.customEnd);
+				}
 			} else {
 				this.get("selectedRange").updateRangeByIndex(2);
 			}
