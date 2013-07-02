@@ -1,0 +1,24 @@
+<div class='hours'><%= hours %>h</div>
+<div class='hoursrange'><%= range %></div>
+<% if (projects.length > 0) { %>
+<div class="accordion" id="details">
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#details" href="#showDetails">
+        show/hide details
+      </a>
+    </div>
+    <div id="showDetails" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <ul class="unstyled">
+        <% for (var i=0, l=projects.length;i<l;i++) { %>
+          <li class="eventsItem">
+            <span class="label"><%= projects[i].label %></span> <%= projects[i].hours.toFixed(2) %>h
+          </li>
+        <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>

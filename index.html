@@ -29,20 +29,6 @@
 
   <a href="https://github.com/aronwoost" id="githubbtn"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-  <script type="text/javascript" src="js/libs/jquery-1.7.1.js"></script>
-  <script type="text/javascript" src="js/libs/spin.min.js"></script>
-  <script type="text/javascript" src="js/libs/moment-2.0.0.js"></script>
-  <script type="text/javascript" src="js/libs/underscore-1.4.4.js"></script>
-  <script type="text/javascript" src="js/libs/backbone-1.0.0.js"></script>
-
-  <script type="text/javascript" src="js/libs/dateragepicker.js"></script>
-
-  <script type="text/javascript" src="js/plugins/bootstrap-transition.js"></script>
-  <script type="text/javascript" src="js/plugins/bootstrap-collapse.js"></script>
-
-  <script type="text/javascript" src="js/models.js"></script>
-  <script type="text/javascript" src="js/views.js"></script>
-  <script type="text/javascript" src="js/app.js"></script>
 
   <script>
     var _gaq=[['_setAccount','UA-344954-14'],['_trackPageview'],['_trackPageLoadTime']];
@@ -51,81 +37,8 @@
     s.parentNode.insertBefore(g,s)}(document,'script'));
   </script>
 
+  <script data-main="/js/config" src="/js/vendor/require-2.1.6.js"></script>
+
 </body>
-
-<script type="text/template" id="tmplIntro">
-  <p>
-    This web app lets you see how many hours you spend on a calendar. It uses the Google Calendar API so you need to authorize the app with the following link:
-  </p>
-  <p>
-    <a href="#" id="authBtn" class="btn btn-large btn-primary">Connect to Google Calendar</a>
-  </p>
-  <p>
-    <strong>Note:</strong> none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data.
-  </p>
-</script>
-
-<script type="text/template" id="tmplCalenderSelectList">
-  <select id="calList" style="display:none; width:100%;">
-    <option value='' selected='selected' id='pleaseSelect'>Please select calendar</option>
-  </select>
-  <div id='spinnerContainer' style='position:relative; left:20px; top:15px;'></div>
-</script>
-
-<script type="text/template" id="tmplRangeSelectList">
-  <select id='rangeList' style='width:100%'>
-    <option value='day'>Day</option>
-    <option value='week'>Week</option>
-    <option value='month'>Month</option>
-    <option value='year'>Year</option>
-    <option value='total'>Total</option>
-    <option value='custom'>Custom</option>
-  </select>
-</script>
-
-<script type="text/template" id="rangeChangeBtns">
-  <a href="" id="prev" class="btn rangeside<% if(disableBtns) { %> disabled <% }; %>">PREV</a> <a href="" id="reset" class="btn rangecenter<% if(disableBtns) { %> disabled <% }; %>">RESET <%= to %></a> <a href="" id="next" class="btn rangeside<% if(disableBtns) { %> disabled <% }; %>">NEXT</a>
-</script>
-
-<script type="text/template" id="calendarListSelectOptionItem">
-  <option value='<%= value %>'><%= text %></option>
-</script>
-
-<script type="text/template" id="tmplOptions">
-  Week starts on:
-    <label class="radio inline">
-      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" <% if(checked === "sunday") { %> checked="checked" <% }; %> >Sunday
-    </label>
-    <label class="radio inline">
-      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" <% if(checked === "monday") { %> checked="monday" <% }; %> >Monday
-    </label>
-</script>
-
-<script type="text/template" id="tmplOutput">
-  <div class='hours'><%= hours %>h</div>
-  <div class='hoursrange'><%= range %></div>
-  <% if (projects.length > 0) { %>
-  <div class="accordion" id="details">
-    <div class="accordion-group">
-      <div class="accordion-heading">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#details" href="#showDetails">
-          show/hide details
-        </a>
-      </div>
-      <div id="showDetails" class="accordion-body collapse">
-        <div class="accordion-inner">
-          <ul class="unstyled">
-          <% for (var i=0, l=projects.length;i<l;i++) { %>
-            <li class="eventsItem">
-              <span class="label"><%= projects[i].label %></span> <%= projects[i].hours.toFixed(2) %>h
-            </li>
-          <% } %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
-</script>
 
 </html>
