@@ -15,9 +15,10 @@ define([
     },
     initialize: function(model, options) {
       this.model.bind('connectError', this.connectError, this);
+      this.model.bind('connectSuccess', this.connectSuccess, this);
 
       this.introView = new IntroView();
-      this.$el.find("#container").append(this.introView.render());
+      // this.$el.find("#container").append(this.introView.render());
 
       var auth = JSON.parse(sessionStorage.getItem("auth"));
 
@@ -37,12 +38,18 @@ define([
           }
         });
         this.model.fetch();
+      } else {
+        this.introView.showGoogleBtn();
       }
     },
     connectError: function() {
       console.log("connectError");
       this.introView.show();
       this.appView.hide();
+    },
+    connectSuccess: function() {
+      this.introView.hide();
+      this.appView.show();
     }
   });
 

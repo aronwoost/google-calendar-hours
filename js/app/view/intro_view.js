@@ -1,25 +1,16 @@
 define([
+    "jquery",
     "backbone",
-    "underscore",
-    "text!app/templates/intro.html"
+    "underscore"
   ],
-  function (Backbone, _, introTmpl) {
+  function ($, Backbone, _, introTmpl) {
 
   "use strict";
 
   var IntroView = Backbone.View.extend({
-    template: undefined,
+    el: $("#intro"),
     events:{
       "click a#authBtn": "connectWithGoogle"
-    },
-    id:"intro",
-    initialize:function(){
-      this.$el.css("width", "100%");
-      this.template = _.template(introTmpl);
-    },
-    render:function(){
-      this.$el.html(this.template());
-      return this.$el;
     },
     connectWithGoogle:function(evt){
       evt.preventDefault();
@@ -27,17 +18,20 @@ define([
 
       var clientId = "502172359025.apps.googleusercontent.com",
         callbackUrl = location.origin + location.pathname + "auth.html",
-        scope = "https://www.googleapis.com/auth/calendar.readonly";
-
-      var reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
+        scope = "https://www.googleapis.com/auth/calendar.readonly",
+        reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
 
       window.location = reqUrl;
     },
     show:function(){
-      this.$el.css("display", "block");
+      this.$el.show();
     },
     hide:function(){
-      this.$el.css("display", "none");
+      this.$el.hide();
+    },
+    showGoogleBtn:function(){
+      this.$el.find("#authBtn").removeAttr('disabled');
+      this.$el.find("#authBtn").text("Connect to Google Calendar");
     }
   });
 

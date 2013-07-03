@@ -28,6 +28,7 @@ define([
       this.get("calendarsCollection").fetch();
     },
     loadCalendarsCollectionComplete: function(collection){
+      this.trigger("connectSuccess");
       if(this.config.lastSelectedCalendarCid) {
         this.setSelectedCalendarById(this.config.lastSelectedCalendarCid);
       }
