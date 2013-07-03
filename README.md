@@ -7,14 +7,10 @@ Stuff used:
 * [Backbone.js](http://backbonejs.org/)
 * [Underscore.js](http://documentcloud.github.com/underscore/#)
 * jQuery
-* [datejs](http://www.datejs.com/)
+* [Moment.js](http://momentjs.com/)
 * [spin.js](http://fgnass.github.com/spin.js/)
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap/) CSS
-
-For the tests:
-* [Mocha](http://visionmedia.github.com/mocha/)
-* [expect.js](https://github.com/LearnBoost/expect.js)
-* [sinon.JS](http://sinonjs.org/)
+* [ReguireJS](http://requirejs.org/)
 
 ## Contributors
 [Philipp Kyeck](https://github.com/pkyeck)
