@@ -1,51 +1,50 @@
 <!doctype html>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta charset="utf-8">
 
-	<title>Google Calendar Hours Calculator - Authentication</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-	<meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Google Calendar Hours Calculator - Authentication</title>
 
-	<script src="js/libs/jquery-1.7.1.js"></script>
+  <script src="js/libs/jquery-1.7.1.js"></script>
 
-	<link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
 
-	<script type="text/javascript">
+  <script type="text/javascript">
 
-	$(document).ready(function(){
-		if(getURLParameter("error", location.search) == null) {
-			console.log(getURLParameter("error", location.search));
-			$("#info").text("There was a problem with the authentication.")
-		} else {
-			var accessToken = getURLParameter("access_token", window.location.hash);
-			console.log(accessToken);
-			if(accessToken == "null") {
-				$("#info").text("There was a problem with the authentication.");
-			} else {
-				sessionStorage.setItem("auth", JSON.stringify({accessToken:accessToken}));
-				if(location.href.indexOf("aronwoost.github.com") !== -1) {
-					window.location = "/google-calendar-hours";
-				} else {
-					window.location = "/";
-				}
-			}
-		}
-	});
+  $(document).ready(function(){
+    if(getURLParameter("error", location.search) == null) {
+      console.log(getURLParameter("error", location.search));
+      $("#info").text("There was a problem with the authentication.")
+    } else {
+      var accessToken = getURLParameter("access_token", window.location.hash);
+      if(accessToken == "null") {
+        $("#info").text("There was a problem with the authentication.");
+      } else {
+        sessionStorage.setItem("auth", JSON.stringify({accessToken:accessToken}));
+        if(location.href.indexOf("aronwoost.github.com") !== -1) {
+          window.location = "/google-calendar-hours";
+        } else {
+          window.location = "/";
+        }
+      }
+    }
+  });
 
-	function getURLParameter(name, searchOrHash) {
-		return decodeURI(
-			(RegExp(name + '=' + '(.+?)(&|$)').exec(searchOrHash)||[,null])[1]
-		);
-	}
+  function getURLParameter(name, searchOrHash) {
+    return decodeURI(
+      (RegExp(name + '=' + '(.+?)(&|$)').exec(searchOrHash)||[,null])[1]
+    );
+  }
 
-	</script>
+  </script>
 
 </head>
 
 <body>
-	<p id="info">
-		Authentication in process...
-	</p>
+  <p id="info">
+    Authentication in process...
+  </p>
 </body>
 </html>
