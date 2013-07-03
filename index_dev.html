@@ -17,30 +17,27 @@
 
 <body>
 
-  <div id="global" style="width:100%">
+  <div id="container">
 
-    <div id="container" style="width:300px; padding:10px; margin:0px auto;">
+    <h3>Google Calender Hours Calculator</h3>
 
-      <div style="padding-bottom: 10px; font-size: 16px; font-weight: bold; color: grey;">Google Calender Hours Calculator</div>
-
-      <div id="intro">
-        <p>
-          This web app lets you see how many hours you spend on a calendar. It uses the Google Calendar API so you need to authorize the app with the following link:
-        </p>
-        <p>
-          <a href="#" id="authBtn" class="btn btn-large btn-primary" disabled="disabled">loading ...</a>
-        </p>
-        <p>
-          <strong>Note:</strong> none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data.
-        </p>
-      </div>
-
+    <div id="intro">
+      <p>
+        This web app lets you see how many hours you spend on a calendar. It uses the Google Calendar API so you need to authorize the app with the following link:
+      </p>
+      <p>
+        <a href="#" id="authBtn" class="btn btn-large btn-primary" disabled="disabled">loading ...</a>
+      </p>
+      <p>
+        <strong>Note:</strong> none of the data is saved elsewhere but in your browser. After you close the browser window / tab all fetched data is delete (sessionStorage is used). Thats why you need to reautherize with Google the next time you visit the page. Also the app has read-only access your calendar data.
+      </p>
     </div>
 
   </div>
 
   <a href="https://github.com/aronwoost" id="githubbtn"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
+  <script data-main="js/config" src="js/vendor/require-2.1.6.js"></script>
 
   <script>
     var _gaq=[['_setAccount','UA-344954-14'],['_trackPageview'],['_trackPageLoadTime']];
@@ -48,8 +45,6 @@
     g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g,s)}(document,'script'));
   </script>
-
-  <script data-main="js/config" src="js/vendor/require-2.1.6.js"></script>
 
 </body>
 

@@ -1,3 +1,14 @@
+h3 {
+  color:grey;
+  padding-bottom:10px;
+}
+
+#container {
+  width:300px;
+  padding:10px;
+  margin:0px auto;
+}
+
 .btn.rangeside {
   width:25%;
   -webkit-box-sizing: border-box;
