@@ -31,7 +31,7 @@
         info.textContent = "There was a problem with the authentication.";
       } else {
         sessionStorage.setItem("auth", JSON.stringify({accessToken:accessToken}));
-        if(location.href.indexOf("aronwoost.github.com") !== -1) {
+        if(location.href.indexOf("aronwoost.github.io") !== -1) {
           window.location = "/google-calendar-hours";
         } else {
           window.location = "/";
