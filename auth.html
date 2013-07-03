@@ -7,20 +7,28 @@
 
   <title>Google Calendar Hours Calculator - Authentication</title>
 
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+</head>
 
-  <link rel="stylesheet" href="css/bootstrap.css">
+<body>
+  <p id="info">
+    Authentication in process...
+  </p>
 
   <script type="text/javascript">
 
-  $(document).ready(function(){
+    function getURLParameter(name, searchOrHash) {
+      return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(searchOrHash)||[,null])[1]
+      );
+    }
+
+    var info = document.getElementById("info");
     if(getURLParameter("error", location.search) == null) {
-      console.log(getURLParameter("error", location.search));
-      $("#info").text("There was a problem with the authentication.")
+      info.textContent = "There was a problem with the authentication.";
     } else {
       var accessToken = getURLParameter("access_token", window.location.hash);
       if(accessToken == "null") {
-        $("#info").text("There was a problem with the authentication.");
+        info.textContent = "There was a problem with the authentication.";
       } else {
         sessionStorage.setItem("auth", JSON.stringify({accessToken:accessToken}));
         if(location.href.indexOf("aronwoost.github.com") !== -1) {
@@ -30,21 +38,8 @@
         }
       }
     }
-  });
-
-  function getURLParameter(name, searchOrHash) {
-    return decodeURI(
-      (RegExp(name + '=' + '(.+?)(&|$)').exec(searchOrHash)||[,null])[1]
-    );
-  }
 
   </script>
 
-</head>
-
-<body>
-  <p id="info">
-    Authentication in process...
-  </p>
 </body>
 </html>
