@@ -10,7 +10,7 @@ define([
     initialize:function(){
       this.eventsCollection = new EventsCollection();
       this.eventsCollection.setUrl("https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events?singleEvents=true");
-      this.eventsCollection.bind("sync", this.eventsReceived, this);
+      this.eventsCollection.bind("eventsReceived", this.eventsReceived, this);
       this.eventsCollection.bind("error", this.connectError, this);
     },
     eventsReceived: function(){
