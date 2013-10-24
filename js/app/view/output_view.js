@@ -39,7 +39,7 @@ define([
         $showDetails;
 
       if (rangeObj.type === "day") {
-        range = rangeObj.start.format("dddd, MMMM d, YYYY");
+        range = rangeObj.start.format("dddd, MMMM D, YYYY");
       } else if (rangeObj.type === "week") {
         range = rangeObj.start.format("DD.MM.YYYY") + " - " + rangeObj.end.format("DD.MM.YYYY");
       } else if (rangeObj.type === "month") {
