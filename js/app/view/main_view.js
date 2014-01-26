@@ -18,7 +18,6 @@ define([
       this.model.bind('connectSuccess', this.connectSuccess, this);
 
       this.introView = new IntroView();
-      // this.$el.find("#container").append(this.introView.render());
 
       var auth = JSON.parse(sessionStorage.getItem("auth"));
 
