@@ -42,10 +42,13 @@ define([
         this.introView.showGoogleBtn();
       }
     },
-    connectError: function() {
-      console.log("connectError");
-      this.introView.show();
-      this.appView.hide();
+    connectError: function(model, xhr) {
+      if(xhr.status === 401) {
+        this.introView.show();
+        this.appView.hide();
+      } else if(xhr.status !== 0) {
+        alert("Error - "+ xhr.status +"\n\n" + model.url);
+      }
     },
     connectSuccess: function() {
       this.introView.hide();

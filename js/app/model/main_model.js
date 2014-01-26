@@ -85,8 +85,8 @@ define([
       this.trigger("calendarSelectionChanged",cal.id);
       this.updateConfig();
     },
-    connectError: function (data) {
-      this.trigger("connectError", data);
+    connectError: function (model, xhr) {
+      this.trigger("connectError", model, xhr);
     },
     updateConfig: function() {
       var selectedCalendarId = this.get("selectedCalendar").id,

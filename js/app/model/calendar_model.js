@@ -16,8 +16,8 @@ define([
     eventsReceived: function(){
       this.trigger("eventsReceived", this);
     },
-    connectError: function(){
-      this.trigger("connectError", this);
+    connectError: function(model, xhr){
+      this.trigger("connectError", model, xhr);
     },
     fetchEvents: function() {
       this.eventsCollection.fetch();
