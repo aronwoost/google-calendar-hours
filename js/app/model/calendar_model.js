@@ -8,8 +8,7 @@ define([
 
   var Calendar = Backbone.Model.extend({
     initialize:function(){
-      this.eventsCollection = new EventsCollection();
-      this.eventsCollection.setUrl("https://www.googleapis.com/calendar/v3/calendars/" + this.get("id") + "/events?singleEvents=true");
+      this.eventsCollection = new EventsCollection(null, {calendarId: this.id});
       this.eventsCollection.bind("eventsReceived", this.eventsReceived, this);
       this.eventsCollection.bind("error", this.connectError, this);
     },

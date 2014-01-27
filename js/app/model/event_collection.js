@@ -6,10 +6,14 @@ define([
 
   "use strict";
 
+  var endpointUrl = "https://www.googleapis.com/calendar/v3/calendars/:id/events?singleEvents=true";
+
   var EventsCollection = Backbone.Collection.extend({
     model: Backbone.Model,
-    initialize:function(){
+    initialize:function(models, options){
       this.bind("sync", this.synced, this);
+      this.originalUrl = endpointUrl.split(":id").join(options.calendarId);
+      this.url = this.originalUrl;
     },
     parse: function(response) {
       return response.items;
@@ -17,19 +21,11 @@ define([
     synced:function(collection, response) {
       var nextPageToken = response.nextPageToken;
       if(nextPageToken){
-        if(this.originalUrl.indexOf("?") !== -1){
-          this.url = this.originalUrl + "&pageToken=" + nextPageToken;
-        }else{
-          this.url = this.originalUrl + "?pageToken=" + nextPageToken;
-        }
+        this.url = this.originalUrl + "&pageToken=" + nextPageToken;
         this.fetch({remove: false});
       } else {
         this.trigger("eventsReceived", this);
       }
-    },
-    setUrl:function(url){
-      this.originalUrl = url;
-      this.url = url;
     }
   });
 
