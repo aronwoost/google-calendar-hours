@@ -1,8 +1,7 @@
 define([
-    "backbone",
-    "underscore"
+    "backbone"
   ],
-  function (Backbone, _) {
+  function (Backbone) {
 
   "use strict";
 
