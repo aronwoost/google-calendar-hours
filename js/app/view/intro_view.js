@@ -24,6 +24,7 @@ define([
       window.location = reqUrl;
     },
     show:function(){
+      this.showGoogleBtn();
       this.$el.show();
     },
     hide:function(){
