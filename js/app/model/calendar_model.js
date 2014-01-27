@@ -42,7 +42,7 @@ define([
           itemDataEnd,
           diff,
           hours,
-          title = item.get("summary"),
+          title = item.get("summary") || "",
           name = title.toLowerCase().replace(/[^\w.]/g, ""); // TODO normalize
 
         itemDataStart = new Date(item.get("start").dateTime);
