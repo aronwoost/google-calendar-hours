@@ -8,14 +8,13 @@ define([
   "use strict";
 
   var Options = Backbone.View.extend({
-    template: undefined,
+    template: _.template(optionsTmpl),
     events: {
       "change #optionsRadios1": "changeRadio1",
       "change #optionsRadios2": "changeRadio2"
     },
     initialize: function() {
       this.model.bind("change:range", this.update, this);
-      this.template = _.template(optionsTmpl);
     },
     render: function() {
       this.$el.html(this.template({checked:this.model.getWeekStart()}));

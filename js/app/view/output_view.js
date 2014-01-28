@@ -23,11 +23,11 @@ define([
   };
 
   var Output = Backbone.View.extend({
-    template: undefined,
+    // TODO defined tmpl here
+    template: _.template(outputTmpl),
     detailsShown: false,
     initialize: function() {
       this.model.bind("updateOutput", this.updateView, this);
-      this.template = _.template(outputTmpl);
     },
     render: function() {
       return this.$el;

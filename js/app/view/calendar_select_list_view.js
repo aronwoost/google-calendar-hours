@@ -23,7 +23,8 @@ define([
 
   var CalendarSelectList = Backbone.View.extend({
     id:"calendars",
-    template: undefined,
+    template: _.template(calendarSelectListTmpl),
+    optionTmpl: _.template(calendarListSelectOptionItemTmpl),
     events: {
       "change select": "calendarChanged"
     },
@@ -31,8 +32,6 @@ define([
       this.model.get("calendarsCollection").bind("sync", this.calendarsReceived, this);
       this.model.bind("calendarSelectionChanged", this.updateView, this);
       this.model.bind("calendarLoadingStart", this.updateView, this);
-
-      this.template = _.template(calendarSelectListTmpl);
     },
     render: function() {
       this.$el.html(this.template());
@@ -54,14 +53,13 @@ define([
     calendarsReceived: function(collection) {
       this.$el.find("#spinnerContainer").remove();
       this.$el.find("select").css("display", "block");
-      var compiled = _.template(calendarListSelectOptionItemTmpl);
       collection.each(function(item) {
-        this.$el.find("select").append(compiled({value:item.id, text:item.getTitle()}));
+        this.$el.find("select").append(this.optionTmpl({value:item.id, text:item.getTitle()}));
       }, this);
     },
     calendarChanged: function(evt) {
       evt.preventDefault();
-      evt.stopPropagation();
+      evt.stopPropagation(); // TODO remove
       this.model.setSelectedCalendarById(evt.target.value);
     }
   });

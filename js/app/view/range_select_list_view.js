@@ -8,13 +8,13 @@ define([
   "use strict";
 
   var RangeSelectList = Backbone.View.extend({
-    template: undefined,
+    // TODO defined tmpl here
+    template: _.template(rangeSelectListTmpl),
     events:{
       "change select#rangeList": "rangeSelected"
     },
     initialize: function() {
       this.model.bind("change:range", this.update, this);
-      this.template = _.template(rangeSelectListTmpl);
     },
     render: function() {
       this.$el.hide();

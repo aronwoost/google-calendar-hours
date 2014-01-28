@@ -15,7 +15,7 @@ define([
   };
 
   var RangeChangeBtns = Backbone.View.extend({
-    template: undefined,
+    template: _.template(rangeChangeBtns),
     events: {
       "click a#prev": "changeRangePrev",
       "click a#reset": "changeRangeReset",
@@ -23,7 +23,6 @@ define([
     },
     initialize: function() {
       this.model.bind("change:range", this.update, this);
-      this.template = _.template(rangeChangeBtns);
     },
     render: function() {
       this.$el.css("display", "none");
