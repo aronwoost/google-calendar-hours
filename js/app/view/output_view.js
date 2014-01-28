@@ -70,10 +70,10 @@ define([
     show: function() {
       this.$el.show();
     },
-    onDetailsShown: function(evt) {
+    onDetailsShown: function() {
       this.detailsShown = true;
     },
-    onDetailsHidden: function(evt) {
+    onDetailsHidden: function() {
       this.detailsShown = false;
     }
   });

@@ -21,10 +21,10 @@ define([
       this.$el.hide();
       return this.$el;
     },
-    changeRadio1: function(evt){
+    changeRadio1: function(){
       this.model.updateWeekStart("sunday");
     },
-    changeRadio2: function(evt){
+    changeRadio2: function(){
       this.model.updateWeekStart("monday");
     },
     update: function(model, value) {
