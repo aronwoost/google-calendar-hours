@@ -68,7 +68,7 @@ define([
       this.$el.html(spinnerContainer);
     },
     show: function() {
-      this.$el.css("display", "block");
+      this.$el.show();
     },
     onDetailsShown: function(evt) {
       this.detailsShown = true;

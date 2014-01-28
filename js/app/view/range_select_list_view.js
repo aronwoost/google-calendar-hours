@@ -17,7 +17,7 @@ define([
       this.template = _.template(rangeSelectListTmpl);
     },
     render: function() {
-      this.$el.css("display", "none");
+      this.$el.hide();
       this.$el.append(this.template());
       return this.$el;
     },
@@ -25,14 +25,14 @@ define([
       if(!value) {
         return;
       }
-      this.$el.css("display", "block");
+      this.$el.show();
       this.$el.find("#rangeList").val(value);
     },
     rangeSelected: function(evt) {
       this.model.updateRangeByIndex(evt.target.selectedIndex);
     },
     show:function(){
-      this.$el.css("display", "block");
+      this.$el.show();
     }
   });
 

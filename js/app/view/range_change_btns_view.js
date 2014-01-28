@@ -73,7 +73,7 @@ define([
       this.model.changeRange(1);
     },
     show:function(){
-      this.$el.css("display", "block");
+      this.$el.show();
     }
   });
 

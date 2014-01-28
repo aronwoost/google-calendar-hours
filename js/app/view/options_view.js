@@ -19,7 +19,7 @@ define([
     },
     render: function() {
       this.$el.html(this.template({checked:this.model.getWeekStart()}));
-      this.$el.css("display", "none");
+      this.$el.hide();
       return this.$el;
     },
     changeRadio1: function(evt){
@@ -30,9 +30,9 @@ define([
     },
     update: function(model, value) {
       if(value === "week") {
-        this.$el.css("display", "block");
+        this.$el.show();
       } else {
-        this.$el.css("display", "none");
+        this.$el.hide();
       }
     }
   });

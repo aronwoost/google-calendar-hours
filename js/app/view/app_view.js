@@ -52,10 +52,10 @@ define([
       this.output.showSpinner();
     },
     show:function(){
-      this.$el.css("display", "block");
+      this.$el.show();
     },
     hide:function(){
-      this.$el.css("display", "none");
+      this.$el.hide();
     }
   });
 
