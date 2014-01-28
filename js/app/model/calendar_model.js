@@ -10,13 +10,9 @@ define([
     initialize:function(){
       this.eventsCollection = new EventsCollection(null, {calendarId: this.id});
       this.eventsCollection.bind("eventsReceived", this.eventsReceived, this);
-      this.eventsCollection.bind("error", this.connectError, this);
     },
     eventsReceived: function(){
       this.trigger("eventsReceived", this);
-    },
-    connectError: function(model, xhr){
-      this.trigger("connectError", model, xhr);
     },
     fetchEvents: function() {
       this.eventsCollection.fetch();

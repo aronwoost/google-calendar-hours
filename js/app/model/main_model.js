@@ -18,7 +18,6 @@ define([
       this.config = options.config;
       var calendarsCollection = new CalendarsCollection();
       calendarsCollection.bind("sync", this.loadCalendarsCollectionComplete, this);
-      calendarsCollection.bind("error", this.connectError, this);
       this.set({calendarsCollection: calendarsCollection});
       this.set({selectedRangeObj: this.get("selectedRange").getRangeObj()});
       this.get("selectedRange").updateWeekStart(this.config.weekStart || "monday");
@@ -45,7 +44,6 @@ define([
         this.trigger("calendarLoadingStart", id);
         model.fetchEvents();
         model.bind("eventsReceived", this.calendarDataReady, this);
-        model.bind("connectError", this.connectError, this);
       }
 
       // set default range, if null (seams this is app startup)
@@ -84,9 +82,6 @@ define([
       });
       this.trigger("calendarSelectionChanged",cal.id);
       this.updateConfig();
-    },
-    connectError: function (model, xhr) {
-      this.trigger("connectError", model, xhr);
     },
     updateConfig: function() {
       var selectedCalendarId = this.get("selectedCalendar").id,

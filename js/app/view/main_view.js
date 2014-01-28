@@ -14,12 +14,12 @@ define([
       "connectError": "connectError"
     },
     initialize: function(model, options) {
-      this.model.bind('connectError', this.connectError, this);
       this.model.bind('connectSuccess', this.connectSuccess, this);
 
       this.introView = new IntroView();
 
-      var auth = JSON.parse(sessionStorage.getItem("auth"));
+      var auth = JSON.parse(sessionStorage.getItem("auth")),
+        self = this;
 
       if(auth) {
         this.appView = new AppView({model:this.model}, {config:options.config});
@@ -36,17 +36,19 @@ define([
             }
           }
         });
+
+        $(document).ajaxError(function(evt, xhr, ajax) {
+          if (xhr.status === 401) {
+            self.introView.show();
+            self.appView.hide();
+          } else if(xhr.status !== 0) {
+            alert("Error - "+ xhr.status +"\n\n" + ajax.url);
+          }
+        });
+
         this.model.fetch();
       } else {
         this.introView.showGoogleBtn();
-      }
-    },
-    connectError: function(model, xhr) {
-      if(xhr.status === 401) {
-        this.introView.show();
-        this.appView.hide();
-      } else if(xhr.status !== 0) {
-        alert("Error - "+ xhr.status +"\n\n" + model.url);
       }
     },
     connectSuccess: function() {
