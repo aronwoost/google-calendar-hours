@@ -10,9 +10,6 @@ define([
 
   var App = Backbone.View.extend({
     el: $("body"),
-    events: {
-      "connectError": "connectError"
-    },
     initialize: function(model, options) {
       this.model.bind("connectSuccess", this.connectSuccess, this);
 
