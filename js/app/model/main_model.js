@@ -27,6 +27,9 @@ define([
       this.get("calendarsCollection").fetch();
     },
     loadCalendarsCollectionComplete: function(){
+      var currentCalendarId = (this.get("selectedCalendar") && this.get("selectedCalendar").id) || -1;
+      this.trigger("calendarSelectionChanged", currentCalendarId);
+
       this.trigger("connectSuccess");
       if(this.config.lastSelectedCalendarCid) {
         this.setSelectedCalendarById(this.config.lastSelectedCalendarCid);
@@ -38,10 +41,11 @@ define([
         return;
       }
       if(model.hasCalendarData()){
+        this.trigger("calendarSelectionChanged", id);
         this.set({selectedCalendar:model});
         this.updateOutput();
       } else {
-        this.trigger("calendarLoadingStart", id);
+        this.trigger("calendarSelectionChanged", id);
         model.fetchEvents();
         model.bind("eventsReceived", this.calendarDataReady, this);
       }
@@ -80,7 +84,6 @@ define([
         projects: hours.projects,
         range: this.getSelectedRange()
       });
-      this.trigger("calendarSelectionChanged",cal.id);
       this.updateConfig();
     },
     updateConfig: function() {

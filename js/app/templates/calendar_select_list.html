@@ -1,4 +1,12 @@
-<select id="calList" style="display:none; width:100%;">
-  <option value="" selected="selected" id="pleaseSelect">Please select calendar</option>
-</select>
-<div id="spinnerContainer" style="position:relative; left:20px; top:15px;"></div>
+<% if(!data.calendars.length !== 0) { %>
+  <select id="calList" style="width:100%;">
+    <% if(!data.cid || data.cid === -1) { %>
+      <option value="" selected="selected" id="pleaseSelect">Please select calendar</option>
+    <% } %>
+    <% for (a in data.calendars) { %>
+      <option value="<%= data.calendars[a].id %>"<% if(data.calendars[a].id === data.cid) { %>selected<% } %>><%= data.calendars[a].summary %></option>
+    <% } %>
+  </select>
+<% } else { %>
+  <div id="spinnerContainer" style="position:relative; left:20px; top:15px;"></div>
+<% } %>

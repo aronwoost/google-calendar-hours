@@ -2,10 +2,9 @@ define([
     "backbone",
     "underscore",
     "text!app/templates/calendar_select_list.html",
-    "text!app/templates/calendar_list_select_option_item.html",
     "spin"
   ],
-  function (Backbone, _, calendarSelectListTmpl, calendarListSelectOptionItemTmpl) {
+  function (Backbone, _, calendarSelectListTmpl) {
 
   "use strict";
 
@@ -24,38 +23,25 @@ define([
   var CalendarSelectList = Backbone.View.extend({
     id:"calendars",
     template: _.template(calendarSelectListTmpl),
-    optionTmpl: _.template(calendarListSelectOptionItemTmpl),
     events: {
       "change select": "calendarChanged"
     },
     initialize: function(){
-      this.model.get("calendarsCollection").bind("sync", this.calendarsReceived, this);
       this.model.bind("calendarSelectionChanged", this.updateView, this);
-      this.model.bind("calendarLoadingStart", this.updateView, this);
     },
     render: function() {
-      this.$el.html(this.template());
+      this.updateView();
       this.$el.find("#spinnerContainer").spin(spinnerOptions);
       return this.$el;
     },
     updateView: function(cid) {
-      this.$el.find("#pleaseSelect").remove();
-      this.$el.find("select").val(cid);
-      // seems that setting the value the first time (sometimes) doesn't work
-      // this makes it sure
-      if(this.$el.find("select").get(0).value===""){
-        var self = this;
-        setTimeout(function(){
-          self.$el.find("select").val(cid);
-        }, 50);
-      }
-    },
-    calendarsReceived: function(collection) {
-      this.$el.find("#spinnerContainer").remove();
-      this.$el.find("select").css("display", "block");
-      collection.each(function(item) {
-        this.$el.find("select").append(this.optionTmpl({value:item.id, text:item.getTitle()}));
-      }, this);
+      var data = {
+        data: {
+          cid:cid,
+          calendars: this.model.get("calendarsCollection").toJSON()
+        }
+      };
+      this.$el.html(this.template(data));
     },
     calendarChanged: function(evt) {
       evt.preventDefault();
