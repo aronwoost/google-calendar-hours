@@ -2,9 +2,9 @@
   baseUrl: ".",
   uglify: {
   },
-  name: 'vendor/almond',
+  name: "vendor/almond",
   mainConfigFile: "config.js",
-  include: ['config'],
-  insertRequire: ['config'],
+  include: ["config"],
+  insertRequire: ["config"],
   out: "main-built.js"
 })

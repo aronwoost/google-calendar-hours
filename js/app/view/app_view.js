@@ -18,7 +18,7 @@ define([
       id:"app"
     },
     initialize: function(model, opts) {
-      this.model.bind('calendarLoadingStart', this.calendarLoadingStart, this);
+      this.model.bind("calendarLoadingStart", this.calendarLoadingStart, this);
 
       // calendar select list
       var calendarSelectList = new CalendarSelectList({model:this.model});

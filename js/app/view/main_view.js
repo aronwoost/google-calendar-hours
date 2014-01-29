@@ -14,7 +14,7 @@ define([
       "connectError": "connectError"
     },
     initialize: function(model, options) {
-      this.model.bind('connectSuccess', this.connectSuccess, this);
+      this.model.bind("connectSuccess", this.connectSuccess, this);
 
       this.introView = new IntroView();
 

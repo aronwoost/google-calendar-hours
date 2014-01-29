@@ -18,7 +18,7 @@ define([
       if(this.model.get("range") === "custom") {
         this.$el.show();
       }
-      this.model.bind('change:range', this.update, this);
+      this.model.bind("change:range", this.update, this);
     },
     render: function() {
       var self = this;
@@ -27,7 +27,7 @@ define([
         input.val(moment(this.config.customStart).format("DD.MM.YYYY")+" - "+moment(this.config.customEnd).format("DD.MM.YYYY"));
       }
       input.css("width", "250px");
-      this.$el.append('<span class="add-on"><i class="icon-calendar"></i></span>');
+      this.$el.append("<span class='add-on'><i class='icon-calendar'></i></span>");
       this.$el.append(input);
       this.$el.find("input").daterangepicker({
         format: "DD.MM.YYYY"

@@ -31,7 +31,7 @@ define([
       this.$el.hide();
     },
     showGoogleBtn:function(){
-      this.$el.find("#authBtn").removeAttr('disabled');
+      this.$el.find("#authBtn").removeAttr("disabled");
       this.$el.find("#authBtn").text("Connect to Google Calendar");
     }
   });
