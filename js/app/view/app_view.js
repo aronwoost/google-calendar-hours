@@ -22,17 +22,19 @@ define([
       var calendarSelectList = new CalendarSelectList({model:this.model});
       this.$el.append(calendarSelectList.render());
 
+      var selectRange = this.model.get("selectedRange");
+
       //change range selectlist
-      this.rangeSelectList = new RangeSelectList({model:this.model.get("selectedRange")});
+      this.rangeSelectList = new RangeSelectList({model:selectRange});
       this.$el.append(this.rangeSelectList.render());
 
       //change range btns
-      this.rangeChangeBtns = new RangeChangeBtns({model:this.model.get("selectedRange")});
+      this.rangeChangeBtns = new RangeChangeBtns({model:selectRange});
       this.$el.append(this.rangeChangeBtns.render());
 
       //date picker
       var config = (opts && opts.config) || {};
-      this.datePicker = new DatePicker({model:this.model.get("selectedRange")}, {config: config});
+      this.datePicker = new DatePicker({model:selectRange}, {config: config});
       this.$el.append(this.datePicker.render());
 
       //output
@@ -40,7 +42,7 @@ define([
       this.$el.append(this.output.render());
 
       //options
-      var options = new Options({model:this.model.get("selectedRange")});
+      var options = new Options({model:selectRange});
       this.$el.append(options.render());
     },
     render:function(){
