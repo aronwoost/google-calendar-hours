@@ -14,9 +14,7 @@ define([
   "use strict";
 
   var AppView = Backbone.View.extend({
-    attributes:{
-      id:"app"
-    },
+    id: "app",
     initialize: function(model, opts) {
       this.model.bind("calendarLoadingStart", this.calendarLoadingStart, this);
 
