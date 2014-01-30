@@ -23,7 +23,6 @@ define([
   };
 
   var Output = Backbone.View.extend({
-    // TODO defined tmpl here
     template: _.template(outputTmpl),
     detailsShown: false,
     initialize: function() {

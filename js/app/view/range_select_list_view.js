@@ -8,7 +8,6 @@ define([
   "use strict";
 
   var RangeSelectList = Backbone.View.extend({
-    // TODO defined tmpl here
     template: _.template(rangeSelectListTmpl),
     events:{
       "change select#rangeList": "rangeSelected"
