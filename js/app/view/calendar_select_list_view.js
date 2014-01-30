@@ -27,7 +27,7 @@ define([
       "change select": "calendarChanged"
     },
     initialize: function(){
-      this.model.bind("calendarSelectionChanged", this.updateView, this);
+      this.model.bind("viewUpdate", this.updateView, this);
     },
     render: function() {
       this.updateView();
@@ -38,7 +38,7 @@ define([
       var data = {
         data: {
           cid:cid,
-          calendars: this.model.get("calendarsCollection").toJSON()
+          calendars: this.model.toJSON()
         }
       };
       this.$el.html(this.template(data));

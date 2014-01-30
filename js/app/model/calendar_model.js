@@ -7,11 +7,13 @@ define([
   "use strict";
 
   var Calendar = Backbone.Model.extend({
+    _isSynced: false,
     initialize:function(){
       this.eventsCollection = new EventsCollection(null, {calendarId: this.id});
       this.eventsCollection.bind("eventsReceived", this.eventsReceived, this);
     },
     eventsReceived: function(){
+      this._isSynced = true;
       this.trigger("eventsReceived", this);
     },
     fetchEvents: function() {
@@ -62,6 +64,9 @@ define([
         total: totalHours,
         projects: this._sortProjectDetails(projects)
       };
+    },
+    isSynced: function() {
+      return this._isSynced;
     },
     _sortProjectDetails: function(projects) {
       var projectList = [];

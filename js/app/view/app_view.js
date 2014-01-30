@@ -16,13 +16,11 @@ define([
   var AppView = Backbone.View.extend({
     id: "app",
     initialize: function(model, opts) {
-      this.model.bind("calendarLoadingStart", this.calendarLoadingStart, this);
-
       // calendar select list
       var calendarSelectList = new CalendarSelectList({model:this.model});
       this.$el.append(calendarSelectList.render());
 
-      var selectRange = this.model.get("selectedRange");
+      var selectRange = this.model.selectedRange;
 
       //change range selectlist
       this.rangeSelectList = new RangeSelectList({model:selectRange});
@@ -47,9 +45,6 @@ define([
     },
     render:function(){
       return this.$el;
-    },
-    calendarLoadingStart:function(){
-      this.output.showSpinner();
     },
     show:function(){
       this.$el.show();

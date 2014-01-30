@@ -33,10 +33,10 @@ require.config({
 
 require(
   [
-    "app/model/main_model",
+    "app/model/calendar_collection",
     "app/view/main_view"
   ],
-  function (MainModel, MainView) {
+  function (CalendarCollection, MainView) {
 
     var config = {lastSelectedCalendarIndex:null, lastSelectedRangeIndex:null};
     var lsConfig = localStorage.getItem("config");
@@ -44,7 +44,7 @@ require(
       config = JSON.parse(lsConfig);
     }
 
-    var appModel = new MainModel(null, {config:config});
-    var app = new MainView({model: appModel}, {config:config});
+    var calendarCollection = new CalendarCollection(null, {config:config});
+    var app = new MainView({model:calendarCollection}, {config:config});
   }
 );

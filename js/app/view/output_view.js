@@ -27,16 +27,28 @@ define([
     template: _.template(outputTmpl),
     detailsShown: false,
     initialize: function() {
-      this.model.bind("updateOutput", this.updateView, this);
+      this.model.bind("viewUpdate", this.updateView, this);
     },
     render: function() {
       return this.$el;
     },
-    updateView: function(data) {
-      var hours = Math.round(data.hours*100)/100,
-        rangeObj = data.range,
+    updateView: function() {
+      var calendar = this.model.selectedCalendar;
+
+      if(!calendar || !calendar.isSynced()) {
+        var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
+        var spinner = spinnerContainer.spin(spinnerOptions);
+        this.$el.html(spinnerContainer);
+        return;
+      }
+
+      var data = calendar.getHours(this.model.selectedRange.getRangeObj());
+
+      var hours = Math.round(data.total*100)/100,
+        rangeObj = this.model.getSelectedRange(),
         range = "",
         $showDetails;
+
 
       if (rangeObj.type === "day") {
         range = rangeObj.start.format("dddd, MMMM D, YYYY");
@@ -61,11 +73,6 @@ define([
       if (this.detailsShown) {
         $showDetails.collapse("show");
       }
-    },
-    showSpinner: function() {
-      var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
-      var spinner = spinnerContainer.spin(spinnerOptions);
-      this.$el.html(spinnerContainer);
     },
     show: function() {
       this.$el.show();
