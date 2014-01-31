@@ -34,7 +34,12 @@ define([
     updateView: function() {
       var calendar = this.model.selectedCalendar;
 
-      if(!calendar || !calendar.isSynced()) {
+      // waiting for user to select calendar
+      if(!calendar) {
+        return;
+      }
+
+      if(!calendar.isSynced()) {
         var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
         var spinner = spinnerContainer.spin(spinnerOptions);
         this.$el.html(spinnerContainer);
