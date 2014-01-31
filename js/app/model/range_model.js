@@ -12,10 +12,26 @@ define([
       "rangeObj":{},
       "rangeIndex":null
     },
-    initialize: function() {
+    initialize: function(data, options) {
+      var config = options.config;
+
       this.currentDatePointer = moment().startOf("day");
       this.currentDatePointerEnd = moment().startOf("day");
       this.weekStart = "sunday";
+
+      if(config) {
+        if(config.lastSelectedRangeIndex !== null) {
+          this.updateRangeByIndex(config.lastSelectedRangeIndex);
+          if(config.lastSelectedRangeIndex === 5) {
+            this.updateCustomRange(config.customStart, config.customEnd);
+          }
+          if(config.weekStart) {
+            this.updateWeekStart(config.weekStart);
+          }
+        } else {
+          this.updateRangeByIndex(2);
+        }
+      }
     },
     rangeIndexMappings: ["day", "week", "month", "year", "total", "custom"],
     updateRangeByIndex: function(index) {

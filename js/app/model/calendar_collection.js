@@ -11,13 +11,12 @@ define([
     model: CalendarModel,
     url: "https://www.googleapis.com/calendar/v3/users/me/calendarList",
     selectedCalendar: null,
-    selectedRange: new RangeModel(),
     selectedRangeObj: null,
     initialize: function(defaults, options) {
       this.config = options.config;
       this.on("sync", this.onSync, this);
+      this.selectedRange = new RangeModel(null, {config: this.config});
       this.selectedRangeObj = this.selectedRange.getRangeObj();
-      this.selectedRange.updateWeekStart(this.config.weekStart || "monday");
       this.selectedRange.bind("change:rangeObj", this.updateView, this);
     },
     parse: function(response) {
@@ -45,19 +44,6 @@ define([
       if(!model.hasCalendarData()){
         model.fetchEvents();
         model.bind("eventsReceived", this.updateView, this);
-      }
-
-      // set default range, if null (seams this is app startup)
-      var currentRange = this.selectedRange.get("range");
-      if(!currentRange) {
-        if(this.config.lastSelectedRangeIndex !== null) {
-          this.selectedRange.updateRangeByIndex(this.config.lastSelectedRangeIndex);
-          if(this.config.lastSelectedRangeIndex === 5) {
-            this.selectedRange.updateCustomRange(this.config.customStart, this.config.customEnd);
-          }
-        } else {
-          this.selectedRange.updateRangeByIndex(2);
-        }
       }
     },
     getSelectedRange: function() {

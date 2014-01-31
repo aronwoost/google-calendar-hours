@@ -29,6 +29,7 @@ define([
       this.model.bind("viewUpdate", this.updateView, this);
     },
     render: function() {
+      this.updateView();
       return this.$el;
     },
     updateView: function() {

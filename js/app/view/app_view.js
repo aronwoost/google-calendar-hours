@@ -16,11 +16,17 @@ define([
   var AppView = Backbone.View.extend({
     id: "app",
     initialize: function(model, opts) {
-      // calendar select list
       var calendarSelectList = new CalendarSelectList({model:this.model});
       this.$el.append(calendarSelectList.render());
 
+      this.config = (opts && opts.config) || {};
+
+      this.model.bind("eventsReceived", this.updateView, this);
+    },
+    updateView: function() {
       var selectRange = this.model.selectedRange;
+
+      this.model.off("eventsReceived", this.updateView, this);
 
       //change range selectlist
       this.rangeSelectList = new RangeSelectList({model:selectRange});
@@ -31,8 +37,7 @@ define([
       this.$el.append(this.rangeChangeBtns.render());
 
       //date picker
-      var config = (opts && opts.config) || {};
-      this.datePicker = new DatePicker({model:selectRange}, {config: config});
+      this.datePicker = new DatePicker({model:selectRange}, {config: this.config});
       this.$el.append(this.datePicker.render());
 
       //output

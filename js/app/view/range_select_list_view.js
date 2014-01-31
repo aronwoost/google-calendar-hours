@@ -18,6 +18,7 @@ define([
     render: function() {
       this.$el.hide();
       this.$el.append(this.template());
+      this.update(this.model, this.model.get("range"));
       return this.$el;
     },
     update: function(model, value) {

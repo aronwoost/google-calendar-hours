@@ -33,6 +33,7 @@ define([
         to: "",
         disableBtns: null
       }));
+      this.update(this.model, this.model.get("range"));
       return this.$el;
     },
     disableBtns: false,
