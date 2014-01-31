@@ -17,7 +17,7 @@ define([
       this.on("sync", this.onSync, this);
       this.selectedRange = new RangeModel(null, {config: this.config});
       this.selectedRangeObj = this.selectedRange.getRangeObj();
-      this.selectedRange.bind("change:rangeObj", this.updateView, this);
+      this.selectedRange.bind("change:rangeObj", this.onRangeObjChange, this);
     },
     parse: function(response) {
       return response.items;
@@ -48,6 +48,10 @@ define([
     },
     getSelectedRange: function() {
       return this.selectedRange.getRangeObj();
+    },
+    onRangeObjChange: function() {
+      this.updateConfig();
+      this.updateView();
     },
     updateView: function() {
       if(!this.selectedCalendar) {
