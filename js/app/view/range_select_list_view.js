@@ -16,17 +16,13 @@ define([
       this.model.bind("change:range", this.update, this);
     },
     render: function() {
-      this.$el.hide();
-      this.$el.append(this.template());
-      this.update(this.model, this.model.get("range"));
+      this.update();
       return this.$el;
     },
-    update: function(model, value) {
-      if(!value) {
-        return;
-      }
-      this.$el.show();
-      this.$el.find("#rangeList").val(value);
+    update: function() {
+      this.$el.html(this.template({
+        range: this.model.get("range")
+      }));
     },
     rangeSelected: function(evt) {
       this.model.updateRangeByIndex(evt.target.selectedIndex);
