@@ -72,3 +72,8 @@ select {
     display: none;
   }
 }
+
+.range-change-btns {
+  text-align: center;
+  margin-bottom: 9px;
+}
