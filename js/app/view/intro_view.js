@@ -14,7 +14,6 @@ define([
     },
     connectWithGoogle:function(evt){
       evt.preventDefault();
-      evt.stopPropagation();
 
       var clientId = "502172359025.apps.googleusercontent.com",
         callbackUrl = location.origin + location.pathname + "auth.html",
