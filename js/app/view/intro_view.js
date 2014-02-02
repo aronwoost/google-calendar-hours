@@ -1,9 +1,8 @@
 define([
     "jquery",
-    "backbone",
-    "underscore"
+    "backbone"
   ],
-  function ($, Backbone, _, introTmpl) {
+  function ($, Backbone) {
 
   "use strict";
 
