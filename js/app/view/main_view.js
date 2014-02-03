@@ -36,6 +36,7 @@ define([
 
         $(document).ajaxError(function(evt, xhr, ajax) {
           if (xhr.status === 401) {
+            sessionStorage.removeItem("auth");
             self.introView.show();
             self.appView.hide();
           } else if(xhr.status !== 0) {
