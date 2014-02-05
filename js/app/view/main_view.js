@@ -35,7 +35,7 @@ define([
         });
 
         $(document).ajaxError(function(evt, xhr, ajax) {
-          if (xhr.status === 401) {
+          if (xhr.status === 401 || xhr.status === 403) {
             sessionStorage.removeItem("auth");
             self.introView.show();
             self.appView.hide();
