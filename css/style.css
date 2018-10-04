@@ -4,7 +4,8 @@ h3 {
 }
 
 #container {
-  width:400px;
+  min-width:300px;
+  max-width:400px;
   padding:10px;
   margin:0px auto;
 }
@@ -53,7 +54,7 @@ select {
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  max-width: 270px;
+  max-width: calc(100% - 100px);
   height: 15px;
   line-height: 15px;
 
