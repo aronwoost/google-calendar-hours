@@ -2,8 +2,21 @@
 (or [aronwoost.github.io/google-calendar-hours](http://aronwoost.github.com/google-calendar-hours/))
 
 ## Testing and building
-Open ```index_dev.html``` to run the non-optimized version. Every file will be loaded one by one. The redirection back from google *will not work* with ```index_dev.html```, instead use `/` to auth agains google (OAuth token will be saved in sessionStorage) and then head back to ```index_dev.html``` for testing.
+Open `index_dev.html` to run the non-optimized version. Every file will be loaded one by one. The redirection back from google *will not work* with `index_dev.html`, instead use `/` to auth agains google (OAuth token will be saved in sessionStorage) and then head back to `index_dev.html` for testing.
 
+### Docker
+To start a local NGINX hosting the static files, run:
+
+```
+$ docker run \
+  --name gch \
+  -v /<path-to-project>:/usr/share/nginx/html:ro \
+  -d \
+  -p 80:80 \
+  nginx
+```
+
+### Build
 To build the app use [r.js](https://github.com/jrburke/r.js/):
 
 ```
