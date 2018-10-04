@@ -9,3 +9,4 @@ Icon?
 .Trashes
 .DS_Store
 *sublime*
+node_modules
