@@ -68,7 +68,8 @@ define([
             projects.push({
               hours: hours,
               label: title,
-              date: itemDataStart
+              date: itemDataStart,
+              end: itemDataEnd
             });
           }
         }

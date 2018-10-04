@@ -54,6 +54,23 @@ define([
       var range = "";
       var $showDetails;
 
+      var downloadLink = "";
+      var filename = "";
+
+      if (rangeObj.sortBy === "date") {
+        downloadLink = "Start,End,Title,Hours\n";
+        
+        for (var i = 0; i < data.projects.length; i++) {
+          downloadLink += moment(data.projects[i].date).format("DD.MM.YYYY HH:mm") + ",";
+          downloadLink += moment(data.projects[i].end).format("DD.MM.YYYY HH:mm") + ",";
+          downloadLink += "\"" + data.projects[i].label + "\",";
+          downloadLink += data.projects[i].hours;
+          downloadLink += "\n";
+        }
+
+        downloadLink = this._getBlobUrl(downloadLink);
+        filename = calendar.get("summary").replace("\"","") + "_" + rangeObj.start.format("MMMM_YYYY") + "_(" + moment().format("YYYYMMDDHHmmss") + ").csv";
+      }
 
       if (rangeObj.type === "day") {
         range = rangeObj.start.format("dddd, MMMM D, YYYY");
@@ -71,6 +88,8 @@ define([
         range: range,
         sortBy: rangeObj.sortBy,
         outputDate: this.outputDate,
+        downloadLink: downloadLink,
+        filename: filename
       }));
 
       // add listener onto details collapse thingy to save state
@@ -92,6 +111,12 @@ define([
     },
     onDetailsHidden: function() {
       this.detailsShown = false;
+    },
+    _getBlobUrl: function(content) {
+      var MIME_TYPE = "text/csv;charset=UTF-8";
+      var UTF8_BOM = "\uFEFF";
+      var blob = new Blob([UTF8_BOM + content], {type:MIME_TYPE});
+      return window.URL.createObjectURL(blob);
     }
   });
 

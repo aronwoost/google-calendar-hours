@@ -18,6 +18,7 @@
           </li>
         <% } %>
         </ul>
+        <% if (sortBy === "date") { %><a class="btn btn-mini" href="<%= downloadLink %>" download="<%= filename %>">Export as CSV</a><% } %>
       </div>
     </div>
   </div>
