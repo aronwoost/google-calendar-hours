@@ -48,13 +48,13 @@ define([
       var options = new Options({model:selectRange});
       this.$el.append(options.render());
     },
-    render:function(){
+    render:function() {
       return this.$el;
     },
-    show:function(){
+    show:function() {
       this.$el.show();
     },
-    hide:function(){
+    hide:function() {
       this.$el.hide();
     }
   });

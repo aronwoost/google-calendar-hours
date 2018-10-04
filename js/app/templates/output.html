@@ -13,6 +13,7 @@
         <ul class="unstyled">
         <% for (var i=0, l=projects.length;i<l;i++) { %>
           <li class="eventsItem">
+            <% if (sortBy === "date") { %><span class="date"><%= outputDate(projects[i].date)  %></span><% } %>
             <span class="label"><%= projects[i].label %></span> <%= projects[i].hours.toFixed(2) %>h
           </li>
         <% } %>

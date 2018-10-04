@@ -37,10 +37,9 @@ require(
     "app/view/main_view"
   ],
   function (CalendarCollection, MainView) {
-
     var config = {lastSelectedCalendarIndex:null, lastSelectedRangeIndex:null};
     var lsConfig = localStorage.getItem("config");
-    if(lsConfig) {
+    if (lsConfig) {
       config = JSON.parse(lsConfig);
     }
 

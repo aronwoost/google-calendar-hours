@@ -3,10 +3,11 @@ define([
     "backbone",
     "underscore",
     "text!app/templates/output.html",
+    "moment",
     "bootstrap-collapse",
     "bootstrap-transition"
   ],
-  function ($, Backbone, _, outputTmpl) {
+  function ($, Backbone, _, outputTmpl, moment) {
 
   "use strict";
 
@@ -36,23 +37,22 @@ define([
       var calendar = this.model.selectedCalendar;
 
       // waiting for user to select calendar
-      if(!calendar) {
+      if (!calendar) {
         return;
       }
 
-      if(!calendar.isSynced()) {
+      if (!calendar.isSynced()) {
         var spinnerContainer = $("<div id='spinnerContainer' style='position:relative; left:150px; top:40px;'></div>");
         var spinner = spinnerContainer.spin(spinnerOptions);
         this.$el.html(spinnerContainer);
         return;
       }
 
-      var data = calendar.getHours(this.model.selectedRange.getRangeObj());
-
-      var hours = Math.round(data.total*100)/100,
-        rangeObj = this.model.getSelectedRange(),
-        range = "",
-        $showDetails;
+      var rangeObj = this.model.selectedRange.getRangeObj();
+      var data = calendar.getHours(rangeObj);
+      var hours = Math.round(data.total*100)/100;
+      var range = "";
+      var $showDetails;
 
 
       if (rangeObj.type === "day") {
@@ -68,7 +68,9 @@ define([
       this.$el.html(this.template({
         hours: hours,
         projects: data.projects,
-        range: range
+        range: range,
+        sortBy: rangeObj.sortBy,
+        outputDate: this.outputDate,
       }));
 
       // add listener onto details collapse thingy to save state
@@ -81,6 +83,9 @@ define([
     },
     show: function() {
       this.$el.show();
+    },
+    outputDate: function(date) {
+      return moment(date).format("DD.MM.");
     },
     onDetailsShown: function() {
       this.detailsShown = true;

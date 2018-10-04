@@ -10,28 +10,39 @@ define([
   var Options = Backbone.View.extend({
     template: _.template(optionsTmpl),
     events: {
-      "change #optionsRadios1": "changeRadio1",
-      "change #optionsRadios2": "changeRadio2"
+      "change #optionsRadios1": "changeRadioStartOfTheWeek",
+      "change #optionsRadios2": "changeRadioStartOfTheWeek",
+      "change #optionsRadiosSortBy1": "changeRadioSortBy",
+      "change #optionsRadiosSortBy2": "changeRadioSortBy"
     },
     initialize: function() {
       this.model.bind("change:range", this.update, this);
     },
     render: function() {
-      this.$el.html(this.template({checked:this.model.getWeekStart()}));
-      this.$el.hide();
+      this.$el.html(this.template({
+        checked1: this.model.getWeekStart(),
+        checked2: this.model.getSortBy(),
+      }));
+      
+      var range = this.model.get("range");
+      if (range !== "week") {
+        this.$el.find("#startOfTheWeek").hide();
+      }
+      
       return this.$el;
     },
-    changeRadio1: function(){
-      this.model.updateWeekStart("sunday");
+    changeRadioStartOfTheWeek: function(event) {
+      this.model.updateWeekStart(event.currentTarget.value);
     },
-    changeRadio2: function(){
-      this.model.updateWeekStart("monday");
+    changeRadioSortBy: function(event) {
+      this.model.updateSortBy(event.currentTarget.value);
     },
     update: function(model, value) {
-      if(value === "week") {
-        this.$el.show();
+      var $start = this.$el.find("#startOfTheWeek");
+      if (value === "week") {
+        $start.show();
       } else {
-        this.$el.hide();
+        $start.hide();
       }
     }
   });

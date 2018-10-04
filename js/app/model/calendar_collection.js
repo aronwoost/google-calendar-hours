@@ -60,13 +60,15 @@ define([
       this.trigger("viewUpdate", this.selectedCalendar.id);
     },
     updateConfig: function() {
-      var selectedCalendarId = this.selectedCalendar.id,
-        rangeIndex = this.selectedRange.attributes.rangeIndex,
-        weekStart = this.selectedRange.getRangeObj().weekStart,
-        customStart = null,
-        customEnd = null;
+      var selectedCalendarId = this.selectedCalendar.id;
+      var rangeIndex = this.selectedRange.attributes.rangeIndex;
+      var rangeObj = this.selectedRange.getRangeObj();
+      var weekStart = rangeObj.weekStart;
+      var sortBy = rangeObj.sortBy;
+      var customStart = null;
+      var customEnd = null;
 
-      if(rangeIndex === 5) {
+      if (rangeIndex === 5) {
         customStart = this.selectedRange.getRangeObj().start.toJSON();
         customEnd = this.selectedRange.getRangeObj().end.toJSON();
       }
@@ -75,6 +77,7 @@ define([
         lastSelectedRangeIndex:rangeIndex,
         lastSelectedCalendarCid:selectedCalendarId,
         weekStart:weekStart,
+        sortBy:sortBy,
         customStart:customStart,
         customEnd:customEnd
       };

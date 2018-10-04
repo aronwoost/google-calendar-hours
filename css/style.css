@@ -4,7 +4,7 @@ h3 {
 }
 
 #container {
-  width:300px;
+  width:400px;
   padding:10px;
   margin:0px auto;
 }
@@ -53,7 +53,7 @@ select {
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  max-width: 200px;
+  max-width: 270px;
   height: 15px;
   line-height: 15px;
 
@@ -61,6 +61,12 @@ select {
   vertical-align: top;
   zoom: 1;
   *display: inline;
+}
+
+.eventsItem > .date {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: #777;
 }
 
 .accordion-heading .accordion-toggle {
