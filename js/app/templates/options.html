@@ -1,7 +1,18 @@
+<div id="startOfTheWeek">
 Week starts on:
   <label class="radio inline">
-    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" <% if(checked === "sunday") { %> checked="checked" <% }; %> >Sunday
+    <input type="radio" name="optionsRadios" id="optionsRadios1" value="sunday" <% if (checked1 === "sunday") { %> checked="checked" <% }; %> >Sunday
   </label>
   <label class="radio inline">
-    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" <% if(checked === "monday") { %> checked="monday" <% }; %> >Monday
+    <input type="radio" name="optionsRadios" id="optionsRadios2" value="monday" <% if (checked1 === "monday") { %> checked="checked" <% }; %> >Monday
   </label>
+</div>
+<div id="sortBy">
+Sort by:
+  <label class="radio inline">
+    <input type="radio" name="optionsRadiosSortBy" id="optionsRadiosSortBy1" value="amount" <% if (checked2 === "amount") { %> checked="checked" <% }; %> >Amount
+  </label>
+  <label class="radio inline">
+    <input type="radio" name="optionsRadiosSortBy" id="optionsRadiosSortBy2" value="date" <% if (checked2 === "date") { %> checked="checked" <% }; %> >Date
+  </label>
+</div>

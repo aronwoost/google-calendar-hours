@@ -13,10 +13,12 @@
         <ul class="unstyled">
         <% for (var i=0, l=projects.length;i<l;i++) { %>
           <li class="eventsItem">
+            <% if (sortBy === "date") { %><span class="date"><%= outputDate(projects[i].date)  %></span><% } %>
             <span class="label"><%= projects[i].label %></span> <%= projects[i].hours.toFixed(2) %>h
           </li>
         <% } %>
         </ul>
+        <% if (sortBy === "date") { %><a class="btn btn-mini" href="<%= downloadLink %>" download="<%= filename %>">Export as CSV</a><% } %>
       </div>
     </div>
   </div>
