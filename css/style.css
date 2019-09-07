@@ -1,6 +1,11 @@
-h3 {
+h1, h3 {
   color:grey;
   padding-bottom:10px;
+}
+
+h3 {
+  color:grey;
+  padding-top:30px;
 }
 
 #container {
