@@ -30,7 +30,8 @@ define([
     },
     showGoogleBtn:function(){
       this.$el.find("#authBtn").removeAttr("disabled");
-      this.$el.find("#authBtn").text("Connect to Google Calendar");
+      this.$el.find("#authBtn").removeClass('btn btn-large btn-primary');
+      this.$el.find("#authBtn").html("<img src='/img/btn_google.png' width='191' height='46' />");
     }
   });
 
