@@ -16,7 +16,7 @@ define([
 
       var clientId = "502172359025.apps.googleusercontent.com",
         callbackUrl = location.origin + location.pathname + "auth.html",
-        scope = "https://www.googleapis.com/auth/calendar.readonly",
+        scope = "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly",
         reqUrl = "https://accounts.google.com/o/oauth2/auth?client_id="+clientId+"&redirect_uri="+callbackUrl+"&scope="+scope+"&response_type=token";
 
       window.location = reqUrl;
