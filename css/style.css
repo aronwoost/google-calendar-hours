@@ -89,3 +89,10 @@ select {
   text-align: center;
   margin-bottom: 9px;
 }
+
+.not_working {
+  font-size: 24px;
+  color: red;
+  font-weight: bold;
+  line-height: 30px;
+}
