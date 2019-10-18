@@ -5,7 +5,7 @@ define([
 
   "use strict";
 
-  var endpointUrl = "https://www.googleapis.com/calendar/v3/calendars/:id/events?singleEvents=true";
+  var endpointUrl = "https://www.googleapis.com/calendar/v3/calendars/:id/events?singleEvents=true&maxResults=2500";
 
   var EventsCollection = Backbone.Collection.extend({
     model: Backbone.Model,
