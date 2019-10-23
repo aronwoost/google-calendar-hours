@@ -31,14 +31,14 @@ $ docker run \
 ```
 
 ### Build
-To build the app use [r.js](https://github.com/jrburke/r.js/):
+[r.js](https://github.com/jrburke/r.js/) is used to build the app:
 
 ```
-# install
-npm install -g requirejs
+# Install (only needs to be run once)
+npm install
 
-# build
-r.js -o js/build.js
+# Build with r.js
+npm run build
 ```
 
 ## Stuff used
