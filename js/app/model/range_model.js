@@ -59,7 +59,7 @@ define([
         if (this.weekStart === "sunday") {
           d1 = this.currentDatePointer.clone().day(0);
         } else {
-          d1 = this.currentDatePointer.clone().day(1);
+          d1 = this.currentDatePointer.clone().subtract("days", 1).day(1);
         }
         d2 = d1.clone().add("weeks", 1);
       } else if (range === "month") {
@@ -117,6 +117,7 @@ define([
         return;
       }
       this.weekStart = day;
+      this.currentDatePointer.add("days", 1)
       this.updateRangeObj();
     },
     getWeekStart: function() {
