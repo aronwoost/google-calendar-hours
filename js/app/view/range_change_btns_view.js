@@ -31,9 +31,8 @@ define([
       var value = this.model.get("range");
 
       this.$el.html(this.template({
-        hide: this.model.get("range") === "custom",
-        to: btnLabel[value] || "",
-        disableBtns: value === "total"
+        hide: value === "custom" || value == "total",
+        to: btnLabel[value] || ""
       }));
     },
     changeRange: function(evt) {
