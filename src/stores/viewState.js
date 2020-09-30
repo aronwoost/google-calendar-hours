@@ -102,15 +102,12 @@ export const setSelectedCalendar = ({ calendarId }) => async (
   getState
 ) => {
   const state = getState();
-  const cA = state.calendar.map[calendarId];
-  if (!cA) {
+  const calendarEvents = state.calendar.map[calendarId];
+  if (!calendarEvents) {
     await dispatch(loadCalendarEvents({ calendarId }));
-    dispatch(setSelectedCalendarId(calendarId));
-    updateConfig({ selectedCalendarId: calendarId });
-  } else {
-    dispatch(setSelectedCalendarId(calendarId));
-    updateConfig({ selectedCalendarId: calendarId });
   }
+  dispatch(setSelectedCalendarId(calendarId));
+  updateConfig({ selectedCalendarId: calendarId });
 };
 
 export const changeRangeType = ({ range }) => async (dispatch) => {
