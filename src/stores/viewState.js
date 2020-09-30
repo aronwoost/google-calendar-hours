@@ -113,7 +113,7 @@ export const setSelectedCalendar = ({ calendarId }) => async (
   }
 };
 
-export const changeRangeType = (range) => async (dispatch) => {
+export const changeRangeType = ({ range }) => async (dispatch) => {
   dispatch(setRangeType(range));
   updateConfig({ lastSelectedRangeType: range });
 };

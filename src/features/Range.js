@@ -20,7 +20,9 @@ const Range = () => {
   return (
     <select
       data-testid="RangeSelectList"
-      onChange={(event) => dispatch(changeRangeType(event.target.value))}
+      onChange={(event) =>
+        dispatch(changeRangeType({ range: event.target.value }))
+      }
       value={currentRangeType}
     >
       <option value="day">Day</option>
