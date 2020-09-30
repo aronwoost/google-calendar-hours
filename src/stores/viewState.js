@@ -15,18 +15,18 @@ export const viewState = createSlice({
   name: 'viewState',
   initialState: getInitialState(),
   reducers: {
-    setSelectedCalendarId: (state, action) => {
-      state.selectedCalendarId = action.payload;
+    setSelectedCalendarId: (state, { payload }) => {
+      state.selectedCalendarId = payload;
     },
-    setRangeType: (state, action) => {
-      state.rangeType = action.payload;
+    setRangeType: (state, { payload }) => {
+      state.rangeType = payload;
     },
-    changeRange: (state, action) => {
-      if (action.payload === 'prev') {
+    changeRange: (state, { payload }) => {
+      if (payload === 'prev') {
         state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
           .subtract(1, state.rangeType)
           .toJSON();
-      } else if (action.payload === 'next') {
+      } else if (payload === 'next') {
         state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
           .add(1, state.rangeType)
           .toJSON();

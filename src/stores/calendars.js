@@ -12,8 +12,8 @@ export const calendars = createSlice({
     list: null,
   },
   reducers: {
-    setCalendars: (state, action) => {
-      state.list = action.payload;
+    setCalendars: (state, { payload }) => {
+      state.list = payload;
     },
   },
 });
@@ -26,10 +26,7 @@ export const loadCalendars = () => async (dispatch, getState) => {
     const data = await getCalendars({ accessToken });
     dispatch(
       setCalendars(
-        data.items.map((item) => ({
-          id: item.id,
-          label: item.summary,
-        }))
+        data.items.map(({ id, summary }) => ({ id, label: summary }))
       )
     );
     const config = getConfig();

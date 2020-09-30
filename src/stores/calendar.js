@@ -10,8 +10,8 @@ export const calendar = createSlice({
     map: {},
   },
   reducers: {
-    setCalendarEvents: (state, action) => {
-      state.map[action.payload.calendarId] = action.payload.events;
+    setCalendarEvents: (state, { payload }) => {
+      state.map[payload.calendarId] = payload.events;
     },
   },
 });

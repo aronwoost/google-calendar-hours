@@ -34,9 +34,9 @@ const CalendarsList = () => {
       {!selectedCalendar && (
         <option key="default">Please select calendar</option>
       )}
-      {calendars.map((item) => (
-        <option value={item.id} key={item.id}>
-          {item.label}
+      {calendars.map(({ id, label }) => (
+        <option value={id} key={id}>
+          {label}
         </option>
       ))}
     </select>
