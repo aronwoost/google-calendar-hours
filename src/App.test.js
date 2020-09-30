@@ -203,7 +203,7 @@ describe('localStorage', () => {
     });
 
     expect(window.localStorage.getItem('config')).toEqual(
-      '{"selectedCalendarId":"test-id","lastSelectedRangeType":"week"}'
+      '{"selectedCalendarId":"test-id","selectedRangeType":"week"}'
     );
   });
 
@@ -212,7 +212,7 @@ describe('localStorage', () => {
       'config',
       JSON.stringify({
         selectedCalendarId: 'test-id',
-        lastSelectedRangeType: 'week',
+        selectedRangeType: 'week',
       })
     );
 
@@ -759,7 +759,7 @@ describe('calculate hours', () => {
 describe('display time range in human readable format', () => {
   it('renders current day', () => {
     const { getByText } = renderAppWithStore({
-      viewState: { rangeType: 'day' },
+      viewState: { selectedRangeType: 'day' },
       calendar: { map: { 'test-id': [] } },
     });
 
@@ -768,7 +768,7 @@ describe('display time range in human readable format', () => {
 
   it('renders current week', () => {
     const { getByText } = renderAppWithStore({
-      viewState: { rangeType: 'week' },
+      viewState: { selectedRangeType: 'week' },
       calendar: { map: { 'test-id': [] } },
     });
 
@@ -777,7 +777,7 @@ describe('display time range in human readable format', () => {
 
   it('renders current month', () => {
     const { getByText } = renderAppWithStore({
-      viewState: { rangeType: 'month' },
+      viewState: { selectedRangeType: 'month' },
       calendar: { map: { 'test-id': [] } },
     });
 
@@ -786,7 +786,7 @@ describe('display time range in human readable format', () => {
 
   it('renders current year', () => {
     const { getByText } = renderAppWithStore({
-      viewState: { rangeType: 'year' },
+      viewState: { selectedRangeType: 'year' },
       calendar: { map: { 'test-id': [] } },
     });
 
@@ -795,7 +795,7 @@ describe('display time range in human readable format', () => {
 
   it('renders without RangeDisplay ("total")', () => {
     const { queryByTestId } = renderAppWithStore({
-      viewState: { rangeType: 'total' },
+      viewState: { selectedRangeType: 'total' },
       calendar: { map: { 'test-id': [] } },
     });
 

@@ -7,7 +7,7 @@ import { getConfig, updateConfig } from './storage';
 
 export const getInitialState = () => ({
   selectedCalendarId: null,
-  rangeType: get(getConfig(), 'lastSelectedRangeType', 'total'),
+  selectedRangeType: get(getConfig(), 'selectedRangeType', 'total'),
   currentDatePointerStart: dayjs().startOf('day').toJSON(),
 });
 
@@ -19,16 +19,16 @@ export const viewState = createSlice({
       state.selectedCalendarId = payload;
     },
     setRangeType: (state, { payload }) => {
-      state.rangeType = payload;
+      state.selectedRangeType = payload;
     },
     changeRange: (state, { payload }) => {
       if (payload === 'prev') {
         state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
-          .subtract(1, state.rangeType)
+          .subtract(1, state.selectedRangeType)
           .toJSON();
       } else if (payload === 'next') {
         state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
-          .add(1, state.rangeType)
+          .add(1, state.selectedRangeType)
           .toJSON();
       }
     },
@@ -51,7 +51,7 @@ export const selectSelectedCalendar = (state) =>
 
 export const selectDate = (state) => state.viewState.currentDatePointerStart;
 
-export const selectRangeType = (state) => state.viewState.rangeType;
+export const selectRangeType = (state) => state.viewState.selectedRangeType;
 
 export const selectHours = (state) => {
   const events = selectCalendarEvents(state, selectSelectedCalendar(state));
@@ -60,25 +60,25 @@ export const selectHours = (state) => {
     return null;
   }
 
-  const { rangeType, currentDatePointerStart } = state.viewState;
+  const { selectedRangeType, currentDatePointerStart } = state.viewState;
   const currentDatePointerStartDate = dayjs(currentDatePointerStart);
 
   let rangeStart;
   let rangeEnd;
 
-  if (rangeType === 'total') {
+  if (selectedRangeType === 'total') {
     rangeStart = dayjs('2000-01-01T10:00:00Z');
     rangeEnd = dayjs('2040-01-01T10:00:00Z');
-  } else if (rangeType === 'week') {
+  } else if (selectedRangeType === 'week') {
     rangeStart = currentDatePointerStartDate.startOf('day').day(0);
     rangeEnd = rangeStart.add(1, 'week');
-  } else if (rangeType === 'day') {
+  } else if (selectedRangeType === 'day') {
     rangeStart = currentDatePointerStartDate.startOf('day');
     rangeEnd = rangeStart.add(1, 'day');
-  } else if (rangeType === 'month') {
+  } else if (selectedRangeType === 'month') {
     rangeStart = currentDatePointerStartDate.startOf('month');
     rangeEnd = rangeStart.add(1, 'month');
-  } else if (rangeType === 'year') {
+  } else if (selectedRangeType === 'year') {
     rangeStart = currentDatePointerStartDate.startOf('year');
     rangeEnd = rangeStart.add(1, 'year');
   }
@@ -112,7 +112,7 @@ export const setSelectedCalendar = ({ calendarId }) => async (
 
 export const changeRangeType = ({ range }) => async (dispatch) => {
   dispatch(setRangeType(range));
-  updateConfig({ lastSelectedRangeType: range });
+  updateConfig({ selectedRangeType: range });
 };
 
 export default viewState.reducer;
