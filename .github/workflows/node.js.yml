@@ -22,4 +22,4 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run lint
-      - run: npx prettier-eslint --list-different $(for i in $(git --no-pager diff --name-only FETCH_HEAD $(git merge-base FETCH_HEAD origin/master) -- '.js' '.md'); do echo $(pwd)/$i; done)
+      - run: npx prettier-eslint --list-different $PWD'/src/**/*.{js,md}'
