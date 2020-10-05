@@ -38,13 +38,8 @@ export const viewState = createSlice({
   },
 });
 
-// TODO don't export all
-export const {
-  setSelectedCalendarId,
-  setRangeType,
-  changeRange,
-  resetRange,
-} = viewState.actions;
+export const { changeRange, resetRange } = viewState.actions;
+const { setSelectedCalendarId, setRangeType } = viewState.actions;
 
 export const selectSelectedCalendar = (state) =>
   state.viewState.selectedCalendarId;
