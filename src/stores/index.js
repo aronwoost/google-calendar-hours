@@ -4,7 +4,8 @@ import calendars from './calendars';
 import viewState from './viewState';
 import calendar from './calendar';
 
-export default ({ initialState } = {}) =>
+// eslint-disable-next-line import/prefer-default-export
+export const store = ({ initialState } = {}) =>
   configureStore({
     reducer: {
       authentication,

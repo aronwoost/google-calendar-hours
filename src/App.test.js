@@ -5,12 +5,12 @@ import timekeeper from 'timekeeper';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import createStore from './stores/store';
+import { store } from './stores';
 import App from './App';
 import { getInitialState } from './stores/viewState';
 
 const createTestStore = ({ authentication, viewState, calendars, calendar }) =>
-  createStore({
+  store({
     initialState: {
       authentication: { accessToken: 'ABC123', ...authentication },
       viewState: {
