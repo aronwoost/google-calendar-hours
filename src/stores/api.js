@@ -16,10 +16,10 @@ const fetchGoogle = ({ url, accessToken, params }) =>
     return response.json();
   });
 
-export const getCalendars = ({ accessToken }) =>
+export const fetchCalendars = ({ accessToken }) =>
   fetchGoogle({ url: `${API_BASE_PATH}users/me/calendarList`, accessToken });
 
-export const getCalendarEvents = ({ accessToken, calendarId }) =>
+export const fetchCalendarEvents = ({ accessToken, calendarId }) =>
   fetchGoogle({
     url: `${API_BASE_PATH}calendars/${calendarId}/events`,
     accessToken,

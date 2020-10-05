@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 
 import { selectAccessToken } from './authentication';
-import { getCalendarEvents } from './api';
+import { fetchCalendarEvents } from './api';
 
 export const calendar = createSlice({
   name: 'calendar',
@@ -25,7 +25,7 @@ export const loadCalendarEvents = ({ calendarId }) => async (
   const state = getState();
   const accessToken = selectAccessToken(state);
   try {
-    const data = await getCalendarEvents({ accessToken, calendarId });
+    const data = await fetchCalendarEvents({ accessToken, calendarId });
     dispatch(setCalendarEvents({ calendarId, events: data.items }));
     return Promise.resolve();
   } catch (e) {

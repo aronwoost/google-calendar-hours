@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 
 import { selectAccessToken } from './authentication';
-import { getCalendars } from './api';
+import { fetchCalendars } from './api';
 import { getConfig } from './storage';
 import { setSelectedCalendar } from './viewState';
 
@@ -23,7 +23,7 @@ const { setCalendars } = calendars.actions;
 export const loadCalendars = () => async (dispatch, getState) => {
   const accessToken = selectAccessToken(getState());
   try {
-    const data = await getCalendars({ accessToken });
+    const data = await fetchCalendars({ accessToken });
     dispatch(
       setCalendars(
         data.items.map(({ id, summary }) => ({ id, label: summary }))
