@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import { get } from 'lodash';
 
-import { loadCalendarEvents, selectCalendarEvents } from './calendar';
+import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { getConfig, updateConfig } from './storage';
 
 export const getInitialState = () => ({
@@ -102,7 +102,7 @@ export const setSelectedCalendar = ({ calendarId }) => async (
   getState
 ) => {
   const state = getState();
-  const calendarEvents = state.calendar.map[calendarId];
+  const calendarEvents = selectCalendarEvents(state, calendarId);
   if (!calendarEvents) {
     await dispatch(loadCalendarEvents({ calendarId }));
   }

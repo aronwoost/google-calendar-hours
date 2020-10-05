@@ -9,7 +9,12 @@ import { store } from './stores';
 import App from './App';
 import { getInitialState } from './stores/viewState';
 
-const createTestStore = ({ authentication, viewState, calendars, calendar }) =>
+const createTestStore = ({
+  authentication,
+  viewState,
+  calendars,
+  calendarEvents,
+}) =>
   store({
     initialState: {
       authentication: { accessToken: 'ABC123', ...authentication },
@@ -22,7 +27,7 @@ const createTestStore = ({ authentication, viewState, calendars, calendar }) =>
         list: [{ id: 'test-id', label: 'test-name' }],
         ...calendars,
       },
-      calendar,
+      calendarEvents,
     },
   });
 
@@ -30,7 +35,7 @@ const renderAppWithStore = ({
   authentication,
   viewState,
   calendars,
-  calendar,
+  calendarEvents,
 } = {}) =>
   render(
     <Provider
@@ -38,7 +43,7 @@ const renderAppWithStore = ({
         authentication,
         viewState,
         calendars,
-        calendar,
+        calendarEvents,
       })}
     >
       <App />
@@ -142,7 +147,7 @@ it('requests calendars and display placeholder', async () => {
 
 it('renders range select list and hours (happy path)', () => {
   const { getByText } = renderAppWithStore({
-    calendar: {
+    calendarEvents: {
       map: { 'test-id': testEvents },
     },
   });
@@ -160,7 +165,7 @@ it('renders correctly after user changes calendar', () => {
         { id: 'test-id-2', label: 'test-name-2' },
       ],
     },
-    calendar: {
+    calendarEvents: {
       map: { 'test-id': [], 'test-id-2': testEvents },
     },
   });
@@ -189,7 +194,7 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 describe('localStorage', () => {
   it('saves user selection to localStorage', () => {
     const { getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: { 'test-id': testEvents },
       },
     });
@@ -232,7 +237,7 @@ describe('localStorage', () => {
 describe('calculate hours', () => {
   it('renders 0h hours (if not matching events)', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -253,7 +258,7 @@ describe('calculate hours', () => {
 
   it('renders hours for day', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -284,7 +289,7 @@ describe('calculate hours', () => {
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -315,7 +320,7 @@ describe('calculate hours', () => {
 
   it('renders hours for day when user changes to next day', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -346,7 +351,7 @@ describe('calculate hours', () => {
 
   it('renders hours for day when user resets', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -379,7 +384,7 @@ describe('calculate hours', () => {
 
   it('renders hours for week', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -410,7 +415,7 @@ describe('calculate hours', () => {
     timekeeper.freeze(new Date('2018-01-12T10:00:00Z'));
 
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -441,7 +446,7 @@ describe('calculate hours', () => {
 
   it('renders hours for week when user changes to next week', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -472,7 +477,7 @@ describe('calculate hours', () => {
 
   it('renders hours for week when user resets', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -505,7 +510,7 @@ describe('calculate hours', () => {
 
   it('renders hours for month', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -536,7 +541,7 @@ describe('calculate hours', () => {
     timekeeper.freeze(new Date('2018-02-01T10:00:00Z'));
 
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -567,7 +572,7 @@ describe('calculate hours', () => {
 
   it('renders hours for month when user changes to next month', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -598,7 +603,7 @@ describe('calculate hours', () => {
 
   it('renders hours for month when user resets', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -631,7 +636,7 @@ describe('calculate hours', () => {
 
   it('renders hours for year', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -662,7 +667,7 @@ describe('calculate hours', () => {
     timekeeper.freeze(new Date('2019-01-01T10:00:00Z'));
 
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -693,7 +698,7 @@ describe('calculate hours', () => {
 
   it('renders hours for year when user changes to next year', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -724,7 +729,7 @@ describe('calculate hours', () => {
 
   it('renders hours for year when user resets', () => {
     const { getByText, getByTestId } = renderAppWithStore({
-      calendar: {
+      calendarEvents: {
         map: {
           'test-id': [
             {
@@ -760,7 +765,7 @@ describe('display time range in human readable format', () => {
   it('renders current day', () => {
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'day' },
-      calendar: { map: { 'test-id': [] } },
+      calendarEvents: { map: { 'test-id': [] } },
     });
 
     expect(getByText('Monday, January 1, 2018')).toBeInTheDocument();
@@ -769,7 +774,7 @@ describe('display time range in human readable format', () => {
   it('renders current week', () => {
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'week' },
-      calendar: { map: { 'test-id': [] } },
+      calendarEvents: { map: { 'test-id': [] } },
     });
 
     expect(getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
@@ -778,7 +783,7 @@ describe('display time range in human readable format', () => {
   it('renders current month', () => {
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
-      calendar: { map: { 'test-id': [] } },
+      calendarEvents: { map: { 'test-id': [] } },
     });
 
     expect(getByText('January, 2018')).toBeInTheDocument();
@@ -787,7 +792,7 @@ describe('display time range in human readable format', () => {
   it('renders current year', () => {
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'year' },
-      calendar: { map: { 'test-id': [] } },
+      calendarEvents: { map: { 'test-id': [] } },
     });
 
     expect(getByText('2018')).toBeInTheDocument();
@@ -796,7 +801,7 @@ describe('display time range in human readable format', () => {
   it('renders without RangeDisplay ("total")', () => {
     const { queryByTestId } = renderAppWithStore({
       viewState: { selectedRangeType: 'total' },
-      calendar: { map: { 'test-id': [] } },
+      calendarEvents: { map: { 'test-id': [] } },
     });
 
     expect(queryByTestId('RangeDisplay')).not.toBeInTheDocument();

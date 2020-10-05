@@ -4,8 +4,8 @@ import { get } from 'lodash';
 import { selectAccessToken } from './authentication';
 import { fetchCalendarEvents } from './api';
 
-export const calendar = createSlice({
-  name: 'calendar',
+export const calendarEvents = createSlice({
+  name: 'calendarEvents',
   initialState: {
     map: {},
   },
@@ -16,7 +16,7 @@ export const calendar = createSlice({
   },
 });
 
-const { setCalendarEvents } = calendar.actions;
+const { setCalendarEvents } = calendarEvents.actions;
 
 export const loadCalendarEvents = ({ calendarId }) => async (
   dispatch,
@@ -34,6 +34,6 @@ export const loadCalendarEvents = ({ calendarId }) => async (
 };
 
 export const selectCalendarEvents = (state, calendarId) =>
-  get(state, `calendar.map["${calendarId}"]`, null);
+  get(state, `calendarEvents.map["${calendarId}"]`, null);
 
-export default calendar.reducer;
+export default calendarEvents.reducer;

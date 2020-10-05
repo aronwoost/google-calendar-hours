@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authentication from './authentication';
 import calendars from './calendars';
 import viewState from './viewState';
-import calendar from './calendar';
+import calendarEvents from './calendarEvents';
 
 // eslint-disable-next-line import/prefer-default-export
 export const store = ({ initialState } = {}) =>
@@ -11,7 +11,7 @@ export const store = ({ initialState } = {}) =>
       authentication,
       calendars,
       viewState,
-      calendar,
+      calendarEvents,
     },
     preloadedState: initialState,
   });
