@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { get } from 'lodash';
 
 import { selectAccessToken } from './authentication';
 import { fetchCalendars } from './api';
@@ -30,7 +29,7 @@ export const loadCalendars = () => async (dispatch, getState) => {
       )
     );
     const config = getConfig();
-    const selectedCalendarId = get(config, 'selectedCalendarId');
+    const selectedCalendarId = config?.selectedCalendarId;
 
     if (selectedCalendarId) {
       dispatch(setSelectedCalendar({ calendarId: selectedCalendarId }));

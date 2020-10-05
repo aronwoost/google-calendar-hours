@@ -1,13 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
-import { get } from 'lodash';
 
 import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { getConfig, updateConfig } from './storage';
 
 export const getInitialState = () => ({
   selectedCalendarId: null,
-  selectedRangeType: get(getConfig(), 'selectedRangeType', 'total'),
+  selectedRangeType: getConfig()?.selectedRangeType || 'total',
   currentDatePointerStart: dayjs().startOf('day').toJSON(),
 });
 

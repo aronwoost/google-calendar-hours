@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { get } from 'lodash';
 
 import { selectAccessToken } from './authentication';
 import { fetchCalendarEvents } from './api';
@@ -34,6 +33,6 @@ export const loadCalendarEvents = ({ calendarId }) => async (
 };
 
 export const selectCalendarEvents = (state, calendarId) =>
-  get(state, `calendarEvents.map["${calendarId}"]`, null);
+  state.calendarEvents?.map[calendarId] || null;
 
 export default calendarEvents.reducer;
