@@ -8,7 +8,7 @@ import {
 } from '../stores/viewState';
 import styles from './RangeChanger.module.css';
 
-const Range = () => {
+const RangeChanger = () => {
   const dispatch = useDispatch();
 
   const selectedCalendar = useSelector(selectSelectedCalendar);
@@ -32,4 +32,4 @@ const Range = () => {
   );
 };
 
-export default Range;
+export default RangeChanger;
