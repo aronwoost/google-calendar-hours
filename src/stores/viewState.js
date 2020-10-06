@@ -60,21 +60,21 @@ export const selectHours = (state) => {
   let rangeStart;
   let rangeEnd;
 
-  if (selectedRangeType === 'total') {
-    rangeStart = dayjs('2000-01-01T10:00:00Z');
-    rangeEnd = dayjs('2040-01-01T10:00:00Z');
+  if (selectedRangeType === 'day') {
+    rangeStart = currentDatePointerStartDate.startOf('day');
+    rangeEnd = rangeStart.add(1, 'day');
   } else if (selectedRangeType === 'week') {
     rangeStart = currentDatePointerStartDate.startOf('day').day(0);
     rangeEnd = rangeStart.add(1, 'week');
-  } else if (selectedRangeType === 'day') {
-    rangeStart = currentDatePointerStartDate.startOf('day');
-    rangeEnd = rangeStart.add(1, 'day');
   } else if (selectedRangeType === 'month') {
     rangeStart = currentDatePointerStartDate.startOf('month');
     rangeEnd = rangeStart.add(1, 'month');
   } else if (selectedRangeType === 'year') {
     rangeStart = currentDatePointerStartDate.startOf('year');
     rangeEnd = rangeStart.add(1, 'year');
+  } else if (selectedRangeType === 'total') {
+    rangeStart = dayjs('2000-01-01T10:00:00Z');
+    rangeEnd = dayjs('2040-01-01T10:00:00Z');
   }
 
   let hours = 0;
