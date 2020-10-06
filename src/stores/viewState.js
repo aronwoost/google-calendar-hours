@@ -3,10 +3,11 @@ import dayjs from 'dayjs';
 
 import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { getConfig, updateConfig } from './storage';
+import { RANGE_TYPE } from '../constants';
 
 export const getInitialState = () => ({
   selectedCalendarId: null,
-  selectedRangeType: getConfig()?.selectedRangeType || 'total',
+  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
   currentDatePointerStart: dayjs().startOf('day').toJSON(),
 });
 
@@ -60,19 +61,19 @@ export const selectHours = (state) => {
   let rangeStart;
   let rangeEnd;
 
-  if (selectedRangeType === 'day') {
+  if (selectedRangeType === RANGE_TYPE.DAY) {
     rangeStart = currentDatePointerStartDate.startOf('day');
     rangeEnd = rangeStart.add(1, 'day');
-  } else if (selectedRangeType === 'week') {
+  } else if (selectedRangeType === RANGE_TYPE.WEEK) {
     rangeStart = currentDatePointerStartDate.startOf('day').day(0);
     rangeEnd = rangeStart.add(1, 'week');
-  } else if (selectedRangeType === 'month') {
+  } else if (selectedRangeType === RANGE_TYPE.MONTH) {
     rangeStart = currentDatePointerStartDate.startOf('month');
     rangeEnd = rangeStart.add(1, 'month');
-  } else if (selectedRangeType === 'year') {
+  } else if (selectedRangeType === RANGE_TYPE.YEAR) {
     rangeStart = currentDatePointerStartDate.startOf('year');
     rangeEnd = rangeStart.add(1, 'year');
-  } else if (selectedRangeType === 'total') {
+  } else if (selectedRangeType === RANGE_TYPE.TOTAL) {
     rangeStart = dayjs('2000-01-01T10:00:00Z');
     rangeEnd = dayjs('2040-01-01T10:00:00Z');
   }

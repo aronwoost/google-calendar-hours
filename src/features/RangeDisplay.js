@@ -3,26 +3,27 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
 import { selectDate, selectRangeType } from '../stores/viewState';
+import { RANGE_TYPE } from '../constants';
 
 const RangeDisplay = () => {
   const currentDate = useSelector(selectDate);
   const currentRangeType = useSelector(selectRangeType);
 
-  if (currentRangeType === 'total') {
+  if (currentRangeType === RANGE_TYPE.TOTAL) {
     return null;
   }
 
   let range;
   const date = dayjs(currentDate);
 
-  if (currentRangeType === 'day') {
+  if (currentRangeType === RANGE_TYPE.DAY) {
     range = date.format('dddd, MMMM D, YYYY');
-  } else if (currentRangeType === 'week') {
+  } else if (currentRangeType === RANGE_TYPE.WEEK) {
     const nextWeek = date.add(1, 'week');
     range = `${date.format('DD.MM.YYYY')} -  ${nextWeek.format('DD.MM.YYYY')}`;
-  } else if (currentRangeType === 'month') {
+  } else if (currentRangeType === RANGE_TYPE.MONTH) {
     range = date.format('MMMM, YYYY');
-  } else if (currentRangeType === 'year') {
+  } else if (currentRangeType === RANGE_TYPE.YEAR) {
     range = date.format('YYYY');
   }
 
