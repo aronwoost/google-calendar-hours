@@ -843,3 +843,41 @@ describe('display time range in human readable format', () => {
     expect(queryByTestId('RangeDisplay')).not.toBeInTheDocument();
   });
 });
+
+describe('display events', () => {
+  it('renders hours for month when user changes to previous month', () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const { getByText, queryByText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T11:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'event-2',
+              start: { dateTime: '2018-01-01T13:00:00Z' },
+              end: { dateTime: '2018-01-01T14:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'event-3',
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    expect(getByText('event-1')).toBeInTheDocument();
+    expect(getByText('event-2')).toBeInTheDocument();
+    expect(queryByText('event-3')).not.toBeInTheDocument();
+  });
+});
