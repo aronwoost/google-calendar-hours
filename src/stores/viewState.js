@@ -83,14 +83,12 @@ export const selectEventsByRange = (state) => {
     rangeEnd = dayjs('2040-01-01T10:00:00Z');
   }
 
-  const filteredEvents = events.filter((event) => {
+  return events.filter((event) => {
     const itemDateStart = new Date(event.start.dateTime);
     const itemDateEnd = new Date(event.end.dateTime);
 
     return itemDateStart > rangeStart && itemDateEnd < rangeEnd;
   });
-
-  return filteredEvents;
 };
 
 export const selectHours = (state) => {
