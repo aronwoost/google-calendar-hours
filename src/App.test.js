@@ -845,7 +845,7 @@ describe('display time range in human readable format', () => {
 });
 
 describe('display events', () => {
-  it('renders events', () => {
+  it('renders events collapsed', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
     const { getByText, queryByText } = renderAppWithStore({
@@ -875,6 +875,46 @@ describe('display events', () => {
         },
       },
     });
+
+    expect(getByText('show details')).toBeInTheDocument();
+
+    expect(queryByText('event-1')).not.toBeInTheDocument();
+  });
+
+  it.only('renders events', async () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const { getByText, queryByText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T11:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'event-2',
+              start: { dateTime: '2018-01-01T13:00:00Z' },
+              end: { dateTime: '2018-01-01T14:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'event-3',
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.click(getByText('show details'));
+
+    expect(getByText('hide details')).toBeInTheDocument();
 
     expect(getByText('event-1')).toBeInTheDocument();
     expect(getByText('event-2')).toBeInTheDocument();

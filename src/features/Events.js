@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
@@ -7,6 +7,8 @@ import {
 } from '../stores/viewState';
 
 const Events = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const selectedCalendar = useSelector(selectSelectedCalendar);
   const events = useSelector((state) =>
     selectEventsByRange(state, selectedCalendar)
@@ -18,11 +20,18 @@ const Events = () => {
 
   return (
     <div>
-      <ul>
-        {events.map((event) => (
-          <li key={event.id}>{event.summary}</li>
-        ))}
-      </ul>
+      <div>
+        <button type="button" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? 'hide details' : 'show details'}
+        </button>
+      </div>
+      {isOpen && (
+        <ul>
+          {events.map((event) => (
+            <li key={event.id}>{event.summary}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
