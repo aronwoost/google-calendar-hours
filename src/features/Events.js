@@ -6,6 +6,8 @@ import {
   selectEventsByRange,
 } from '../stores/viewState';
 
+import styles from './Events.module.css';
+
 const Events = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,9 +28,11 @@ const Events = () => {
         </button>
       </div>
       {isOpen && (
-        <ul>
+        <ul className={styles.list}>
           {events.map((event) => (
-            <li key={event.id}>{event.summary}</li>
+            <li key={event.id} className={styles.listItem}>
+              {event.summary}
+            </li>
           ))}
         </ul>
       )}
