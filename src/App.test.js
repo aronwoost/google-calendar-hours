@@ -915,6 +915,9 @@ describe('display events', () => {
     fireEvent.click(getByText('show details'));
 
     expect(getByText('hide details')).toBeInTheDocument();
+    expect(getByText('Sort by:')).toBeInTheDocument();
+    expect(getByText('Date')).toBeInTheDocument();
+    expect(getByText('Amount')).toBeInTheDocument();
 
     expect(getByText('01.01.')).toBeInTheDocument();
     expect(getByText('event-1')).toBeInTheDocument();
@@ -925,5 +928,47 @@ describe('display events', () => {
     expect(getByText('5h')).toBeInTheDocument();
 
     expect(queryByText('event-3')).not.toBeInTheDocument();
+  });
+
+  it('renders events by amount', async () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const { getByText, getByLabelText, queryAllByText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'event-2',
+              start: { dateTime: '2018-01-05T13:00:00Z' },
+              end: { dateTime: '2018-01-05T18:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'event-3',
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.click(getByText('show details'));
+
+    fireEvent.click(getByLabelText('Amount'));
+
+    const items = queryAllByText(/event-[1-3]/);
+
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveTextContent('event-2');
+    expect(items[1]).toHaveTextContent('event-1');
   });
 });
