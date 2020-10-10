@@ -10,6 +10,10 @@
   text-align: left;
 }
 
+.listItem span {
+  padding-right: 5px;
+}
+
 .listItem + .listItem {
   margin-top: 2px;
 }
