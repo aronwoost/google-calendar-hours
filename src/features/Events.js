@@ -30,12 +30,20 @@ const Events = () => {
       </div>
       {isOpen && (
         <ul className={styles.list}>
-          {events.map((event) => (
-            <li key={event.id} className={styles.listItem}>
-              <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
-              <span>{event.summary}</span>
-            </li>
-          ))}
+          {events.map((event) => {
+            const itemDateStart = new Date(event.start.dateTime);
+            const itemDateEnd = new Date(event.end.dateTime);
+
+            const hours = (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
+
+            return (
+              <li key={event.id} className={styles.listItem}>
+                <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
+                <span>{event.summary}</span>
+                <span>{`${hours}h`}</span>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>
