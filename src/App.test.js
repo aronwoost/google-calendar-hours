@@ -881,7 +881,7 @@ describe('display events', () => {
     expect(queryByText('event-1')).not.toBeInTheDocument();
   });
 
-  it.only('renders events', async () => {
+  it('renders events', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
     const { getByText, queryByText } = renderAppWithStore({
@@ -898,8 +898,8 @@ describe('display events', () => {
             {
               id: '2',
               summary: 'event-2',
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
+              start: { dateTime: '2018-01-05T13:00:00Z' },
+              end: { dateTime: '2018-01-05T14:00:00Z' },
             },
             {
               id: '3',
@@ -916,8 +916,12 @@ describe('display events', () => {
 
     expect(getByText('hide details')).toBeInTheDocument();
 
+    expect(getByText('01.01.')).toBeInTheDocument();
     expect(getByText('event-1')).toBeInTheDocument();
+
+    expect(getByText('05.01.')).toBeInTheDocument();
     expect(getByText('event-2')).toBeInTheDocument();
+
     expect(queryByText('event-3')).not.toBeInTheDocument();
   });
 });

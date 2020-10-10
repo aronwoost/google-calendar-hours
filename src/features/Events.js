@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
 import {
   selectSelectedCalendar,
@@ -31,7 +32,8 @@ const Events = () => {
         <ul className={styles.list}>
           {events.map((event) => (
             <li key={event.id} className={styles.listItem}>
-              {event.summary}
+              <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
+              <span>{event.summary}</span>
             </li>
           ))}
         </ul>
