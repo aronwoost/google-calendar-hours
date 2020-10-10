@@ -1,0 +1,13 @@
+.app {
+  text-align: center;
+}
+
+.appHeader {
+  width: 380px;
+  padding: 8px;
+}
+
+.appHeader > * {
+  margin-bottom: 8px;
+  width: 100%;
+}
