@@ -36,7 +36,20 @@ const Events = () => {
   });
 
   if (sortBy === 'amount') {
-    eventsToRender = orderBy(eventsToRender, 'hours', 'desc');
+    const eventsObject = {};
+    eventsToRender.forEach((event) => {
+      if (eventsObject[event.summary]) {
+        eventsObject[event.summary] += event.hours;
+      } else {
+        eventsObject[event.summary] = event.hours;
+      }
+    });
+    const newArray = Object.entries(eventsObject).map(([key, value]) => ({
+      summary: key,
+      hours: value,
+      id: key,
+    }));
+    eventsToRender = orderBy(newArray, 'hours', 'desc');
   }
 
   return (
@@ -51,7 +64,9 @@ const Events = () => {
           <ul className={styles.list}>
             {eventsToRender.map((event) => (
               <li key={event.id} className={styles.listItem}>
-                <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
+                {sortBy === 'date' && (
+                  <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
+                )}
                 <span>{event.summary}</span>
                 <span>{`${event.hours}h`}</span>
               </li>

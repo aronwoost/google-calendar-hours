@@ -971,4 +971,41 @@ describe('display events', () => {
     expect(items[0]).toHaveTextContent('event-2');
     expect(items[1]).toHaveTextContent('event-1');
   });
+
+  it('renders with events with same summary added together', async () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const { getByText, getByLabelText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'test summary',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'test summary',
+              start: { dateTime: '2018-01-05T13:00:00Z' },
+              end: { dateTime: '2018-01-05T18:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'some other event',
+              start: { dateTime: '2018-01-06T10:00:00Z' },
+              end: { dateTime: '2018-01-06T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.click(getByText('show details'));
+    fireEvent.click(getByLabelText('Amount'));
+
+    expect(getByText('7h')).toBeInTheDocument();
+  });
 });
