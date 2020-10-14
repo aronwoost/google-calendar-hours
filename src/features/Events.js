@@ -48,11 +48,11 @@ const Events = () => {
 
   if (sortBy === 'amount') {
     const eventsObject = {};
-    eventsToRender.forEach((event) => {
-      if (eventsObject[event.summary]) {
-        eventsObject[event.summary] += event.hours;
+    eventsToRender.forEach(({ summary, hours }) => {
+      if (eventsObject[summary]) {
+        eventsObject[summary] += hours;
       } else {
-        eventsObject[event.summary] = event.hours;
+        eventsObject[summary] = hours;
       }
     });
     const newArray = Object.entries(eventsObject).map(([key, value]) => ({
@@ -63,10 +63,10 @@ const Events = () => {
     eventsToRender = orderBy(newArray, 'hours', 'desc');
   } else {
     const lines = eventsToRender.map(
-      (event) =>
-        `${dayjs(event.start.dateTime).format('DD.MM.YYYY HH:mm')},${dayjs(
-          event.end.dateTime
-        ).format('DD.MM.YYYY HH:mm')},"${event.summary}",${event.hours}`
+      ({ start, end, summary, hours }) =>
+        `${dayjs(start.dateTime).format('DD.MM.YYYY HH:mm')},${dayjs(
+          end.dateTime
+        ).format('DD.MM.YYYY HH:mm')},"${summary}",${hours}`
     );
 
     downloadBlob = createBlobUrl(
