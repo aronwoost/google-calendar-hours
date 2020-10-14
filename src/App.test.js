@@ -942,7 +942,12 @@ describe('display events', () => {
   it('renders events by amount', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    const { getByText, getByLabelText, queryAllByText } = renderAppWithStore({
+    const {
+      getByText,
+      getByLabelText,
+      queryAllByText,
+      queryByText,
+    } = renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
         map: {
@@ -973,6 +978,8 @@ describe('display events', () => {
     fireEvent.click(getByText('show details'));
 
     fireEvent.click(getByLabelText('Amount'));
+
+    expect(queryByText('Export as CSV')).not.toBeInTheDocument();
 
     const items = queryAllByText(/event-[1-3]/);
 

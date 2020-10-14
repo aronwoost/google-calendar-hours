@@ -92,14 +92,16 @@ const Events = () => {
               </li>
             ))}
           </ul>
-          <a
-            href={createBlobUrl(downloadLinkString)}
-            download={`${currentCalendarName}_${dayjs(date).format(
-              'MMMM_YYYY'
-            )}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`}
-          >
-            Export as CSV
-          </a>
+          {downloadLinkString && (
+            <a
+              href={createBlobUrl(downloadLinkString)}
+              download={`${currentCalendarName}_${dayjs(date).format(
+                'MMMM_YYYY'
+              )}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`}
+            >
+              Export as CSV
+            </a>
+          )}
           <div>
             <span>Sort by:</span>
             <label htmlFor="contactChoice2">
