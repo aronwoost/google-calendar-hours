@@ -965,6 +965,7 @@ describe('display events', () => {
     const items = queryAllByText(/event-[1-3]/);
 
     expect(items).toHaveLength(2);
+    // confirm correct order
     expect(items[0]).toHaveTextContent('event-2');
     expect(items[1]).toHaveTextContent('event-1');
   });
