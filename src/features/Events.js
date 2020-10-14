@@ -6,7 +6,10 @@ import { orderBy } from 'lodash';
 import {
   selectSelectedCalendar,
   selectEventsByRange,
+  selectDate,
 } from '../stores/viewState';
+import { selectCalendars } from '../stores/calendars';
+import createBlobUrl from '../utils/createBlobUrl';
 
 import styles from './Events.module.css';
 
@@ -18,10 +21,16 @@ const Events = () => {
   const events = useSelector((state) =>
     selectEventsByRange(state, selectedCalendar)
   );
+  const calendars = useSelector(selectCalendars);
+  const date = useSelector(selectDate);
 
   if (!events) {
     return null;
   }
+
+  const currentCalendarName = calendars.find(
+    (item) => item.id === selectedCalendar
+  )?.label;
 
   let eventsToRender = events.map((event) => {
     const itemDateStart = new Date(event.start.dateTime);
@@ -34,6 +43,8 @@ const Events = () => {
       hours,
     };
   });
+
+  let downloadLinkString;
 
   if (sortBy === 'amount') {
     const eventsObject = {};
@@ -50,6 +61,15 @@ const Events = () => {
       id: key,
     }));
     eventsToRender = orderBy(newArray, 'hours', 'desc');
+  } else {
+    const lines = eventsToRender.map(
+      (event) =>
+        `${dayjs(event.start.dateTime).format('DD.MM.YYYY HH:mm')},${dayjs(
+          event.end.dateTime
+        ).format('DD.MM.YYYY HH:mm')},"${event.summary}",${event.hours}`
+    );
+
+    downloadLinkString = ['Start,End,Title,Hours'].concat(lines).join('\n');
   }
 
   return (
@@ -72,6 +92,14 @@ const Events = () => {
               </li>
             ))}
           </ul>
+          <a
+            href={createBlobUrl(downloadLinkString)}
+            download={`${currentCalendarName}_${dayjs(date).format(
+              'MMMM_YYYY'
+            )}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`}
+          >
+            Export as CSV
+          </a>
           <div>
             <span>Sort by:</span>
             <label htmlFor="contactChoice2">

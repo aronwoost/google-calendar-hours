@@ -9,6 +9,8 @@ import { store } from './stores';
 import App from './App';
 import { getInitialState } from './stores/viewState';
 
+jest.mock('./utils/createBlobUrl', () => (content) => content);
+
 const createTestStore = ({
   authentication,
   viewState,
@@ -926,6 +928,13 @@ describe('display events', () => {
     expect(getByText('05.01.')).toBeInTheDocument();
     expect(getByText('event-2')).toBeInTheDocument();
     expect(getByText('5h')).toBeInTheDocument();
+
+    const downloadLink = getByText('Export as CSV');
+    expect(downloadLink).toBeInTheDocument();
+    expect(downloadLink.getAttribute('download')).toBe(
+      'test-name_January_2018_(20180101110000).csv'
+    );
+    expect(downloadLink.getAttribute('href')).toMatchSnapshot();
 
     expect(queryByText('event-3')).not.toBeInTheDocument();
   });
