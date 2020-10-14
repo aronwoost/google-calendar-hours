@@ -106,20 +106,22 @@ const Events = () => {
           )}
           <div>
             <span>Sort by:</span>
-            <label htmlFor="contactChoice2">
+            <label htmlFor="date">
               Date
               <input
                 type="radio"
                 value="date"
+                id="date"
                 checked={sortBy === 'date'}
                 onChange={({ target }) => setSortBy(target.value)}
               />
             </label>
-            <label htmlFor="contactChoice1">
+            <label htmlFor="amount">
               Amount
               <input
                 type="radio"
                 value="amount"
+                id="amount"
                 checked={sortBy === 'amount'}
                 onChange={({ target }) => setSortBy(target.value)}
               />
