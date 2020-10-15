@@ -862,7 +862,7 @@ describe('display events', () => {
     expect(queryByText('event-1')).not.toBeInTheDocument();
   });
 
-  it('renders events', async () => {
+  it('renders events', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
     const { getByText, queryByText } = renderAppWithStore({
@@ -918,7 +918,7 @@ describe('display events', () => {
     expect(queryByText('event-3')).not.toBeInTheDocument();
   });
 
-  it('renders events by amount', async () => {
+  it('renders events by amount', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
     const {
@@ -968,7 +968,7 @@ describe('display events', () => {
     expect(items[1]).toHaveTextContent('event-1');
   });
 
-  it('renders with events with same summary added together', async () => {
+  it('renders with events with same summary added together', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
     const { getByText, getByLabelText } = renderAppWithStore({
