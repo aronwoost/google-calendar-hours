@@ -98,6 +98,7 @@ const server = setupServer(
 
 delete window.location;
 
+beforeEach(() => dayjs.locale('de'));
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
@@ -240,8 +241,6 @@ describe('localStorage', () => {
 });
 
 describe('calculate hours', () => {
-  beforeAll(() => dayjs.locale('de'));
-
   it('renders 0h hours (if not matching events)', () => {
     const { getByText, getByTestId } = renderAppWithStore({
       calendarEvents: {
@@ -845,8 +844,6 @@ describe('calculate hours', () => {
 });
 
 describe('display time range in human readable format', () => {
-  beforeAll(() => dayjs.locale('de'));
-
   it('renders current day', () => {
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'day' },
