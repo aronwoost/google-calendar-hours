@@ -774,6 +774,9 @@ describe('display time range in human readable format', () => {
   });
 
   it('renders current week', () => {
+    // set to a tuesday
+    timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
+
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'week' },
       calendarEvents: { map: { 'test-id': [] } },

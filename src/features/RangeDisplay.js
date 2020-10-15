@@ -19,10 +19,11 @@ const RangeDisplay = () => {
   if (currentRangeType === RANGE_TYPE.DAY) {
     range = date.locale('en').format('dddd, MMMM D, YYYY');
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
-    const nextWeek = date.add(1, 'week');
-    range = `${date.locale('en').format('DD.MM.YYYY')} -  ${nextWeek
+    const startOfWeek = date.weekday(0);
+    const nextWeek = startOfWeek.add(1, 'week');
+    range = `${startOfWeek
       .locale('en')
-      .format('DD.MM.YYYY')}`;
+      .format('DD.MM.YYYY')} -  ${nextWeek.locale('en').format('DD.MM.YYYY')}`;
   } else if (currentRangeType === RANGE_TYPE.MONTH) {
     range = date.locale('en').format('MMMM, YYYY');
   } else if (currentRangeType === RANGE_TYPE.YEAR) {
