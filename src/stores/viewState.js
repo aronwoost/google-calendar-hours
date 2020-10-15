@@ -10,12 +10,18 @@ import { RANGE_TYPE, WEEK_START } from '../constants';
 dayjs.locale('de');
 dayjs.extend(weekday);
 
-export const getInitialState = () => ({
-  selectedCalendarId: null,
-  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
-  currentDatePointerStart: dayjs().startOf('day').toJSON(),
-  weekStart: WEEK_START.MONDAY,
-});
+export const getInitialState = () => {
+  const weekStart = getConfig()?.weekStart || WEEK_START.MONDAY;
+
+  dayjs.locale(weekStart === WEEK_START.MONDAY ? 'de' : 'en');
+
+  return {
+    selectedCalendarId: null,
+    selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
+    currentDatePointerStart: dayjs().startOf('day').toJSON(),
+    weekStart,
+  };
+};
 
 export const viewState = createSlice({
   name: 'viewState',

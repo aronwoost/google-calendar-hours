@@ -219,11 +219,14 @@ describe('localStorage', () => {
   });
 
   it('uses data from localStorage to sets UI', async () => {
+    timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
+
     window.localStorage.setItem(
       'config',
       JSON.stringify({
         selectedCalendarId: 'test-id',
         selectedRangeType: 'week',
+        weekStart: 'sunday',
       })
     );
 
@@ -234,9 +237,27 @@ describe('localStorage', () => {
       calendars: {
         list: null,
       },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              start: { dateTime: '2018-01-07T10:00:00Z' },
+              end: { dateTime: '2018-01-07T11:00:00Z' },
+            },
+            {
+              start: { dateTime: '2018-01-08T13:00:00Z' },
+              end: { dateTime: '2018-01-08T14:00:00Z' },
+            },
+            {
+              start: { dateTime: '2018-01-09T10:00:00Z' },
+              end: { dateTime: '2018-01-09T11:00:00Z' },
+            },
+          ],
+        },
+      },
     });
 
-    expect(await findByText('1h')).toBeInTheDocument();
+    expect(await findByText('3h')).toBeInTheDocument();
   });
 });
 
