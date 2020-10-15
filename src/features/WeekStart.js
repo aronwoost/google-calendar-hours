@@ -21,7 +21,7 @@ const RangeChanger = () => {
   return (
     <div>
       <span>Week starts on:</span>
-      <label htmlFor="date">
+      <label htmlFor="sunday">
         Sunday
         <input
           type="radio"
@@ -31,7 +31,7 @@ const RangeChanger = () => {
           onChange={({ target }) => dispatch(setWeekStart(target.value))}
         />
       </label>
-      <label htmlFor="amount">
+      <label htmlFor="monday">
         Monday
         <input
           type="radio"
