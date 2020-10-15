@@ -853,9 +853,7 @@ describe('display events', () => {
     const { getByText, queryByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
-        map: {
-          'test-id': [],
-        },
+        map: { 'test-id': [] },
       },
     });
 
