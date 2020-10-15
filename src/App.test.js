@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import timekeeper from 'timekeeper';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
+import dayjs from 'dayjs';
 
 import { store } from './stores';
 import App from './App';
@@ -518,6 +519,39 @@ describe('calculate hours', () => {
     expect(getByText('2h')).toBeInTheDocument();
   });
 
+  it('renders hours for week when user changes to next week', () => {
+    timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
+
+    const { getByText, getByTestId, getByLabelText } = renderAppWithStore({
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              start: { dateTime: '2018-01-07T10:00:00Z' },
+              end: { dateTime: '2018-01-07T11:00:00Z' },
+            },
+            {
+              start: { dateTime: '2018-01-08T13:00:00Z' },
+              end: { dateTime: '2018-01-08T14:00:00Z' },
+            },
+            {
+              start: { dateTime: '2018-01-09T10:00:00Z' },
+              end: { dateTime: '2018-01-09T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'week' },
+    });
+
+    fireEvent.click(getByLabelText('Sunday'));
+
+    expect(getByText('3h')).toBeInTheDocument();
+  });
+
   it('renders hours for month', () => {
     const { getByText, getByTestId, queryByText } = renderAppWithStore({
       calendarEvents: {
@@ -807,6 +841,8 @@ describe('calculate hours', () => {
 });
 
 describe('display time range in human readable format', () => {
+  beforeAll(() => dayjs.locale('de'));
+
   it('renders current day', () => {
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'day' },
@@ -824,6 +860,20 @@ describe('display time range in human readable format', () => {
       viewState: { selectedRangeType: 'week' },
       calendarEvents: { map: { 'test-id': [] } },
     });
+
+    expect(getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
+  });
+
+  it('renders current week with week start sunday', () => {
+    // set to a tuesday
+    timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
+
+    const { getByLabelText, getByText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'week' },
+      calendarEvents: { map: { 'test-id': [] } },
+    });
+
+    fireEvent.click(getByLabelText('Sunday'));
 
     expect(getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
   });

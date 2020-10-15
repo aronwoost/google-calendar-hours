@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   selectRangeType,
   selectWeekStart,
-  setWeekStart,
+  changeWeekStart,
 } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
@@ -28,7 +28,7 @@ const WeekStart = () => {
           value="sunday"
           id="sunday"
           checked={weekStart === 'sunday'}
-          onChange={({ target }) => dispatch(setWeekStart(target.value))}
+          onChange={({ target }) => dispatch(changeWeekStart(target.value))}
         />
       </label>
       <label htmlFor="monday">
@@ -38,7 +38,7 @@ const WeekStart = () => {
           value="monday"
           id="monday"
           checked={weekStart === 'monday'}
-          onChange={({ target }) => dispatch(setWeekStart(target.value))}
+          onChange={({ target }) => dispatch(changeWeekStart(target.value))}
         />
       </label>
     </div>

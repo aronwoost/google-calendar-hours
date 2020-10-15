@@ -47,8 +47,8 @@ export const viewState = createSlice({
   },
 });
 
-export const { changeRange, resetRange, setWeekStart } = viewState.actions;
-const { setSelectedCalendarId, setRangeType } = viewState.actions;
+export const { changeRange, resetRange } = viewState.actions;
+const { setSelectedCalendarId, setRangeType, setWeekStart } = viewState.actions;
 
 export const selectSelectedCalendar = (state) =>
   state.viewState.selectedCalendarId;
@@ -131,6 +131,11 @@ export const setSelectedCalendar = ({ calendarId }) => async (
 export const changeRangeType = ({ range }) => async (dispatch) => {
   dispatch(setRangeType(range));
   updateConfig({ selectedRangeType: range });
+};
+
+export const changeWeekStart = (weekStart) => async (dispatch) => {
+  dayjs.locale(weekStart === WEEK_START.MONDAY ? 'de' : 'en');
+  dispatch(setWeekStart(weekStart));
 };
 
 export default viewState.reducer;
