@@ -1,9 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
+import 'dayjs/locale/de';
+import weekday from 'dayjs/plugin/weekday';
 
 import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { getConfig, updateConfig } from './storage';
 import { RANGE_TYPE } from '../constants';
+
+dayjs.locale('de');
+dayjs.extend(weekday);
 
 export const getInitialState = () => ({
   selectedCalendarId: null,
@@ -65,7 +70,7 @@ export const selectHours = (state) => {
     rangeStart = currentDatePointerStartDate.startOf('day');
     rangeEnd = rangeStart.add(1, 'day');
   } else if (selectedRangeType === RANGE_TYPE.WEEK) {
-    rangeStart = currentDatePointerStartDate.startOf('day').day(0);
+    rangeStart = currentDatePointerStartDate.startOf('day').weekday(0);
     rangeEnd = rangeStart.add(1, 'week');
   } else if (selectedRangeType === RANGE_TYPE.MONTH) {
     rangeStart = currentDatePointerStartDate.startOf('month');

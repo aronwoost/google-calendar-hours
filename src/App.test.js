@@ -383,21 +383,23 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for week', () => {
+    timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
+
     const { getByText, getByTestId } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
             {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
+              start: { dateTime: '2018-01-07T10:00:00Z' },
+              end: { dateTime: '2018-01-07T11:00:00Z' },
             },
             {
-              start: { dateTime: '2018-01-02T10:00:00Z' },
-              end: { dateTime: '2018-01-02T11:00:00Z' },
+              start: { dateTime: '2018-01-08T13:00:00Z' },
+              end: { dateTime: '2018-01-08T14:00:00Z' },
             },
             {
-              start: { dateTime: '2018-01-10T10:00:00Z' },
-              end: { dateTime: '2018-01-10T11:00:00Z' },
+              start: { dateTime: '2018-01-09T10:00:00Z' },
+              end: { dateTime: '2018-01-09T11:00:00Z' },
             },
           ],
         },
@@ -772,6 +774,9 @@ describe('display time range in human readable format', () => {
   });
 
   it('renders current week', () => {
+    // set to a tuesday
+    timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
+
     const { getByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'week' },
       calendarEvents: { map: { 'test-id': [] } },

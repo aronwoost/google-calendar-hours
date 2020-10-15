@@ -17,14 +17,17 @@ const RangeDisplay = () => {
   const date = dayjs(currentDate);
 
   if (currentRangeType === RANGE_TYPE.DAY) {
-    range = date.format('dddd, MMMM D, YYYY');
+    range = date.locale('en').format('dddd, MMMM D, YYYY');
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
-    const nextWeek = date.add(1, 'week');
-    range = `${date.format('DD.MM.YYYY')} -  ${nextWeek.format('DD.MM.YYYY')}`;
+    const startOfWeek = date.weekday(0);
+    const nextWeek = startOfWeek.add(1, 'week');
+    range = `${startOfWeek
+      .locale('en')
+      .format('DD.MM.YYYY')} -  ${nextWeek.locale('en').format('DD.MM.YYYY')}`;
   } else if (currentRangeType === RANGE_TYPE.MONTH) {
-    range = date.format('MMMM, YYYY');
+    range = date.locale('en').format('MMMM, YYYY');
   } else if (currentRangeType === RANGE_TYPE.YEAR) {
-    range = date.format('YYYY');
+    range = date.locale('en').format('YYYY');
   }
 
   return <div data-testid="RangeDisplay">{range}</div>;
