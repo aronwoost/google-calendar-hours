@@ -523,7 +523,7 @@ describe('calculate hours', () => {
     expect(getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for week when user changes to next week', () => {
+  it('renders hours for week when user sets week start to Sunday', () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
 
     const { getByText, getByTestId, getByLabelText } = renderAppWithStore({
