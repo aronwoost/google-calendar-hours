@@ -8,15 +8,15 @@ import {
 } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
-const RangeChanger = () => {
-  const currentRangeType = useSelector(selectRangeType);
+const WeekStart = () => {
   const dispatch = useDispatch();
+
+  const currentRangeType = useSelector(selectRangeType);
+  const weekStart = useSelector(selectWeekStart);
 
   if (currentRangeType !== RANGE_TYPE.WEEK) {
     return null;
   }
-
-  const weekStart = useSelector(selectWeekStart);
 
   return (
     <div>
@@ -45,4 +45,4 @@ const RangeChanger = () => {
   );
 };
 
-export default RangeChanger;
+export default WeekStart;
