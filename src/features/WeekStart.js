@@ -1,7 +1,16 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { selectRangeType } from '../stores/viewState';
+import { RANGE_TYPE } from '../constants';
 
 const RangeChanger = () => {
+  const currentRangeType = useSelector(selectRangeType);
   const sortBy = 'monday';
+
+  if (currentRangeType !== RANGE_TYPE.WEEK) {
+    return null;
+  }
 
   return (
     <div>

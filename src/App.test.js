@@ -259,7 +259,7 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for day', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    const { getByText, getByTestId, queryByText } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -285,6 +285,8 @@ describe('calculate hours', () => {
     });
 
     expect(getByText('2h')).toBeInTheDocument();
+
+    expect(queryByText('Week starts on:')).not.toBeInTheDocument();
   });
 
   it('renders hours for day when user changes to previous day', () => {
@@ -517,7 +519,7 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for month', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    const { getByText, getByTestId, queryByText } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -543,6 +545,8 @@ describe('calculate hours', () => {
     });
 
     expect(getByText('2h')).toBeInTheDocument();
+
+    expect(queryByText('Week starts on:')).not.toBeInTheDocument();
   });
 
   it('renders hours for month when user changes to previous month', () => {
@@ -643,7 +647,7 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for year', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    const { getByText, getByTestId, queryByText } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -669,6 +673,8 @@ describe('calculate hours', () => {
     });
 
     expect(getByText('2h')).toBeInTheDocument();
+
+    expect(queryByText('Week starts on:')).not.toBeInTheDocument();
   });
 
   it('renders hours for year when user changes to previous year', () => {
