@@ -136,6 +136,7 @@ export const changeRangeType = ({ range }) => async (dispatch) => {
 export const changeWeekStart = (weekStart) => async (dispatch) => {
   dayjs.locale(weekStart === WEEK_START.MONDAY ? 'de' : 'en');
   dispatch(setWeekStart(weekStart));
+  updateConfig({ weekStart });
 };
 
 export default viewState.reducer;

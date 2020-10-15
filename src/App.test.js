@@ -196,7 +196,7 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 
 describe('localStorage', () => {
   it('saves user selection to localStorage', () => {
-    const { getByTestId } = renderAppWithStore({
+    const { getByTestId, getByLabelText } = renderAppWithStore({
       calendarEvents: {
         map: { 'test-id': testEvents },
       },
@@ -210,8 +210,10 @@ describe('localStorage', () => {
       target: { value: 'week' },
     });
 
+    fireEvent.click(getByLabelText('Sunday'));
+
     expect(window.localStorage.getItem('config')).toEqual(
-      '{"selectedCalendarId":"test-id","selectedRangeType":"week"}'
+      '{"selectedCalendarId":"test-id","selectedRangeType":"week","weekStart":"sunday"}'
     );
   });
 
@@ -238,6 +240,8 @@ describe('localStorage', () => {
 });
 
 describe('calculate hours', () => {
+  beforeAll(() => dayjs.locale('de'));
+
   it('renders 0h hours (if not matching events)', () => {
     const { getByText, getByTestId } = renderAppWithStore({
       calendarEvents: {
