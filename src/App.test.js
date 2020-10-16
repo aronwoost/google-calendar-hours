@@ -255,6 +255,7 @@ describe('localStorage', () => {
       },
     });
 
+    // without {weekStart: 'sunday'} result would be 2h
     expect(await findByText('3h')).toBeInTheDocument();
   });
 });
@@ -571,6 +572,7 @@ describe('calculate hours', () => {
 
     fireEvent.click(getByLabelText('Sunday'));
 
+    // without "Sunday" result would be 2h
     expect(getByText('3h')).toBeInTheDocument();
   });
 
