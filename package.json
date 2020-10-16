@@ -45,6 +45,7 @@
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
+    "react-datepicker": "^3.3.0",
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.1.3",
