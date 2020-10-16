@@ -45,6 +45,7 @@ const Events = () => {
   });
 
   let downloadBlob;
+  let filename;
 
   if (sortBy === 'amount') {
     const eventsObject = {};
@@ -72,6 +73,9 @@ const Events = () => {
     downloadBlob = createBlobUrl(
       ['Start,End,Title,Hours'].concat(lines).join('\n')
     );
+    filename = `${currentCalendarName}_${dayjs(date).format(
+      'MMMM_YYYY'
+    )}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`;
   }
 
   return (
@@ -95,12 +99,7 @@ const Events = () => {
             ))}
           </ul>
           {downloadBlob && (
-            <a
-              href={downloadBlob}
-              download={`${currentCalendarName}_${dayjs(date).format(
-                'MMMM_YYYY'
-              )}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`}
-            >
+            <a href={downloadBlob} download={filename}>
               Export as CSV
             </a>
           )}
