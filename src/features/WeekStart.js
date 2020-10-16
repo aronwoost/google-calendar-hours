@@ -6,7 +6,7 @@ import {
   selectWeekStart,
   changeWeekStart,
 } from '../stores/viewState';
-import { RANGE_TYPE } from '../constants';
+import { RANGE_TYPE, WEEK_START } from '../constants';
 
 const WeekStart = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const WeekStart = () => {
           type="radio"
           value="sunday"
           id="sunday"
-          checked={weekStart === 'sunday'}
+          checked={weekStart === WEEK_START.SUNDAY}
           onChange={({ target }) => dispatch(changeWeekStart(target.value))}
         />
       </label>
@@ -37,7 +37,7 @@ const WeekStart = () => {
           type="radio"
           value="monday"
           id="monday"
-          checked={weekStart === 'monday'}
+          checked={weekStart === WEEK_START.MONDAY}
           onChange={({ target }) => dispatch(changeWeekStart(target.value))}
         />
       </label>
