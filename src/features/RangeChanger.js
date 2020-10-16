@@ -5,15 +5,18 @@ import {
   selectSelectedCalendar,
   changeRange,
   resetRange,
+  selectRangeType,
 } from '../stores/viewState';
 import styles from './RangeChanger.module.css';
+import { RANGE_TYPE } from '../constants';
 
 const RangeChanger = () => {
   const dispatch = useDispatch();
 
   const selectedCalendar = useSelector(selectSelectedCalendar);
+  const currentRangeType = useSelector(selectRangeType);
 
-  if (!selectedCalendar) {
+  if (!selectedCalendar || currentRangeType === RANGE_TYPE.TOTAL) {
     return null;
   }
 
