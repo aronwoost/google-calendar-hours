@@ -848,8 +848,6 @@ describe('display time range in human readable format', () => {
 
 describe('display events', () => {
   it('renders events collapsed', () => {
-    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
-
     const { getByText, queryByText } = renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
