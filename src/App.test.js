@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import timekeeper from 'timekeeper';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import dayjs from 'dayjs';
 
 import { store } from './stores';
 import App from './App';
@@ -98,7 +97,6 @@ const server = setupServer(
 
 delete window.location;
 
-beforeEach(() => dayjs.locale('de'));
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
@@ -897,7 +895,7 @@ describe('display time range in human readable format', () => {
 
     fireEvent.click(getByLabelText('Sunday'));
 
-    expect(getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
+    expect(getByText('31.12.2017 - 07.01.2018')).toBeInTheDocument();
   });
 
   it('renders current month', () => {

@@ -2,12 +2,17 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { selectDate, selectRangeType } from '../stores/viewState';
+import {
+  selectDate,
+  selectRangeType,
+  selectLocaleForWeekStart,
+} from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
 const RangeDisplay = () => {
   const currentDate = useSelector(selectDate);
   const currentRangeType = useSelector(selectRangeType);
+  const localeForWeekStart = useSelector(selectLocaleForWeekStart);
 
   if (currentRangeType === RANGE_TYPE.TOTAL) {
     return null;
@@ -19,7 +24,7 @@ const RangeDisplay = () => {
   if (currentRangeType === RANGE_TYPE.DAY) {
     range = date.locale('en').format('dddd, MMMM D, YYYY');
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
-    const startOfWeek = date.weekday(0);
+    const startOfWeek = date.locale(localeForWeekStart).weekday(0);
     const nextWeek = startOfWeek.add(1, 'week');
     range = `${startOfWeek
       .locale('en')

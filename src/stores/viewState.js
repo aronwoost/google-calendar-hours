@@ -7,21 +7,14 @@ import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { getConfig, updateConfig } from './storage';
 import { RANGE_TYPE, WEEK_START } from '../constants';
 
-dayjs.locale('de');
 dayjs.extend(weekday);
 
-export const getInitialState = () => {
-  const weekStart = getConfig()?.weekStart || WEEK_START.MONDAY;
-
-  dayjs.locale(weekStart === WEEK_START.MONDAY ? 'de' : 'en');
-
-  return {
-    selectedCalendarId: null,
-    selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
-    currentDatePointerStart: dayjs().startOf('day').toJSON(),
-    weekStart,
-  };
-};
+export const getInitialState = () => ({
+  selectedCalendarId: null,
+  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
+  currentDatePointerStart: dayjs().startOf('day').toJSON(),
+  weekStart: getConfig()?.weekStart || WEEK_START.MONDAY,
+});
 
 export const viewState = createSlice({
   name: 'viewState',
@@ -63,6 +56,8 @@ export const selectDate = (state) => state.viewState.currentDatePointerStart;
 
 export const selectRangeType = (state) => state.viewState.selectedRangeType;
 export const selectWeekStart = (state) => state.viewState.weekStart;
+export const selectLocaleForWeekStart = (state) =>
+  state.viewState.weekStart === WEEK_START.SUNDAY ? 'en' : 'de';
 
 export const selectEventsByRange = (state) => {
   const events = selectCalendarEvents(state, selectSelectedCalendar(state));
@@ -81,7 +76,10 @@ export const selectEventsByRange = (state) => {
     rangeStart = currentDatePointerStartDate.startOf('day');
     rangeEnd = rangeStart.add(1, 'day');
   } else if (selectedRangeType === RANGE_TYPE.WEEK) {
-    rangeStart = currentDatePointerStartDate.startOf('day').weekday(0);
+    rangeStart = currentDatePointerStartDate
+      .locale(selectLocaleForWeekStart(state))
+      .startOf('day')
+      .weekday(0);
     rangeEnd = rangeStart.add(1, 'week');
   } else if (selectedRangeType === RANGE_TYPE.MONTH) {
     rangeStart = currentDatePointerStartDate.startOf('month');
@@ -140,7 +138,6 @@ export const changeRangeType = ({ range }) => async (dispatch) => {
 };
 
 export const changeWeekStart = (weekStart) => async (dispatch) => {
-  dayjs.locale(weekStart === WEEK_START.MONDAY ? 'de' : 'en');
   dispatch(setWeekStart(weekStart));
   updateConfig({ weekStart });
 };
