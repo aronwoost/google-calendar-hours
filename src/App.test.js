@@ -761,6 +761,37 @@ describe('calculate hours', () => {
 
     expect(getByText('2h')).toBeInTheDocument();
   });
+
+  it('renders hours for total', () => {
+    const { getByText, getByTestId, queryByTestId } = renderAppWithStore({
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              start: { dateTime: '2004-01-01T10:00:00Z' },
+              end: { dateTime: '2004-01-01T11:00:00Z' },
+            },
+            {
+              start: { dateTime: '2010-01-14T13:00:00Z' },
+              end: { dateTime: '2010-01-14T14:00:00Z' },
+            },
+            {
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'total' },
+    });
+
+    expect(getByText('3h')).toBeInTheDocument();
+
+    expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
+  });
 });
 
 describe('display time range in human readable format', () => {
