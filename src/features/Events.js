@@ -10,12 +10,13 @@ import {
 } from '../stores/viewState';
 import { selectCalendars } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
+import { SORT_BY } from '../constants';
 
 import styles from './Events.module.css';
 
 const Events = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [sortBy, setSortBy] = useState('date');
+  const [sortBy, setSortBy] = useState(SORT_BY.DATE);
 
   const selectedCalendar = useSelector(selectSelectedCalendar);
   const events = useSelector((state) =>
@@ -47,7 +48,7 @@ const Events = () => {
   let downloadBlob;
   let filename;
 
-  if (sortBy === 'amount') {
+  if (sortBy === SORT_BY.AMOUNT) {
     const eventsObject = {};
     eventsToRender.forEach(({ summary, hours }) => {
       if (eventsObject[summary]) {
@@ -90,7 +91,7 @@ const Events = () => {
           <ul className={styles.list}>
             {eventsToRender.map((event) => (
               <li key={event.id} className={styles.listItem}>
-                {sortBy === 'date' && (
+                {sortBy === SORT_BY.DATE && (
                   <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
                 )}
                 <span>{event.summary}</span>
@@ -111,7 +112,7 @@ const Events = () => {
                 type="radio"
                 value="date"
                 id="date"
-                checked={sortBy === 'date'}
+                checked={sortBy === SORT_BY.DATE}
                 onChange={({ target }) => setSortBy(target.value)}
               />
             </label>
@@ -121,7 +122,7 @@ const Events = () => {
                 type="radio"
                 value="amount"
                 id="amount"
-                checked={sortBy === 'amount'}
+                checked={sortBy === SORT_BY.AMOUNT}
                 onChange={({ target }) => setSortBy(target.value)}
               />
             </label>
