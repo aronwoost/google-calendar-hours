@@ -12,7 +12,11 @@ dayjs.extend(weekday);
 export const getInitialState = () => ({
   selectedCalendarId: null,
   selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
-  currentDatePointerStart: dayjs().startOf('day').toJSON(),
+  currentDatePointerStart:
+    getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
+      ? getConfig().start
+      : dayjs().startOf('day').toJSON(),
+  currentDatePointerEnd: getConfig()?.end,
   weekStart: getConfig()?.weekStart || WEEK_START.MONDAY,
 });
 
@@ -52,8 +56,14 @@ export const viewState = createSlice({
   },
 });
 
-export const { changeRange, resetRange, setStart, setEnd } = viewState.actions;
-const { setSelectedCalendarId, setRangeType, setWeekStart } = viewState.actions;
+export const { changeRange, resetRange } = viewState.actions;
+const {
+  setSelectedCalendarId,
+  setRangeType,
+  setWeekStart,
+  setStart,
+  setEnd,
+} = viewState.actions;
 
 export const selectSelectedCalendar = (state) =>
   state.viewState.selectedCalendarId;

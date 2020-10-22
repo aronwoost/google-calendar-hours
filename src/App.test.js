@@ -272,9 +272,8 @@ describe('localStorage', () => {
     );
   });
 
-  it('uses data from localStorage to sets UI', async () => {
+  it('reads data', async () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
-
     window.localStorage.setItem(
       'config',
       JSON.stringify({
@@ -313,6 +312,29 @@ describe('localStorage', () => {
 
     // without {weekStart: 'sunday'} result would be 2h
     expect(await findByText('3h')).toBeInTheDocument();
+  });
+
+  it('reads data with custom range', async () => {
+    window.localStorage.setItem(
+      'config',
+      JSON.stringify({
+        selectedCalendarId: 'test-id',
+        selectedRangeType: 'custom',
+        start: '2004-01-01T10:00:00.000Z',
+        end: '2018-02-02T10:00:00.000Z',
+      })
+    );
+
+    const { findByText } = renderAppWithStore({
+      viewState: {
+        selectedCalendarId: null,
+      },
+      calendars: {
+        list: null,
+      },
+    });
+
+    expect(await findByText('2h')).toBeInTheDocument();
   });
 });
 
