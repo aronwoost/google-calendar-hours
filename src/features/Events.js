@@ -74,9 +74,9 @@ const Events = () => {
     downloadBlob = createBlobUrl(
       ['Start,End,Title,Hours'].concat(lines).join('\n')
     );
-    filename = `${currentCalendarName}_${dayjs(date).format(
-      'MMMM_YYYY'
-    )}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`;
+    filename = `${currentCalendarName}_${dayjs(date)
+      .locale('en')
+      .format('MMMM_YYYY')}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`;
   }
 
   return (
