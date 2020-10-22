@@ -83,7 +83,7 @@ export const selectCurrentDatePointers = (state) => {
   } = state.viewState;
   const currentDatePointerStartDate = dayjs(currentDatePointerStart);
 
-  if (currentDatePointerEnd) {
+  if (selectedRangeType === RANGE_TYPE.CUSTOM) {
     return {
       start: dayjs(currentDatePointerStart),
       end: dayjs(currentDatePointerEnd),

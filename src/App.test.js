@@ -1016,6 +1016,13 @@ describe('calculate hours', () => {
     expect(getByText('3h')).toBeInTheDocument();
 
     expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
+
+    // back to week
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'week' },
+    });
+
+    expect(getByText('1h')).toBeInTheDocument();
   });
 });
 
