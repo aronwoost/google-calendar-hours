@@ -11,6 +11,6 @@ module.exports = {
     'arrow-body-style': ['error', 'as-needed'],
     'import/no-named-as-default': 'off',
     'no-param-reassign': 'off',
-    'react/jsx-fragments': ['off', 'mode'],
+    'react/jsx-fragments': ['error', 'element'],
   },
 };
