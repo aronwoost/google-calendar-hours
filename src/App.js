@@ -7,6 +7,7 @@ import RangeChanger from './features/RangeChanger';
 import Hours from './features/Hours';
 import RangeDisplay from './features/RangeDisplay';
 import Events from './features/Events';
+import WeekStart from './features/WeekStart';
 import { selectHasToken } from './stores/authentication';
 import logo from './google_auth.png';
 
@@ -58,6 +59,7 @@ const App = () => {
         <Range />
         <RangeChanger />
         <Hours />
+        <WeekStart />
         <RangeDisplay />
         <Events />
       </header>

@@ -413,6 +413,10 @@ describe('calculate hours', () => {
     });
 
     expect(getByText('2h')).toBeInTheDocument();
+
+    expect(getByText('Week starts on:')).toBeInTheDocument();
+    expect(getByText('Sunday')).toBeInTheDocument();
+    expect(getByText('Monday')).toBeInTheDocument();
   });
 
   it('renders hours for week when user changes to previous week', () => {
