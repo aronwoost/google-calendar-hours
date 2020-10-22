@@ -4,6 +4,7 @@ export const RANGE_TYPE = {
   MONTH: 'month',
   YEAR: 'year',
   TOTAL: 'total',
+  CUSTOM: 'custom',
 };
 
 export const SORT_BY = {

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import CalendarsList from './features/CalendarsList';
 import Range from './features/Range';
 import RangeChanger from './features/RangeChanger';
+import CustomRange from './features/CustomRange';
 import Hours from './features/Hours';
 import RangeDisplay from './features/RangeDisplay';
 import Events from './features/Events';
@@ -58,6 +59,7 @@ const App = () => {
         <CalendarsList />
         <Range />
         <RangeChanger />
+        <CustomRange />
         <Hours />
         <WeekStart />
         <RangeDisplay />
