@@ -9,10 +9,10 @@ import {
   changeEnd,
 } from '../stores/viewState';
 
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { RANGE_TYPE } from '../constants';
 import styles from './CustomRange.module.css';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 const CustomRange = () => {
   const dispatch = useDispatch();
