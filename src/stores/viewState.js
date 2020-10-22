@@ -163,6 +163,7 @@ export const changeRangeType = ({ range }) => async (dispatch, getState) => {
     const { start, end } = selectCurrentDatePointers(getState());
     dispatch(setStart(start.toJSON()));
     dispatch(setEnd(end.toJSON()));
+    updateConfig({ start: start.toJSON(), end: end.toJSON() });
   }
   dispatch(setRangeType(range));
   updateConfig({ selectedRangeType: range });
@@ -171,6 +172,16 @@ export const changeRangeType = ({ range }) => async (dispatch, getState) => {
 export const changeWeekStart = (weekStart) => async (dispatch) => {
   dispatch(setWeekStart(weekStart));
   updateConfig({ weekStart });
+};
+
+export const changeStart = (start) => async (dispatch) => {
+  dispatch(setStart(start));
+  updateConfig({ start });
+};
+
+export const changeEnd = (end) => async (dispatch) => {
+  dispatch(setEnd(end));
+  updateConfig({ end });
 };
 
 export default viewState.reducer;

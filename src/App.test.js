@@ -194,7 +194,7 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 });
 
 describe('localStorage', () => {
-  it('saves user selection to localStorage', () => {
+  it('saves user selection', () => {
     const { getByTestId, getByLabelText } = renderAppWithStore({
       calendarEvents: {
         map: { 'test-id': testEvents },
@@ -213,6 +213,62 @@ describe('localStorage', () => {
 
     expect(window.localStorage.getItem('config')).toEqual(
       '{"selectedCalendarId":"test-id","selectedRangeType":"week","weekStart":"sunday"}'
+    );
+  });
+
+  it('saves start and end when user changes from week to custom', () => {
+    const { getByTestId } = renderAppWithStore({
+      calendarEvents: {
+        map: { 'test-id': testEvents },
+      },
+    });
+
+    fireEvent.change(getByTestId('CalendarsList'), {
+      target: { value: 'test-id' },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'week' },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'custom' },
+    });
+
+    expect(window.localStorage.getItem('config')).toEqual(
+      '{"selectedCalendarId":"test-id","selectedRangeType":"custom","start":"2017-12-31T23:00:00.000Z","end":"2018-01-07T23:00:00.000Z"}'
+    );
+  });
+
+  it('saves custom start and end', () => {
+    const { container, getByTestId } = renderAppWithStore({
+      calendarEvents: {
+        map: { 'test-id': testEvents },
+      },
+    });
+
+    fireEvent.change(getByTestId('CalendarsList'), {
+      target: { value: 'test-id' },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'custom' },
+    });
+
+    const dateInputs = container.querySelectorAll(
+      '[data-testid="CustomRange"] input'
+    );
+
+    fireEvent.change(dateInputs[0], {
+      target: { value: new Date('2004-01-01T10:00:00Z') },
+    });
+
+    fireEvent.change(dateInputs[1], {
+      target: { value: new Date('2018-02-02T10:00:00Z') },
+    });
+
+    expect(window.localStorage.getItem('config')).toEqual(
+      '{"selectedCalendarId":"test-id","start":"2004-01-01T10:00:00.000Z","end":"2018-02-02T10:00:00.000Z","selectedRangeType":"custom"}'
     );
   });
 

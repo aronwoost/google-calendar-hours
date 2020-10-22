@@ -5,8 +5,8 @@ import DatePicker from 'react-datepicker';
 import {
   selectRangeType,
   selectCurrentDatePointers,
-  setStart,
-  setEnd,
+  changeStart,
+  changeEnd,
 } from '../stores/viewState';
 
 import { RANGE_TYPE } from '../constants';
@@ -31,12 +31,12 @@ const CustomRange = () => {
       Start:
       <DatePicker
         selected={startDate}
-        onChange={(date) => dispatch(setStart(date.toJSON()))}
+        onChange={(date) => dispatch(changeStart(date.toJSON()))}
       />
       End:
       <DatePicker
         selected={endDate}
-        onChange={(date) => dispatch(setEnd(date.toJSON()))}
+        onChange={(date) => dispatch(changeEnd(date.toJSON()))}
       />
     </div>
   );
