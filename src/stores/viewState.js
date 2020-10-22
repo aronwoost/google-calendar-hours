@@ -53,7 +53,7 @@ export const selectDate = (state) => state.viewState.currentDatePointerStart;
 
 export const selectRangeType = (state) => state.viewState.selectedRangeType;
 
-export const selectHours = (state) => {
+export const selectEventsByRange = (state) => {
   const events = selectCalendarEvents(state, selectSelectedCalendar(state));
 
   if (!events) {
@@ -83,15 +83,28 @@ export const selectHours = (state) => {
     rangeEnd = dayjs('2040-01-01T10:00:00Z');
   }
 
+  return events.filter((event) => {
+    const itemDateStart = new Date(event.start.dateTime);
+    const itemDateEnd = new Date(event.end.dateTime);
+
+    return itemDateStart > rangeStart && itemDateEnd < rangeEnd;
+  });
+};
+
+export const selectHours = (state) => {
+  const events = selectEventsByRange(state);
+
+  if (!events) {
+    return null;
+  }
+
   let hours = 0;
 
   events.forEach((event) => {
     const itemDateStart = new Date(event.start.dateTime);
     const itemDateEnd = new Date(event.end.dateTime);
 
-    if (itemDateStart > rangeStart && itemDateEnd < rangeEnd) {
-      hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
-    }
+    hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
   });
 
   return hours;

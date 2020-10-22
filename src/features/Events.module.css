@@ -1,0 +1,19 @@
+.list {
+  margin-left: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listItem {
+  background: lightgrey;
+  padding: 2px;
+  text-align: left;
+}
+
+.listItem span {
+  padding-right: 5px;
+}
+
+.listItem + .listItem {
+  margin-top: 2px;
+}

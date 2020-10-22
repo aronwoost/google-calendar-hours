@@ -9,6 +9,8 @@ import { store } from './stores';
 import App from './App';
 import { getInitialState } from './stores/viewState';
 
+jest.mock('./utils/createBlobUrl', () => (content) => content);
+
 const createTestStore = ({
   authentication,
   viewState,
@@ -841,5 +843,163 @@ describe('display time range in human readable format', () => {
     });
 
     expect(queryByTestId('RangeDisplay')).not.toBeInTheDocument();
+  });
+});
+
+describe('display events', () => {
+  it('renders events collapsed', () => {
+    const { getByText, queryByText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: { 'test-id': [] },
+      },
+    });
+
+    expect(getByText('show details')).toBeInTheDocument();
+
+    expect(queryByText('event-1')).not.toBeInTheDocument();
+  });
+
+  it('renders events', () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const { getByText, queryByText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'event-2',
+              start: { dateTime: '2018-01-05T13:00:00Z' },
+              end: { dateTime: '2018-01-05T18:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'event-3',
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.click(getByText('show details'));
+
+    expect(getByText('hide details')).toBeInTheDocument();
+    expect(getByText('Sort by:')).toBeInTheDocument();
+    expect(getByText('Date')).toBeInTheDocument();
+    expect(getByText('Amount')).toBeInTheDocument();
+
+    expect(getByText('01.01.')).toBeInTheDocument();
+    expect(getByText('event-1')).toBeInTheDocument();
+    expect(getByText('2h')).toBeInTheDocument();
+
+    expect(getByText('05.01.')).toBeInTheDocument();
+    expect(getByText('event-2')).toBeInTheDocument();
+    expect(getByText('5h')).toBeInTheDocument();
+
+    const downloadLink = getByText('Export as CSV');
+    expect(downloadLink).toBeInTheDocument();
+    expect(downloadLink.getAttribute('download')).toBe(
+      'test-name_January_2018_(20180101110000).csv'
+    );
+    expect(downloadLink.getAttribute('href')).toMatchSnapshot();
+
+    expect(queryByText('event-3')).not.toBeInTheDocument();
+  });
+
+  it('renders events by amount', () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const {
+      getByText,
+      getByLabelText,
+      queryAllByText,
+      queryByText,
+    } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'event-2',
+              start: { dateTime: '2018-01-05T13:00:00Z' },
+              end: { dateTime: '2018-01-05T18:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'event-3',
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.click(getByText('show details'));
+
+    fireEvent.click(getByLabelText('Amount'));
+
+    expect(queryByText('Export as CSV')).not.toBeInTheDocument();
+
+    const items = queryAllByText(/event-[1-3]/);
+
+    expect(items).toHaveLength(2);
+    // confirm correct order
+    expect(items[0]).toHaveTextContent('event-2');
+    expect(items[1]).toHaveTextContent('event-1');
+  });
+
+  it('renders with events with same summary added together', () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    const { getByText, getByLabelText } = renderAppWithStore({
+      viewState: { selectedRangeType: 'month' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'test summary',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+            {
+              id: '2',
+              summary: 'test summary',
+              start: { dateTime: '2018-01-05T13:00:00Z' },
+              end: { dateTime: '2018-01-05T18:00:00Z' },
+            },
+            {
+              id: '3',
+              summary: 'some other event',
+              start: { dateTime: '2018-01-06T10:00:00Z' },
+              end: { dateTime: '2018-01-06T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.click(getByText('show details'));
+    fireEvent.click(getByLabelText('Amount'));
+
+    expect(getByText('7h')).toBeInTheDocument();
   });
 });
