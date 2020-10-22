@@ -10,3 +10,8 @@ export const SORT_BY = {
   DATE: 'date',
   AMOUNT: 'amount',
 };
+
+export const WEEK_START = {
+  MONDAY: 'monday',
+  SUNDAY: 'sunday',
+};

@@ -5,7 +5,7 @@ import weekday from 'dayjs/plugin/weekday';
 
 import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { getConfig, updateConfig } from './storage';
-import { RANGE_TYPE } from '../constants';
+import { RANGE_TYPE, WEEK_START } from '../constants';
 
 dayjs.locale('de');
 dayjs.extend(weekday);
@@ -14,6 +14,7 @@ export const getInitialState = () => ({
   selectedCalendarId: null,
   selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
   currentDatePointerStart: dayjs().startOf('day').toJSON(),
+  weekStart: WEEK_START.MONDAY,
 });
 
 export const viewState = createSlice({
@@ -40,10 +41,13 @@ export const viewState = createSlice({
     resetRange: (state) => {
       state.currentDatePointerStart = dayjs().startOf('day').toJSON();
     },
+    setWeekStart: (state, { payload }) => {
+      state.weekStart = payload;
+    },
   },
 });
 
-export const { changeRange, resetRange } = viewState.actions;
+export const { changeRange, resetRange, setWeekStart } = viewState.actions;
 const { setSelectedCalendarId, setRangeType } = viewState.actions;
 
 export const selectSelectedCalendar = (state) =>
@@ -52,6 +56,7 @@ export const selectSelectedCalendar = (state) =>
 export const selectDate = (state) => state.viewState.currentDatePointerStart;
 
 export const selectRangeType = (state) => state.viewState.selectedRangeType;
+export const selectWeekStart = (state) => state.viewState.weekStart;
 
 export const selectEventsByRange = (state) => {
   const events = selectCalendarEvents(state, selectSelectedCalendar(state));

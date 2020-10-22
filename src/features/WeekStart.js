@@ -1,16 +1,22 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { selectRangeType } from '../stores/viewState';
+import {
+  selectRangeType,
+  selectWeekStart,
+  setWeekStart,
+} from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
 const RangeChanger = () => {
   const currentRangeType = useSelector(selectRangeType);
-  const sortBy = 'monday';
+  const dispatch = useDispatch();
 
   if (currentRangeType !== RANGE_TYPE.WEEK) {
     return null;
   }
+
+  const weekStart = useSelector(selectWeekStart);
 
   return (
     <div>
@@ -21,8 +27,8 @@ const RangeChanger = () => {
           type="radio"
           value="sunday"
           id="sunday"
-          checked={sortBy === 'sunday'}
-          onChange={() => {}}
+          checked={weekStart === 'sunday'}
+          onChange={({ target }) => dispatch(setWeekStart(target.value))}
         />
       </label>
       <label htmlFor="amount">
@@ -31,8 +37,8 @@ const RangeChanger = () => {
           type="radio"
           value="monday"
           id="monday"
-          checked={sortBy === 'monday'}
-          onChange={() => {}}
+          checked={weekStart === 'monday'}
+          onChange={({ target }) => dispatch(setWeekStart(target.value))}
         />
       </label>
     </div>
