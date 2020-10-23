@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import DatePicker from 'react-datepicker';
+import dayjs from 'dayjs';
 
 import {
   selectRangeType,
@@ -19,8 +19,6 @@ const CustomRange = () => {
 
   const currentRangeType = useSelector(selectRangeType);
   const { start, end } = useSelector(selectCurrentDatePointers);
-  const startDate = new Date(start);
-  const endDate = new Date(end);
 
   if (currentRangeType !== RANGE_TYPE.CUSTOM) {
     return null;
@@ -29,14 +27,20 @@ const CustomRange = () => {
   return (
     <div className={styles.component} data-testid="CustomRange">
       Start:
-      <DatePicker
-        selected={startDate}
-        onChange={(date) => dispatch(changeStart(date.toJSON()))}
+      <input
+        type="date"
+        value={dayjs(start).format('YYYY-MM-DD')}
+        onChange={({ target }) =>
+          dispatch(changeStart(new Date(target.value).toJSON()))
+        }
       />
       End:
-      <DatePicker
-        selected={endDate}
-        onChange={(date) => dispatch(changeEnd(date.toJSON()))}
+      <input
+        type="date"
+        value={dayjs(end).format('YYYY-MM-DD')}
+        onChange={({ target }) =>
+          dispatch(changeEnd(new Date(target.value).toJSON()))
+        }
       />
     </div>
   );

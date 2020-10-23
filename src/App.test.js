@@ -260,15 +260,15 @@ describe('localStorage', () => {
     );
 
     fireEvent.change(dateInputs[0], {
-      target: { value: new Date('2004-01-01T10:00:00Z') },
+      target: { value: '2004-01-01' },
     });
 
     fireEvent.change(dateInputs[1], {
-      target: { value: new Date('2018-02-02T10:00:00Z') },
+      target: { value: '2018-02-02' },
     });
 
     expect(window.localStorage.getItem('config')).toEqual(
-      '{"selectedCalendarId":"test-id","start":"2004-01-01T10:00:00.000Z","end":"2018-02-02T10:00:00.000Z","selectedRangeType":"custom"}'
+      '{"selectedCalendarId":"test-id","start":"2004-01-01T00:00:00.000Z","end":"2018-02-02T00:00:00.000Z","selectedRangeType":"custom"}'
     );
   });
 
@@ -1002,15 +1002,15 @@ describe('calculate hours', () => {
     );
 
     // inputs should have the value of previously selected range ("week" in this case)
-    expect(dateInputs[0].value).toBe('12/29/2003');
-    expect(dateInputs[1].value).toBe('01/05/2004');
+    expect(dateInputs[0].value).toBe('2003-12-29');
+    expect(dateInputs[1].value).toBe('2004-01-05');
 
     fireEvent.change(dateInputs[0], {
-      target: { value: new Date('2004-01-01T10:00:00Z') },
+      target: { value: '2004-01-01' },
     });
 
     fireEvent.change(dateInputs[1], {
-      target: { value: new Date('2018-02-02T10:00:00Z') },
+      target: { value: '2018-02-02' },
     });
 
     expect(getByText('3h')).toBeInTheDocument();
