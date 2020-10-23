@@ -8,10 +8,8 @@ import {
   changeStart,
   changeEnd,
 } from '../stores/viewState';
-
-import 'react-datepicker/dist/react-datepicker.css';
-
 import { RANGE_TYPE } from '../constants';
+
 import styles from './CustomRange.module.css';
 
 const CustomRange = () => {
