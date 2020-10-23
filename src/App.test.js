@@ -194,7 +194,7 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 });
 
 describe('localStorage', () => {
-  it('saves user selection to localStorage', () => {
+  it('saves user selection', () => {
     const { getByTestId, getByLabelText } = renderAppWithStore({
       calendarEvents: {
         map: { 'test-id': testEvents },
@@ -216,9 +216,64 @@ describe('localStorage', () => {
     );
   });
 
-  it('uses data from localStorage to sets UI', async () => {
-    timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
+  it('saves start and end when user changes from week to custom', () => {
+    const { getByTestId } = renderAppWithStore({
+      calendarEvents: {
+        map: { 'test-id': testEvents },
+      },
+    });
 
+    fireEvent.change(getByTestId('CalendarsList'), {
+      target: { value: 'test-id' },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'week' },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'custom' },
+    });
+
+    expect(window.localStorage.getItem('config')).toEqual(
+      '{"selectedCalendarId":"test-id","selectedRangeType":"custom","start":"2017-12-31T23:00:00.000Z","end":"2018-01-07T23:00:00.000Z"}'
+    );
+  });
+
+  it('saves custom start and end', () => {
+    const { container, getByTestId } = renderAppWithStore({
+      calendarEvents: {
+        map: { 'test-id': testEvents },
+      },
+    });
+
+    fireEvent.change(getByTestId('CalendarsList'), {
+      target: { value: 'test-id' },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'custom' },
+    });
+
+    const dateInputs = container.querySelectorAll(
+      '[data-testid="CustomRange"] input'
+    );
+
+    fireEvent.change(dateInputs[0], {
+      target: { value: '2004-01-01' },
+    });
+
+    fireEvent.change(dateInputs[1], {
+      target: { value: '2018-02-02' },
+    });
+
+    expect(window.localStorage.getItem('config')).toEqual(
+      '{"selectedCalendarId":"test-id","start":"2004-01-01T00:00:00.000Z","end":"2018-02-02T00:00:00.000Z","selectedRangeType":"custom"}'
+    );
+  });
+
+  it('reads data', async () => {
+    timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
     window.localStorage.setItem(
       'config',
       JSON.stringify({
@@ -258,6 +313,29 @@ describe('localStorage', () => {
     // without {weekStart: 'sunday'} result would be 2h
     expect(await findByText('3h')).toBeInTheDocument();
   });
+
+  it('reads data with custom range', async () => {
+    window.localStorage.setItem(
+      'config',
+      JSON.stringify({
+        selectedCalendarId: 'test-id',
+        selectedRangeType: 'custom',
+        start: '2004-01-01T10:00:00.000Z',
+        end: '2018-02-02T10:00:00.000Z',
+      })
+    );
+
+    const { findByText } = renderAppWithStore({
+      viewState: {
+        selectedCalendarId: null,
+      },
+      calendars: {
+        list: null,
+      },
+    });
+
+    expect(await findByText('2h')).toBeInTheDocument();
+  });
 });
 
 describe('calculate hours', () => {
@@ -283,7 +361,12 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for day', () => {
-    const { getByText, getByTestId, queryByText } = renderAppWithStore({
+    const {
+      getByText,
+      getByTestId,
+      queryByText,
+      queryByTestId,
+    } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -311,6 +394,7 @@ describe('calculate hours', () => {
     expect(getByText('2h')).toBeInTheDocument();
 
     expect(queryByText('Week starts on:')).not.toBeInTheDocument();
+    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for day when user changes to previous day', () => {
@@ -413,7 +497,7 @@ describe('calculate hours', () => {
   it('renders hours for week', () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
 
-    const { getByText, getByTestId } = renderAppWithStore({
+    const { getByText, getByTestId, queryByTestId } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -443,6 +527,8 @@ describe('calculate hours', () => {
     expect(getByText('Week starts on:')).toBeInTheDocument();
     expect(getByText('Sunday')).toBeInTheDocument();
     expect(getByText('Monday')).toBeInTheDocument();
+
+    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for week when user changes to previous week', () => {
@@ -577,7 +663,12 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for month', () => {
-    const { getByText, getByTestId, queryByText } = renderAppWithStore({
+    const {
+      getByText,
+      getByTestId,
+      queryByText,
+      queryByTestId,
+    } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -605,6 +696,7 @@ describe('calculate hours', () => {
     expect(getByText('2h')).toBeInTheDocument();
 
     expect(queryByText('Week starts on:')).not.toBeInTheDocument();
+    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for month when user changes to previous month', () => {
@@ -705,7 +797,12 @@ describe('calculate hours', () => {
   });
 
   it('renders hours for year', () => {
-    const { getByText, getByTestId, queryByText } = renderAppWithStore({
+    const {
+      getByText,
+      getByTestId,
+      queryByText,
+      queryByTestId,
+    } = renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -733,6 +830,7 @@ describe('calculate hours', () => {
     expect(getByText('2h')).toBeInTheDocument();
 
     expect(queryByText('Week starts on:')).not.toBeInTheDocument();
+    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for year when user changes to previous year', () => {
@@ -861,6 +959,70 @@ describe('calculate hours', () => {
     expect(getByText('3h')).toBeInTheDocument();
 
     expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
+    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
+  });
+
+  it('renders hours for custom', () => {
+    // set to a tuesday
+    timekeeper.freeze(new Date('2004-01-01T10:00:00Z'));
+
+    const {
+      container,
+      getByText,
+      getByTestId,
+      queryByTestId,
+    } = renderAppWithStore({
+      viewState: { selectedRangeType: 'week' },
+      calendarEvents: {
+        map: {
+          'test-id': [
+            {
+              start: { dateTime: '2004-01-01T10:00:00Z' },
+              end: { dateTime: '2004-01-01T11:00:00Z' },
+            },
+            {
+              start: { dateTime: '2010-01-14T13:00:00Z' },
+              end: { dateTime: '2010-01-14T14:00:00Z' },
+            },
+            {
+              start: { dateTime: '2018-02-01T10:00:00Z' },
+              end: { dateTime: '2018-02-01T11:00:00Z' },
+            },
+          ],
+        },
+      },
+    });
+
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'custom' },
+    });
+
+    const dateInputs = container.querySelectorAll(
+      '[data-testid="CustomRange"] input'
+    );
+
+    // inputs should have the value of previously selected range ("week" in this case)
+    expect(dateInputs[0].value).toBe('2003-12-29');
+    expect(dateInputs[1].value).toBe('2004-01-05');
+
+    fireEvent.change(dateInputs[0], {
+      target: { value: '2004-01-01' },
+    });
+
+    fireEvent.change(dateInputs[1], {
+      target: { value: '2018-02-02' },
+    });
+
+    expect(getByText('3h')).toBeInTheDocument();
+
+    expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
+
+    // back to week
+    fireEvent.change(getByTestId('RangeSelectList'), {
+      target: { value: 'week' },
+    });
+
+    expect(getByText('1h')).toBeInTheDocument();
   });
 });
 

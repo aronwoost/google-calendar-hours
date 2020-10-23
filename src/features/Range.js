@@ -30,6 +30,7 @@ const Range = () => {
       <option value="month">Month</option>
       <option value="year">Year</option>
       <option value="total">Total</option>
+      <option value="custom">Custom</option>
     </select>
   );
 };

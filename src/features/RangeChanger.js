@@ -16,7 +16,11 @@ const RangeChanger = () => {
   const selectedCalendar = useSelector(selectSelectedCalendar);
   const currentRangeType = useSelector(selectRangeType);
 
-  if (!selectedCalendar || currentRangeType === RANGE_TYPE.TOTAL) {
+  if (
+    !selectedCalendar ||
+    currentRangeType === RANGE_TYPE.TOTAL ||
+    currentRangeType === RANGE_TYPE.CUSTOM
+  ) {
     return null;
   }
 

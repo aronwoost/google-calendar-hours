@@ -12,7 +12,11 @@ dayjs.extend(weekday);
 export const getInitialState = () => ({
   selectedCalendarId: null,
   selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
-  currentDatePointerStart: dayjs().startOf('day').toJSON(),
+  currentDatePointerStart:
+    getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
+      ? getConfig().start
+      : dayjs().startOf('day').toJSON(),
+  currentDatePointerEnd: getConfig()?.end,
   weekStart: getConfig()?.weekStart || WEEK_START.MONDAY,
 });
 
@@ -43,11 +47,23 @@ export const viewState = createSlice({
     setWeekStart: (state, { payload }) => {
       state.weekStart = payload;
     },
+    setStart: (state, { payload }) => {
+      state.currentDatePointerStart = payload;
+    },
+    setEnd: (state, { payload }) => {
+      state.currentDatePointerEnd = payload;
+    },
   },
 });
 
 export const { changeRange, resetRange } = viewState.actions;
-const { setSelectedCalendarId, setRangeType, setWeekStart } = viewState.actions;
+const {
+  setSelectedCalendarId,
+  setRangeType,
+  setWeekStart,
+  setStart,
+  setEnd,
+} = viewState.actions;
 
 export const selectSelectedCalendar = (state) =>
   state.viewState.selectedCalendarId;
@@ -59,15 +75,20 @@ export const selectWeekStart = (state) => state.viewState.weekStart;
 export const selectLocaleForWeekStart = (state) =>
   state.viewState.weekStart === WEEK_START.SUNDAY ? 'en' : 'de';
 
-export const selectEventsByRange = (state) => {
-  const events = selectCalendarEvents(state, selectSelectedCalendar(state));
-
-  if (!events) {
-    return null;
-  }
-
-  const { selectedRangeType, currentDatePointerStart } = state.viewState;
+export const selectCurrentDatePointers = (state) => {
+  const {
+    selectedRangeType,
+    currentDatePointerStart,
+    currentDatePointerEnd,
+  } = state.viewState;
   const currentDatePointerStartDate = dayjs(currentDatePointerStart);
+
+  if (selectedRangeType === RANGE_TYPE.CUSTOM) {
+    return {
+      start: dayjs(currentDatePointerStart),
+      end: dayjs(currentDatePointerEnd),
+    };
+  }
 
   let rangeStart;
   let rangeEnd;
@@ -92,11 +113,26 @@ export const selectEventsByRange = (state) => {
     rangeEnd = dayjs('2040-01-01T10:00:00Z');
   }
 
+  return {
+    start: rangeStart,
+    end: rangeEnd,
+  };
+};
+
+export const selectEventsByRange = (state) => {
+  const events = selectCalendarEvents(state, selectSelectedCalendar(state));
+
+  if (!events) {
+    return null;
+  }
+
+  const { start, end } = selectCurrentDatePointers(state);
+
   return events.filter((event) => {
     const itemDateStart = new Date(event.start.dateTime);
     const itemDateEnd = new Date(event.end.dateTime);
 
-    return itemDateStart > rangeStart && itemDateEnd < rangeEnd;
+    return itemDateStart > start && itemDateEnd < end;
   });
 };
 
@@ -132,7 +168,13 @@ export const setSelectedCalendar = ({ calendarId }) => async (
   updateConfig({ selectedCalendarId: calendarId });
 };
 
-export const changeRangeType = ({ range }) => async (dispatch) => {
+export const changeRangeType = ({ range }) => async (dispatch, getState) => {
+  if (range === RANGE_TYPE.CUSTOM) {
+    const { start, end } = selectCurrentDatePointers(getState());
+    dispatch(setStart(start.toJSON()));
+    dispatch(setEnd(end.toJSON()));
+    updateConfig({ start: start.toJSON(), end: end.toJSON() });
+  }
   dispatch(setRangeType(range));
   updateConfig({ selectedRangeType: range });
 };
@@ -140,6 +182,16 @@ export const changeRangeType = ({ range }) => async (dispatch) => {
 export const changeWeekStart = (weekStart) => async (dispatch) => {
   dispatch(setWeekStart(weekStart));
   updateConfig({ weekStart });
+};
+
+export const changeStart = (start) => async (dispatch) => {
+  dispatch(setStart(start));
+  updateConfig({ start });
+};
+
+export const changeEnd = (end) => async (dispatch) => {
+  dispatch(setEnd(end));
+  updateConfig({ end });
 };
 
 export default viewState.reducer;
