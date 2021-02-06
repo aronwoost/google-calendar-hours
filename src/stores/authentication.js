@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 let accessToken;
 
 try {
-  accessToken = localStorage.getItem('accessToken');
+  accessToken = sessionStorage.getItem('accessToken');
 } catch (e) {
   // don't handle
 }

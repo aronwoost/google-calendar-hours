@@ -1,0 +1,8 @@
+.headline {
+  color: grey;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 36px;
+  text-rendering: optimizeLegibility;
+}

@@ -101,15 +101,27 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-it('renders google auth button', () => {
+it('renders auth screen', () => {
+  window.location = {
+    origin: 'http://test.com',
+    pathname: '/testpath',
+  };
+
   renderAppWithStore({
     authentication: { accessToken: null },
   });
 
+  expect(
+    screen.getByText('Google Calendar Hours Calculator')
+  ).toBeInTheDocument();
+  expect(screen.getByTestId('AuthLink')).toHaveAttribute(
+    'href',
+    'https://accounts.google.com/o/oauth2/auth?client_id=502172359025.apps.googleusercontent.com&redirect_uri=http://test.com/testpathauth.html&scope=https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly&response_type=token'
+  );
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
 });
 
-it('writes access token to localStorage and does redirect', () => {
+it('writes access token to sessionStorage and does redirect', () => {
   window.location = new URL(
     'https://www.example.com/hello#access_token=ABC123'
   );
@@ -118,7 +130,7 @@ it('writes access token to localStorage and does redirect', () => {
     authentication: { accessToken: null },
   });
 
-  expect(window.localStorage.getItem('accessToken')).toEqual('ABC123');
+  expect(window.sessionStorage.getItem('accessToken')).toEqual('ABC123');
   expect(window.location).toBe('/');
 });
 
@@ -126,6 +138,14 @@ it('renders "loading" without calendars', () => {
   renderAppWithStore({ calendars: { list: null } });
 
   expect(screen.getByText('loading')).toBeInTheDocument();
+});
+
+it('renders static content', () => {
+  renderAppWithStore();
+
+  expect(
+    screen.getByText('Google Calendar Hours Calculator')
+  ).toBeInTheDocument();
 });
 
 it('renders calendars list', () => {

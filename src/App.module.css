@@ -1,9 +1,22 @@
 .appHeader {
   width: 380px;
-  padding: 8px;
+  margin: 8px;
 }
 
 .appHeader > * {
   width: 100%;
   margin-bottom: 8px;
+}
+
+.appHeader p {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.appHeader h3 {
+  padding-top: 20px;
+  color: grey;
+  font-size: 18px;
+  font-weight: bold;
 }
