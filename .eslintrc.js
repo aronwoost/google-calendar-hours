@@ -9,8 +9,9 @@ module.exports = {
     'prettier',
     'prettier/react',
     'plugin:testing-library/react',
+    'plugin:jest-dom/recommended',
   ],
-  plugins: ['prettier', 'testing-library'],
+  plugins: ['prettier', 'testing-library', 'jest-dom'],
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'arrow-body-style': ['error', 'as-needed'],

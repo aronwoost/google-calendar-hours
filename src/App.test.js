@@ -1132,7 +1132,8 @@ describe('display events', () => {
 
     const downloadLink = screen.getByText('Export as CSV');
     expect(downloadLink).toBeInTheDocument();
-    expect(downloadLink.getAttribute('download')).toBe(
+    expect(downloadLink).toHaveAttribute(
+      'download',
       'test-name_January_2018_(20180101110000).csv'
     );
     expect(downloadLink.getAttribute('href')).toMatchSnapshot();
