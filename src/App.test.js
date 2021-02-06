@@ -163,6 +163,22 @@ it('renders "loading" without calendars', () => {
   expect(screen.getByText('loading')).toBeInTheDocument();
 });
 
+it('renders without UI elements when calendars are loading but viewState values are set', () => {
+  renderAppWithStore({
+    calendars: { list: null },
+    viewState: {
+      selectedCalendarId: 'test-id',
+      selectedRangeType: 'week',
+    },
+  });
+
+  expect(screen.getByText('loading')).toBeInTheDocument();
+  expect(screen.queryByTestId('RangeSelectList')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
+  expect(screen.queryByText('Week starts on:')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('RangeDisplay')).not.toBeInTheDocument();
+});
+
 it('renders static content', () => {
   renderAppWithStore();
 

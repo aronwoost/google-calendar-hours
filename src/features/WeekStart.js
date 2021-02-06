@@ -6,6 +6,7 @@ import {
   selectRangeType,
   selectWeekStart,
   changeWeekStart,
+  selectSelectedCalendar,
 } from '../stores/viewState';
 import { RANGE_TYPE, WEEK_START } from '../constants';
 
@@ -17,8 +18,9 @@ const WeekStart = () => {
 
   const currentRangeType = useSelector(selectRangeType);
   const weekStart = useSelector(selectWeekStart);
+  const selectedCalendar = useSelector(selectSelectedCalendar);
 
-  if (currentRangeType !== RANGE_TYPE.WEEK) {
+  if (currentRangeType !== RANGE_TYPE.WEEK || !selectedCalendar) {
     return null;
   }
 
