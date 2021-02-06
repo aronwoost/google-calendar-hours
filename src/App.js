@@ -29,7 +29,7 @@ const App = () => {
       window.location && window.location.hash
     );
     if (accessToken !== 'null') {
-      localStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('accessToken', accessToken);
       window.location = '/';
     }
   }, []);
@@ -70,9 +70,9 @@ const App = () => {
           <p>
             None of the data fetched from the Google Calendar API is saved
             elsewhere but in your browser. After you close the browser
-            window/tab all data is delete (technical detail: sessionStorage is
-            used). Thats why you need to reauthorize with Google the next time
-            you visit the page.
+            window/tab all authentication data is delete (technical detail:
+            sessionStorage is used). Thats why you need to reauthorize with
+            Google the next time you visit the page.
           </p>
           <p>This app only has read-only access to your calendar data.</p>
         </header>

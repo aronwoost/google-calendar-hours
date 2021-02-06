@@ -121,7 +121,7 @@ it('renders auth screen', () => {
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
 });
 
-it('writes access token to localStorage and does redirect', () => {
+it('writes access token to sessionStorage and does redirect', () => {
   window.location = new URL(
     'https://www.example.com/hello#access_token=ABC123'
   );
@@ -130,7 +130,7 @@ it('writes access token to localStorage and does redirect', () => {
     authentication: { accessToken: null },
   });
 
-  expect(window.localStorage.getItem('accessToken')).toEqual('ABC123');
+  expect(window.sessionStorage.getItem('accessToken')).toEqual('ABC123');
   expect(window.location).toBe('/');
 });
 
