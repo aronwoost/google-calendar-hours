@@ -9,6 +9,7 @@ import Hours from './features/Hours';
 import RangeDisplay from './features/RangeDisplay';
 import Events from './features/Events';
 import WeekStart from './features/WeekStart';
+import Headline from './Headline';
 import { selectHasToken } from './stores/authentication';
 import logo from './google_auth.png';
 
@@ -46,6 +47,7 @@ const App = () => {
   if (!hasToken) {
     return (
       <div>
+        <Headline />
         <button type="button" onClick={handleGoogleClick}>
           <img src={logo} alt="Auth with Google" width="191" height="46" />
         </button>
@@ -56,6 +58,7 @@ const App = () => {
   return (
     <div>
       <header className={styles.appHeader}>
+        <Headline />
         <CalendarsList />
         <Range />
         <RangeChanger />

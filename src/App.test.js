@@ -101,11 +101,14 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-it('renders google auth button', () => {
+it('renders auth screen', () => {
   renderAppWithStore({
     authentication: { accessToken: null },
   });
 
+  expect(
+    screen.getByText('Google Calendar Hours Calculator')
+  ).toBeInTheDocument();
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
 });
 
@@ -126,6 +129,14 @@ it('renders "loading" without calendars', () => {
   renderAppWithStore({ calendars: { list: null } });
 
   expect(screen.getByText('loading')).toBeInTheDocument();
+});
+
+it('renders static content', () => {
+  renderAppWithStore();
+
+  expect(
+    screen.getByText('Google Calendar Hours Calculator')
+  ).toBeInTheDocument();
 });
 
 it('renders calendars list', () => {
