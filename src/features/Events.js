@@ -130,7 +130,6 @@ const Events = () => {
                 checked={sortBy === SORT_BY.DATE}
                 onChange={({ target }) => setSortBy(target.value)}
               />
-              {/* eslint jsx-a11y/label-has-associated-control: "off" */}
               <label
                 className={cx(
                   bootstrap.btn,
@@ -148,7 +147,6 @@ const Events = () => {
                 checked={sortBy === SORT_BY.AMOUNT}
                 onChange={({ target }) => setSortBy(target.value)}
               />
-              {/* eslint jsx-a11y/label-has-associated-control: "off" */}
               <label
                 className={cx(
                   bootstrap.btn,
