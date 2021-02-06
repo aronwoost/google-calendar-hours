@@ -33,18 +33,18 @@ const CustomRange = () => {
       )}
       data-testid="CustomRange"
     >
-      <span className={cx(bootstrap['input-group-text'])}>Start:</span>
+      <span className={bootstrap['input-group-text']}>Start:</span>
       <input
-        className={cx(bootstrap['form-control'])}
+        className={bootstrap['form-control']}
         type="date"
         value={dayjs(start).format('YYYY-MM-DD')}
         onChange={({ target }) =>
           dispatch(changeStart(new Date(target.value).toJSON()))
         }
       />
-      <span className={cx(bootstrap['input-group-text'])}>End:</span>
+      <span className={bootstrap['input-group-text']}>End:</span>
       <input
-        className={cx(bootstrap['form-control'])}
+        className={bootstrap['form-control']}
         type="date"
         value={dayjs(end).format('YYYY-MM-DD')}
         onChange={({ target }) =>

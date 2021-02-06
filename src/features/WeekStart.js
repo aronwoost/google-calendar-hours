@@ -30,7 +30,7 @@ const WeekStart = () => {
         role="group"
       >
         <input
-          className={cx(bootstrap['btn-check'])}
+          className={bootstrap['btn-check']}
           type="radio"
           value="sunday"
           id="sunday"
@@ -44,7 +44,7 @@ const WeekStart = () => {
           Sunday
         </label>
         <input
-          className={cx(bootstrap['btn-check'])}
+          className={bootstrap['btn-check']}
           type="radio"
           value="monday"
           id="monday"

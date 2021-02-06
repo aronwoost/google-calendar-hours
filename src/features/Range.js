@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import cx from 'classnames';
 
 import {
   changeRangeType,
@@ -23,7 +22,7 @@ const Range = () => {
   return (
     <select
       data-testid="RangeSelectList"
-      className={cx(bootstrap['form-select'])}
+      className={bootstrap['form-select']}
       onChange={(event) =>
         dispatch(changeRangeType({ range: event.target.value }))
       }

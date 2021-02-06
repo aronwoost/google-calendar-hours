@@ -29,7 +29,7 @@ const RangeChanger = () => {
   return (
     <div
       data-testid="RangeChanger"
-      className={cx(bootstrap['btn-group'])}
+      className={bootstrap['btn-group']}
       role="group"
     >
       <button

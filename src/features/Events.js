@@ -98,9 +98,9 @@ const Events = () => {
       </div>
       {isOpen && (
         <Fragment>
-          <ul className={cx(styles.list)}>
+          <ul className={styles.list}>
             {eventsToRender.map((event) => (
-              <li key={event.id} className={cx(bootstrap.row)}>
+              <li key={event.id} className={bootstrap.row}>
                 {sortBy === SORT_BY.DATE && (
                   <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
                     {dayjs(event.start.dateTime).format('DD.MM.')}
@@ -112,9 +112,7 @@ const Events = () => {
                 >
                   {event.summary}
                 </span>
-                <span
-                  className={cx(bootstrap['col-sm'])}
-                >{`${event.hours}h`}</span>
+                <span className={bootstrap['col-sm']}>{`${event.hours}h`}</span>
               </li>
             ))}
           </ul>
@@ -125,7 +123,7 @@ const Events = () => {
               role="group"
             >
               <input
-                className={cx(bootstrap['btn-check'])}
+                className={bootstrap['btn-check']}
                 type="radio"
                 value="date"
                 id="date1"
@@ -143,7 +141,7 @@ const Events = () => {
                 Date
               </label>
               <input
-                className={cx(bootstrap['btn-check'])}
+                className={bootstrap['btn-check']}
                 type="radio"
                 value="amount"
                 id="amount"

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import cx from 'classnames';
 
 import { loadCalendars, selectCalendars } from '../stores/calendars';
 import {
@@ -29,7 +28,7 @@ const CalendarsList = () => {
   return (
     <select
       data-testid="CalendarsList"
-      className={cx(bootstrap['form-select'])}
+      className={bootstrap['form-select']}
       onChange={(event) => {
         dispatch(setSelectedCalendar({ calendarId: event.target.value }));
       }}
