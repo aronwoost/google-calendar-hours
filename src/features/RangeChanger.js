@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import cx from 'classnames';
 
 import {
   selectSelectedCalendar,
@@ -7,8 +8,9 @@ import {
   resetRange,
   selectRangeType,
 } from '../stores/viewState';
-import styles from './RangeChanger.module.css';
 import { RANGE_TYPE } from '../constants';
+
+import bootstrap from '../bootstrap.module.css';
 
 const RangeChanger = () => {
   const dispatch = useDispatch();
@@ -25,14 +27,30 @@ const RangeChanger = () => {
   }
 
   return (
-    <div data-testid="RangeChanger" className={styles.buttons}>
-      <button type="button" onClick={() => dispatch(changeRange('prev'))}>
+    <div
+      data-testid="RangeChanger"
+      className={cx(bootstrap['btn-group'])}
+      role="group"
+    >
+      <button
+        type="button"
+        className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
+        onClick={() => dispatch(changeRange('prev'))}
+      >
         Prev
       </button>
-      <button type="button" onClick={() => dispatch(resetRange())}>
+      <button
+        type="button"
+        className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
+        onClick={() => dispatch(resetRange())}
+      >
         Reset
       </button>
-      <button type="button" onClick={() => dispatch(changeRange('next'))}>
+      <button
+        type="button"
+        className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
+        onClick={() => dispatch(changeRange('next'))}
+      >
         Next
       </button>
     </div>

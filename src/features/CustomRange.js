@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
+import cx from 'classnames';
 
 import {
   selectRangeType,
@@ -10,6 +11,7 @@ import {
 } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
+import bootstrap from '../bootstrap.module.css';
 import styles from './CustomRange.module.css';
 
 const CustomRange = () => {
@@ -23,17 +25,26 @@ const CustomRange = () => {
   }
 
   return (
-    <div className={styles.component} data-testid="CustomRange">
-      Start:
+    <div
+      className={cx(
+        styles.component,
+        bootstrap['input-group'],
+        bootstrap['input-group-sm']
+      )}
+      data-testid="CustomRange"
+    >
+      <span className={cx(bootstrap['input-group-text'])}>Start:</span>
       <input
+        className={cx(bootstrap['form-control'])}
         type="date"
         value={dayjs(start).format('YYYY-MM-DD')}
         onChange={({ target }) =>
           dispatch(changeStart(new Date(target.value).toJSON()))
         }
       />
-      End:
+      <span className={cx(bootstrap['input-group-text'])}>End:</span>
       <input
+        className={cx(bootstrap['form-control'])}
         type="date"
         value={dayjs(end).format('YYYY-MM-DD')}
         onChange={({ target }) =>

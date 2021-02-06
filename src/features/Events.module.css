@@ -1,19 +1,28 @@
 .list {
   margin-left: 0;
+  margin-top: 12px;
   padding: 0;
-  list-style: none;
 }
 
-.listItem {
-  background: lightgrey;
-  padding: 2px;
+.eventDate {
+  font-variant-numeric: tabular-nums lining-nums;
+  padding-right: 0;
+}
+
+.eventName {
+  word-break: unset;
+  flex-grow: 1000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-align: left;
+  padding-right: 0;
 }
 
-.listItem span {
-  padding-right: 5px;
+.sortByLabel {
+  margin-right: 8px;
 }
 
-.listItem + .listItem {
-  margin-top: 2px;
+.downloadLink {
+  margin-left: 8px;
 }

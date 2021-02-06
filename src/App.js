@@ -54,7 +54,7 @@ const App = () => {
   }
 
   return (
-    <div className={styles.app}>
+    <div>
       <header className={styles.appHeader}>
         <CalendarsList />
         <Range />

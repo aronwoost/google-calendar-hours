@@ -1,11 +1,14 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import cx from 'classnames';
 
 import {
   changeRangeType,
   selectSelectedCalendar,
   selectRangeType,
 } from '../stores/viewState';
+
+import bootstrap from '../bootstrap.module.css';
 
 const Range = () => {
   const dispatch = useDispatch();
@@ -20,6 +23,7 @@ const Range = () => {
   return (
     <select
       data-testid="RangeSelectList"
+      className={cx(bootstrap['form-select'])}
       onChange={(event) =>
         dispatch(changeRangeType({ range: event.target.value }))
       }

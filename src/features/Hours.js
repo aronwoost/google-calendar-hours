@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { selectHours, selectSelectedCalendar } from '../stores/viewState';
 
+import styles from './Hours.module.css';
+
 const Hours = () => {
   const hours = useSelector(selectHours);
   const selectedCalendar = useSelector(selectSelectedCalendar);
@@ -15,7 +17,7 @@ const Hours = () => {
     return <div>Loading hours</div>;
   }
 
-  return <div>{`${hours}h`}</div>;
+  return <div className={styles.hours}>{`${hours}h`}</div>;
 };
 
 export default Hours;
