@@ -4,8 +4,13 @@ module.exports = {
     jest: true,
   },
   parser: 'babel-eslint',
-  extends: ['airbnb', 'prettier', 'prettier/react'],
-  plugins: ['prettier'],
+  extends: [
+    'airbnb',
+    'prettier',
+    'prettier/react',
+    'plugin:testing-library/react',
+  ],
+  plugins: ['prettier', 'testing-library'],
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'arrow-body-style': ['error', 'as-needed'],
@@ -26,5 +31,8 @@ module.exports = {
       'error',
       { devDependencies: ['**/*.test.js'] },
     ],
+    'testing-library/prefer-wait-for': 'error',
+    'testing-library/no-manual-cleanup': 'error',
+    'testing-library/prefer-screen-queries': 'error',
   },
 };
