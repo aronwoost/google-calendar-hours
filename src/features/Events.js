@@ -126,7 +126,7 @@ const Events = () => {
                 className={bootstrap['btn-check']}
                 type="radio"
                 value="date"
-                id="date1"
+                id="date"
                 checked={sortBy === SORT_BY.DATE}
                 onChange={({ target }) => setSortBy(target.value)}
               />
@@ -135,7 +135,7 @@ const Events = () => {
                   bootstrap.btn,
                   bootstrap['btn-outline-secondary']
                 )}
-                htmlFor="date1"
+                htmlFor="date"
               >
                 Date
               </label>
