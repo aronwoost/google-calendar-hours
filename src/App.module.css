@@ -1,6 +1,6 @@
 .appHeader {
   width: 380px;
-  padding: 8px;
+  margin: 8px;
 }
 
 .appHeader > * {
