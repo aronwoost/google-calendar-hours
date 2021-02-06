@@ -15,8 +15,8 @@
 }
 
 .appHeader h3 {
+  padding-top: 20px;
   color: grey;
   font-size: 18px;
   font-weight: bold;
-  padding-top: 20px;
 }
