@@ -17,6 +17,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "lint": "eslint --ext js src",
+    "lint:css": "stylelint 'src/**/*.css'",
     "prettier": "prettier-eslint --write $PWD'/src/**/*.{js,md}'"
   },
   "browserslist": {
@@ -89,6 +90,10 @@
     "resolve-url-loader": "^3.1.2",
     "sass-loader": "^8.0.2",
     "style-loader": "^0.23.1",
+    "stylelint": "^13.9.0",
+    "stylelint-config-idiomatic-order": "^8.1.0",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-order": "^4.1.0",
     "terser-webpack-plugin": "^2.3.8",
     "timekeeper": "^2.2.0",
     "ts-pnp": "^1.1.6",
