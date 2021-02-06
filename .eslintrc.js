@@ -11,7 +11,7 @@ module.exports = {
     'plugin:testing-library/react',
     'plugin:jest-dom/recommended',
   ],
-  plugins: ['prettier', 'testing-library', 'jest-dom'],
+  plugins: ['prettier', 'testing-library', 'jest-dom', 'no-only-tests'],
   rules: {
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'arrow-body-style': ['error', 'as-needed'],
@@ -35,5 +35,6 @@ module.exports = {
     'testing-library/prefer-wait-for': 'error',
     'testing-library/no-manual-cleanup': 'error',
     'testing-library/prefer-screen-queries': 'error',
+    'no-only-tests/no-only-tests': 'error',
   },
 };
