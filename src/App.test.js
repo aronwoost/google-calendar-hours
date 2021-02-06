@@ -401,6 +401,8 @@ describe('calculate hours', () => {
     });
 
     expect(screen.getByText('0h')).toBeInTheDocument();
+
+    expect(screen.queryByText('show details')).not.toBeInTheDocument();
   });
 
   it('renders hours for day', () => {
@@ -1115,10 +1117,21 @@ describe('display time range in human readable format', () => {
 
 describe('display events', () => {
   it('renders events collapsed', () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
     renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
-        map: { 'test-id': [] },
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+          ],
+        },
       },
     });
 
