@@ -1,7 +1,0 @@
-.buttons {
-  display: flex;
-}
-
-.buttons > button {
-  flex: 1;
-}

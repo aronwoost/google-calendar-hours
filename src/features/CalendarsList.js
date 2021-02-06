@@ -7,6 +7,8 @@ import {
   setSelectedCalendar,
 } from '../stores/viewState';
 
+import bootstrap from '../bootstrap.module.css';
+
 const CalendarsList = () => {
   const dispatch = useDispatch();
 
@@ -26,6 +28,7 @@ const CalendarsList = () => {
   return (
     <select
       data-testid="CalendarsList"
+      className={bootstrap['form-select']}
       onChange={(event) => {
         dispatch(setSelectedCalendar({ calendarId: event.target.value }));
       }}

@@ -7,6 +7,8 @@ import {
   selectRangeType,
 } from '../stores/viewState';
 
+import bootstrap from '../bootstrap.module.css';
+
 const Range = () => {
   const dispatch = useDispatch();
 
@@ -20,6 +22,7 @@ const Range = () => {
   return (
     <select
       data-testid="RangeSelectList"
+      className={bootstrap['form-select']}
       onChange={(event) =>
         dispatch(changeRangeType({ range: event.target.value }))
       }

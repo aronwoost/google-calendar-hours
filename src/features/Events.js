@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { orderBy } from 'lodash';
+import cx from 'classnames';
 
 import {
   selectSelectedCalendar,
@@ -12,6 +13,7 @@ import { selectCalendars } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
 import { SORT_BY } from '../constants';
 
+import bootstrap from '../bootstrap.module.css';
 import styles from './Events.module.css';
 
 const Events = () => {
@@ -82,7 +84,15 @@ const Events = () => {
   return (
     <div>
       <div>
-        <button type="button" onClick={() => setIsOpen(!isOpen)}>
+        <button
+          type="button"
+          className={cx(
+            bootstrap.btn,
+            bootstrap['btn-outline-secondary'],
+            bootstrap['btn-sm']
+          )}
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {isOpen ? 'hide details' : 'show details'}
         </button>
       </div>
@@ -90,42 +100,77 @@ const Events = () => {
         <Fragment>
           <ul className={styles.list}>
             {eventsToRender.map((event) => (
-              <li key={event.id} className={styles.listItem}>
+              <li key={event.id} className={bootstrap.row}>
                 {sortBy === SORT_BY.DATE && (
-                  <span>{dayjs(event.start.dateTime).format('DD.MM.')}</span>
+                  <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
+                    {dayjs(event.start.dateTime).format('DD.MM.')}
+                  </span>
                 )}
-                <span>{event.summary}</span>
-                <span>{`${event.hours}h`}</span>
+                <span
+                  className={cx(bootstrap['col-sm'], styles.eventName)}
+                  title={event.summary}
+                >
+                  {event.summary}
+                </span>
+                <span className={bootstrap['col-sm']}>{`${event.hours}h`}</span>
               </li>
             ))}
           </ul>
-          {downloadBlob && (
-            <a href={downloadBlob} download={filename}>
-              Export as CSV
-            </a>
-          )}
           <div>
-            <span>Sort by:</span>
-            <label htmlFor="date">
-              Date
+            <span className={styles.sortByLabel}>Sort by:</span>
+            <div
+              className={cx(bootstrap['btn-group'], bootstrap['btn-group-sm'])}
+              role="group"
+            >
               <input
+                className={bootstrap['btn-check']}
                 type="radio"
                 value="date"
                 id="date"
                 checked={sortBy === SORT_BY.DATE}
                 onChange={({ target }) => setSortBy(target.value)}
               />
-            </label>
-            <label htmlFor="amount">
-              Amount
+              <label
+                className={cx(
+                  bootstrap.btn,
+                  bootstrap['btn-outline-secondary']
+                )}
+                htmlFor="date"
+              >
+                Date
+              </label>
               <input
+                className={bootstrap['btn-check']}
                 type="radio"
                 value="amount"
                 id="amount"
                 checked={sortBy === SORT_BY.AMOUNT}
                 onChange={({ target }) => setSortBy(target.value)}
               />
-            </label>
+              <label
+                className={cx(
+                  bootstrap.btn,
+                  bootstrap['btn-outline-secondary']
+                )}
+                htmlFor="amount"
+              >
+                Amount
+              </label>
+            </div>
+            {downloadBlob && (
+              <a
+                href={downloadBlob}
+                download={filename}
+                className={cx(
+                  styles.downloadLink,
+                  bootstrap.btn,
+                  bootstrap['btn-outline-secondary'],
+                  bootstrap['btn-sm']
+                )}
+              >
+                Export as CSV
+              </a>
+            )}
           </div>
         </Fragment>
       )}

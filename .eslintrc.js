@@ -12,5 +12,15 @@ module.exports = {
     'import/no-named-as-default': 'off',
     'no-param-reassign': 'off',
     'react/jsx-fragments': ['error', 'element'],
+    'jsx-a11y/label-has-associated-control': [
+      'error',
+      {
+        labelComponents: [],
+        labelAttributes: [],
+        controlComponents: [],
+        assert: 'either',
+        depth: 25,
+      },
+    ],
   },
 };
