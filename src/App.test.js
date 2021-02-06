@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { screen, render, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import timekeeper from 'timekeeper';
 import { rest } from 'msw';
@@ -102,11 +102,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 it('renders google auth button', () => {
-  const { getByAltText } = renderAppWithStore({
+  renderAppWithStore({
     authentication: { accessToken: null },
   });
 
-  expect(getByAltText('Auth with Google')).toBeInTheDocument();
+  expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
 });
 
 it('writes access token to localStorage and does redirect', () => {
@@ -123,44 +123,44 @@ it('writes access token to localStorage and does redirect', () => {
 });
 
 it('renders "loading" without calendars', () => {
-  const { getByText } = renderAppWithStore({ calendars: { list: null } });
+  renderAppWithStore({ calendars: { list: null } });
 
-  expect(getByText('loading')).toBeInTheDocument();
+  expect(screen.getByText('loading')).toBeInTheDocument();
 });
 
 it('renders calendars list', () => {
-  const { queryByText } = renderAppWithStore();
+  renderAppWithStore();
 
-  expect(queryByText('Please select calendar')).not.toBeInTheDocument();
+  expect(screen.queryByText('Please select calendar')).not.toBeInTheDocument();
 });
 
 it('requests calendars and display placeholder', async () => {
-  const { findByText, queryByTestId, queryByText } = renderAppWithStore({
+  renderAppWithStore({
     viewState: { selectedCalendarId: null },
     calendars: { list: null },
   });
 
-  expect(await findByText('Please select calendar')).toBeInTheDocument();
-  expect(await findByText('test-name')).toBeInTheDocument();
-  expect(queryByTestId('RangeSelectList')).not.toBeInTheDocument();
-  expect(queryByText('Loading hours')).not.toBeInTheDocument();
-  expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
+  expect(await screen.findByText('Please select calendar')).toBeInTheDocument();
+  expect(await screen.findByText('test-name')).toBeInTheDocument();
+  expect(screen.queryByTestId('RangeSelectList')).not.toBeInTheDocument();
+  expect(screen.queryByText('Loading hours')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
 });
 
 it('renders range select list and hours (happy path)', () => {
-  const { getByText } = renderAppWithStore({
+  renderAppWithStore({
     calendarEvents: {
       map: { 'test-id': testEvents },
     },
   });
 
-  expect(getByText('Total')).toBeInTheDocument();
-  expect(getByText('Week')).toBeInTheDocument();
-  expect(getByText('2h')).toBeInTheDocument();
+  expect(screen.getByText('Total')).toBeInTheDocument();
+  expect(screen.getByText('Week')).toBeInTheDocument();
+  expect(screen.getByText('2h')).toBeInTheDocument();
 });
 
 it('renders correctly after user changes calendar', () => {
-  const { getByTestId, getByText } = renderAppWithStore({
+  renderAppWithStore({
     calendars: {
       list: [
         { id: 'test-id', label: 'test-name' },
@@ -172,21 +172,21 @@ it('renders correctly after user changes calendar', () => {
     },
   });
 
-  fireEvent.change(getByTestId('CalendarsList'), {
+  fireEvent.change(screen.getByTestId('CalendarsList'), {
     target: { value: 'test-id-2' },
   });
 
-  expect(getByText('2h')).toBeInTheDocument();
+  expect(screen.getByText('2h')).toBeInTheDocument();
 });
 
 it('requests events, display hours and sets localStorage when loaded', async () => {
-  const { getByTestId, findByText } = renderAppWithStore();
+  renderAppWithStore();
 
-  fireEvent.change(getByTestId('CalendarsList'), {
+  fireEvent.change(screen.getByTestId('CalendarsList'), {
     target: { value: 'test-id' },
   });
 
-  expect(await findByText('2h')).toBeInTheDocument();
+  expect(await screen.findByText('2h')).toBeInTheDocument();
 
   expect(window.localStorage.getItem('config')).toEqual(
     '{"selectedCalendarId":"test-id"}'
@@ -195,21 +195,21 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 
 describe('localStorage', () => {
   it('saves user selection', () => {
-    const { getByTestId, getByLabelText } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: { 'test-id': testEvents },
       },
     });
 
-    fireEvent.change(getByTestId('CalendarsList'), {
+    fireEvent.change(screen.getByTestId('CalendarsList'), {
       target: { value: 'test-id' },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    fireEvent.click(getByLabelText('Sunday'));
+    fireEvent.click(screen.getByLabelText('Sunday'));
 
     expect(window.localStorage.getItem('config')).toEqual(
       '{"selectedCalendarId":"test-id","selectedRangeType":"week","weekStart":"sunday"}'
@@ -217,21 +217,21 @@ describe('localStorage', () => {
   });
 
   it('saves start and end when user changes from week to custom', () => {
-    const { getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: { 'test-id': testEvents },
       },
     });
 
-    fireEvent.change(getByTestId('CalendarsList'), {
+    fireEvent.change(screen.getByTestId('CalendarsList'), {
       target: { value: 'test-id' },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'custom' },
     });
 
@@ -241,17 +241,17 @@ describe('localStorage', () => {
   });
 
   it('saves custom start and end', () => {
-    const { container, getByTestId } = renderAppWithStore({
+    const { container } = renderAppWithStore({
       calendarEvents: {
         map: { 'test-id': testEvents },
       },
     });
 
-    fireEvent.change(getByTestId('CalendarsList'), {
+    fireEvent.change(screen.getByTestId('CalendarsList'), {
       target: { value: 'test-id' },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'custom' },
     });
 
@@ -283,7 +283,7 @@ describe('localStorage', () => {
       })
     );
 
-    const { findByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: {
         selectedCalendarId: null,
       },
@@ -311,7 +311,7 @@ describe('localStorage', () => {
     });
 
     // without {weekStart: 'sunday'} result would be 2h
-    expect(await findByText('3h')).toBeInTheDocument();
+    expect(await screen.findByText('3h')).toBeInTheDocument();
   });
 
   it('reads data with custom range', async () => {
@@ -325,7 +325,7 @@ describe('localStorage', () => {
       })
     );
 
-    const { findByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: {
         selectedCalendarId: null,
       },
@@ -334,13 +334,13 @@ describe('localStorage', () => {
       },
     });
 
-    expect(await findByText('2h')).toBeInTheDocument();
+    expect(await screen.findByText('2h')).toBeInTheDocument();
   });
 });
 
 describe('calculate hours', () => {
   it('renders 0h hours (if not matching events)', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -353,20 +353,15 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    expect(getByText('0h')).toBeInTheDocument();
+    expect(screen.getByText('0h')).toBeInTheDocument();
   });
 
   it('renders hours for day', () => {
-    const {
-      getByText,
-      getByTestId,
-      queryByText,
-      queryByTestId,
-    } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -387,20 +382,20 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
 
-    expect(queryByText('Week starts on:')).not.toBeInTheDocument();
-    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
+    expect(screen.queryByText('Week starts on:')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for day when user changes to previous day', () => {
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -421,17 +416,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
-    fireEvent.click(getByText('Prev'));
+    fireEvent.click(screen.getByText('Prev'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for day when user changes to next day', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -452,17 +447,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    expect(getByText('1h')).toBeInTheDocument();
+    expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
   it('renders hours for day when user resets', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -483,21 +478,21 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    fireEvent.click(getByText('Reset'));
+    fireEvent.click(screen.getByText('Reset'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for week', () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
 
-    const { getByText, getByTestId, queryByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -518,23 +513,23 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
 
-    expect(getByText('Week starts on:')).toBeInTheDocument();
-    expect(getByText('Sunday')).toBeInTheDocument();
-    expect(getByText('Monday')).toBeInTheDocument();
+    expect(screen.getByText('Week starts on:')).toBeInTheDocument();
+    expect(screen.getByText('Sunday')).toBeInTheDocument();
+    expect(screen.getByText('Monday')).toBeInTheDocument();
 
-    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for week when user changes to previous week', () => {
     timekeeper.freeze(new Date('2018-01-12T10:00:00Z'));
 
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -555,17 +550,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    fireEvent.click(getByText('Prev'));
+    fireEvent.click(screen.getByText('Prev'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for week when user changes to next week', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -586,17 +581,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    expect(getByText('1h')).toBeInTheDocument();
+    expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
   it('renders hours for week when user resets', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -617,21 +612,21 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    fireEvent.click(getByText('Reset'));
+    fireEvent.click(screen.getByText('Reset'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for week when user sets week start to Sunday', () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
 
-    const { getByText, getByTestId, getByLabelText } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -652,23 +647,18 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    fireEvent.click(getByLabelText('Sunday'));
+    fireEvent.click(screen.getByLabelText('Sunday'));
 
     // without "Sunday" result would be 2h
-    expect(getByText('3h')).toBeInTheDocument();
+    expect(screen.getByText('3h')).toBeInTheDocument();
   });
 
   it('renders hours for month', () => {
-    const {
-      getByText,
-      getByTestId,
-      queryByText,
-      queryByTestId,
-    } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -689,20 +679,20 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
 
-    expect(queryByText('Week starts on:')).not.toBeInTheDocument();
-    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
+    expect(screen.queryByText('Week starts on:')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for month when user changes to previous month', () => {
     timekeeper.freeze(new Date('2018-02-01T10:00:00Z'));
 
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -723,17 +713,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
-    fireEvent.click(getByText('Prev'));
+    fireEvent.click(screen.getByText('Prev'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for month when user changes to next month', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -754,17 +744,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    expect(getByText('1h')).toBeInTheDocument();
+    expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
   it('renders hours for month when user resets', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -785,24 +775,19 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    fireEvent.click(getByText('Reset'));
+    fireEvent.click(screen.getByText('Reset'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for year', () => {
-    const {
-      getByText,
-      getByTestId,
-      queryByText,
-      queryByTestId,
-    } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -823,20 +808,20 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
 
-    expect(queryByText('Week starts on:')).not.toBeInTheDocument();
-    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
+    expect(screen.queryByText('Week starts on:')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for year when user changes to previous year', () => {
     timekeeper.freeze(new Date('2019-01-01T10:00:00Z'));
 
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -857,17 +842,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
-    fireEvent.click(getByText('Prev'));
+    fireEvent.click(screen.getByText('Prev'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for year when user changes to next year', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -888,17 +873,17 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    expect(getByText('1h')).toBeInTheDocument();
+    expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
   it('renders hours for year when user resets', () => {
-    const { getByText, getByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -919,19 +904,19 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
-    fireEvent.click(getByText('Next'));
+    fireEvent.click(screen.getByText('Next'));
 
-    fireEvent.click(getByText('Reset'));
+    fireEvent.click(screen.getByText('Reset'));
 
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
   it('renders hours for total', () => {
-    const { getByText, getByTestId, queryByTestId } = renderAppWithStore({
+    renderAppWithStore({
       calendarEvents: {
         map: {
           'test-id': [
@@ -952,26 +937,21 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'total' },
     });
 
-    expect(getByText('3h')).toBeInTheDocument();
+    expect(screen.getByText('3h')).toBeInTheDocument();
 
-    expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
-    expect(queryByTestId('CustomRange')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
   it('renders hours for custom', () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2004-01-01T10:00:00Z'));
 
-    const {
-      container,
-      getByText,
-      getByTestId,
-      queryByTestId,
-    } = renderAppWithStore({
+    const { container } = renderAppWithStore({
       viewState: { selectedRangeType: 'week' },
       calendarEvents: {
         map: {
@@ -993,7 +973,7 @@ describe('calculate hours', () => {
       },
     });
 
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'custom' },
     });
 
@@ -1013,101 +993,101 @@ describe('calculate hours', () => {
       target: { value: '2018-02-02' },
     });
 
-    expect(getByText('3h')).toBeInTheDocument();
+    expect(screen.getByText('3h')).toBeInTheDocument();
 
-    expect(queryByTestId('RangeChanger')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
 
     // back to week
-    fireEvent.change(getByTestId('RangeSelectList'), {
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
-    expect(getByText('1h')).toBeInTheDocument();
+    expect(screen.getByText('1h')).toBeInTheDocument();
   });
 });
 
 describe('display time range in human readable format', () => {
   it('renders current day', () => {
-    const { getByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'day' },
       calendarEvents: { map: { 'test-id': [] } },
     });
 
-    expect(getByText('Monday, January 1, 2018')).toBeInTheDocument();
+    expect(screen.getByText('Monday, January 1, 2018')).toBeInTheDocument();
   });
 
   it('renders current week', () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    const { getByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'week' },
       calendarEvents: { map: { 'test-id': [] } },
     });
 
-    expect(getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
+    expect(screen.getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
   });
 
   it('renders current week with week start sunday', () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    const { getByLabelText, getByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'week' },
       calendarEvents: { map: { 'test-id': [] } },
     });
 
-    fireEvent.click(getByLabelText('Sunday'));
+    fireEvent.click(screen.getByLabelText('Sunday'));
 
-    expect(getByText('31.12.2017 - 07.01.2018')).toBeInTheDocument();
+    expect(screen.getByText('31.12.2017 - 07.01.2018')).toBeInTheDocument();
   });
 
   it('renders current month', () => {
-    const { getByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: { map: { 'test-id': [] } },
     });
 
-    expect(getByText('January, 2018')).toBeInTheDocument();
+    expect(screen.getByText('January, 2018')).toBeInTheDocument();
   });
 
   it('renders current year', () => {
-    const { getByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'year' },
       calendarEvents: { map: { 'test-id': [] } },
     });
 
-    expect(getByText('2018')).toBeInTheDocument();
+    expect(screen.getByText('2018')).toBeInTheDocument();
   });
 
   it('renders without RangeDisplay ("total")', () => {
-    const { queryByTestId } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'total' },
       calendarEvents: { map: { 'test-id': [] } },
     });
 
-    expect(queryByTestId('RangeDisplay')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('RangeDisplay')).not.toBeInTheDocument();
   });
 });
 
 describe('display events', () => {
   it('renders events collapsed', () => {
-    const { getByText, queryByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
         map: { 'test-id': [] },
       },
     });
 
-    expect(getByText('show details')).toBeInTheDocument();
+    expect(screen.getByText('show details')).toBeInTheDocument();
 
-    expect(queryByText('event-1')).not.toBeInTheDocument();
+    expect(screen.queryByText('event-1')).not.toBeInTheDocument();
   });
 
   it('renders events', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    const { getByText, queryByText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
         map: {
@@ -1135,40 +1115,36 @@ describe('display events', () => {
       },
     });
 
-    fireEvent.click(getByText('show details'));
+    fireEvent.click(screen.getByText('show details'));
 
-    expect(getByText('hide details')).toBeInTheDocument();
-    expect(getByText('Sort by:')).toBeInTheDocument();
-    expect(getByText('Date')).toBeInTheDocument();
-    expect(getByText('Amount')).toBeInTheDocument();
+    expect(screen.getByText('hide details')).toBeInTheDocument();
+    expect(screen.getByText('Sort by:')).toBeInTheDocument();
+    expect(screen.getByText('Date')).toBeInTheDocument();
+    expect(screen.getByText('Amount')).toBeInTheDocument();
 
-    expect(getByText('01.01.')).toBeInTheDocument();
-    expect(getByText('event-1')).toBeInTheDocument();
-    expect(getByText('2h')).toBeInTheDocument();
+    expect(screen.getByText('01.01.')).toBeInTheDocument();
+    expect(screen.getByText('event-1')).toBeInTheDocument();
+    expect(screen.getByText('2h')).toBeInTheDocument();
 
-    expect(getByText('05.01.')).toBeInTheDocument();
-    expect(getByText('event-2')).toBeInTheDocument();
-    expect(getByText('5h')).toBeInTheDocument();
+    expect(screen.getByText('05.01.')).toBeInTheDocument();
+    expect(screen.getByText('event-2')).toBeInTheDocument();
+    expect(screen.getByText('5h')).toBeInTheDocument();
 
-    const downloadLink = getByText('Export as CSV');
+    const downloadLink = screen.getByText('Export as CSV');
     expect(downloadLink).toBeInTheDocument();
-    expect(downloadLink.getAttribute('download')).toBe(
+    expect(downloadLink).toHaveAttribute(
+      'download',
       'test-name_January_2018_(20180101110000).csv'
     );
     expect(downloadLink.getAttribute('href')).toMatchSnapshot();
 
-    expect(queryByText('event-3')).not.toBeInTheDocument();
+    expect(screen.queryByText('event-3')).not.toBeInTheDocument();
   });
 
   it('renders events by amount', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    const {
-      getByText,
-      getByLabelText,
-      queryAllByText,
-      queryByText,
-    } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
         map: {
@@ -1196,13 +1172,13 @@ describe('display events', () => {
       },
     });
 
-    fireEvent.click(getByText('show details'));
+    fireEvent.click(screen.getByText('show details'));
 
-    fireEvent.click(getByLabelText('Amount'));
+    fireEvent.click(screen.getByLabelText('Amount'));
 
-    expect(queryByText('Export as CSV')).not.toBeInTheDocument();
+    expect(screen.queryByText('Export as CSV')).not.toBeInTheDocument();
 
-    const items = queryAllByText(/event-[1-3]/);
+    const items = screen.queryAllByText(/event-[1-3]/);
 
     expect(items).toHaveLength(2);
     // confirm correct order
@@ -1213,7 +1189,7 @@ describe('display events', () => {
   it('renders with events with same summary added together', () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    const { getByText, getByLabelText } = renderAppWithStore({
+    renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
         map: {
@@ -1241,9 +1217,9 @@ describe('display events', () => {
       },
     });
 
-    fireEvent.click(getByText('show details'));
-    fireEvent.click(getByLabelText('Amount'));
+    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByLabelText('Amount'));
 
-    expect(getByText('7h')).toBeInTheDocument();
+    expect(screen.getByText('7h')).toBeInTheDocument();
   });
 });

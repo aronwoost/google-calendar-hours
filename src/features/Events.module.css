@@ -1,22 +1,22 @@
 .list {
-  margin-left: 0;
-  margin-top: 12px;
   padding: 0;
+  margin-top: 12px;
+  margin-left: 0;
 }
 
 .eventDate {
-  font-variant-numeric: tabular-nums lining-nums;
   padding-right: 0;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 .eventName {
-  word-break: unset;
-  flex-grow: 1000;
   overflow: hidden;
+  flex-grow: 1000;
+  padding-right: 0;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: left;
-  padding-right: 0;
+  word-break: unset;
 }
 
 .sortByLabel {
