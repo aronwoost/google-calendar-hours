@@ -7,3 +7,16 @@
   width: 100%;
   margin-bottom: 8px;
 }
+
+.appHeader p {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.appHeader h3 {
+  color: grey;
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 20px;
+}
