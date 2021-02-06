@@ -102,6 +102,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 it('renders auth screen', () => {
+  window.location = {
+    origin: 'http://test.com',
+    pathname: '/testpath',
+  };
+
   renderAppWithStore({
     authentication: { accessToken: null },
   });
@@ -109,6 +114,10 @@ it('renders auth screen', () => {
   expect(
     screen.getByText('Google Calendar Hours Calculator')
   ).toBeInTheDocument();
+  expect(screen.getByTestId('AuthLink')).toHaveAttribute(
+    'href',
+    'https://accounts.google.com/o/oauth2/auth?client_id=502172359025.apps.googleusercontent.com&redirect_uri=http://test.com/testpathauth.html&scope=https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly&response_type=token'
+  );
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
 });
 
