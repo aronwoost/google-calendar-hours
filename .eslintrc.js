@@ -22,5 +22,9 @@ module.exports = {
         depth: 25,
       },
     ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: ['**/*.test.js'] },
+    ],
   },
 };
