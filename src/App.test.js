@@ -141,7 +141,7 @@ it('writes access token to sessionStorage and does redirect', () => {
 });
 
 it('delete access token from sessionStorage and does redirect when API returns non-200', async () => {
-  window.sessionStorage.setItem('accessToken', 'test test');
+  window.sessionStorage.setItem('accessToken', 'def456');
 
   renderAppWithStore({
     authentication: { accessToken: 'def456' },
