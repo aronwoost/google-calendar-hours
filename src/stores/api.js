@@ -10,7 +10,7 @@ const fetchGoogle = ({ url, accessToken, params }) =>
     })}`
   ).then((response) => {
     if (response.status !== 200) {
-      localStorage.removeItem('accessToken');
+      sessionStorage.removeItem('accessToken');
       window.location = '/';
     }
     return response.json();
