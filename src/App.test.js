@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, render, fireEvent } from '@testing-library/react';
+import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import timekeeper from 'timekeeper';
 import { rest } from 'msw';
@@ -74,7 +74,10 @@ const server = setupServer(
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
       if (accessToken !== 'ABC123') {
-        return res(403);
+        return res((_res) => {
+          _res.status = 403;
+          return _res;
+        });
       }
 
       return res(
@@ -87,7 +90,10 @@ const server = setupServer(
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
       if (accessToken !== 'ABC123') {
-        return res(403);
+        return res((_res) => {
+          _res.status = 403;
+          return _res;
+        });
       }
 
       return res(ctx.json({ items: testEvents }));
@@ -131,6 +137,23 @@ it('writes access token to sessionStorage and does redirect', () => {
   });
 
   expect(window.sessionStorage.getItem('accessToken')).toEqual('ABC123');
+  expect(window.location).toBe('/');
+});
+
+it('delete access token from sessionStorage and does redirect when API returns non-200', async () => {
+  window.sessionStorage.setItem('accessToken', 'def456');
+
+  renderAppWithStore({
+    authentication: { accessToken: 'def456' },
+    calendars: {
+      list: null,
+    },
+  });
+
+  await waitFor(() =>
+    expect(window.sessionStorage.getItem('accessToken')).toEqual(null)
+  );
+
   expect(window.location).toBe('/');
 });
 
