@@ -172,7 +172,6 @@ it('renders without UI elements when calendars are loading but viewState values 
     },
   });
 
-  expect(screen.getByText('loading')).toBeInTheDocument();
   expect(screen.queryByTestId('RangeSelectList')).not.toBeInTheDocument();
   expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
   expect(screen.queryByText('Week starts on:')).not.toBeInTheDocument();
