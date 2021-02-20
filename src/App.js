@@ -12,7 +12,10 @@ import WeekStart from './features/WeekStart';
 import Headline from './Headline';
 import { selectHasToken } from './stores/authentication';
 import { selectSelectedCalendar } from './stores/viewState';
-import { selectCalendarEvents } from './stores/calendarEvents';
+import {
+  selectCalendarEvents,
+  selectIsEventsLoading,
+} from './stores/calendarEvents';
 import logo from './google_auth.png';
 
 import styles from './App.module.css';
@@ -28,6 +31,7 @@ const App = () => {
   const events = useSelector((state) =>
     selectCalendarEvents(state, selectedCalendar)
   );
+  const eventsLoading = useSelector(selectIsEventsLoading);
 
   useEffect(() => {
     const accessToken = getURLParameter(
@@ -91,6 +95,7 @@ const App = () => {
       <header className={styles.appHeader}>
         <Headline />
         <CalendarsList />
+        {eventsLoading && 'loading'}
         {events && (
           <Fragment>
             <Range />

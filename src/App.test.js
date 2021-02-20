@@ -179,6 +179,23 @@ it('renders without UI elements when calendars are loading but viewState values 
   expect(screen.queryByTestId('RangeDisplay')).not.toBeInTheDocument();
 });
 
+it.only('renders "loading" when events are loading', async () => {
+  renderAppWithStore({
+    calendars: {
+      list: [
+        { id: 'test-id', label: 'test-name' },
+        { id: 'test-id-2', label: 'test-name-2' },
+      ],
+    },
+  });
+
+  fireEvent.change(screen.getByTestId('CalendarsList'), {
+    target: { value: 'test-id-2' },
+  });
+
+  expect(screen.getByText('loading')).toBeInTheDocument();
+});
+
 it('renders static content', () => {
   renderAppWithStore();
 
