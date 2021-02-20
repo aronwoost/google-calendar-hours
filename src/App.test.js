@@ -179,7 +179,7 @@ it('renders without UI elements when calendars are loading but viewState values 
   expect(screen.queryByTestId('RangeDisplay')).not.toBeInTheDocument();
 });
 
-it.only('renders "loading" when events are loading', async () => {
+it('renders "loading" when events are loading', async () => {
   renderAppWithStore({
     calendars: {
       list: [
