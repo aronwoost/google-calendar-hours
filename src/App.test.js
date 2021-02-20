@@ -344,7 +344,7 @@ describe('localStorage', () => {
 
     renderAppWithStore({
       viewState: {
-        selectedCalendarId: null,
+        ...getInitialState(),
       },
       calendars: {
         list: null,
@@ -386,7 +386,7 @@ describe('localStorage', () => {
 
     renderAppWithStore({
       viewState: {
-        selectedCalendarId: null,
+        ...getInitialState(),
       },
       calendars: {
         list: null,

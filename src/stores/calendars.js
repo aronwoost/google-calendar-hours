@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { selectAccessToken } from './authentication';
 import { fetchCalendars } from './api';
-import { getConfig } from './storage';
 import { setSelectedCalendar } from './viewState';
 
 export const calendars = createSlice({
@@ -28,8 +27,7 @@ export const loadCalendars = () => async (dispatch, getState) => {
         data.items.map(({ id, summary }) => ({ id, label: summary }))
       )
     );
-    const config = getConfig();
-    const selectedCalendarId = config?.selectedCalendarId;
+    const { selectedCalendarId } = getState().viewState;
 
     if (selectedCalendarId) {
       dispatch(setSelectedCalendar({ calendarId: selectedCalendarId }));

@@ -10,7 +10,7 @@ import { RANGE_TYPE, WEEK_START } from '../constants';
 dayjs.extend(weekday);
 
 export const getInitialState = () => ({
-  selectedCalendarId: null,
+  selectedCalendarId: getConfig()?.selectedCalendarId ?? null,
   selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
   currentDatePointerStart:
     getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
