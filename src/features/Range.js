@@ -1,23 +1,14 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import {
-  changeRangeType,
-  selectSelectedCalendar,
-  selectRangeType,
-} from '../stores/viewState';
+import { changeRangeType, selectRangeType } from '../stores/viewState';
 
 import bootstrap from '../bootstrap.module.css';
 
 const Range = () => {
   const dispatch = useDispatch();
 
-  const selectedCalendar = useSelector(selectSelectedCalendar);
   const currentRangeType = useSelector(selectRangeType);
-
-  if (!selectedCalendar) {
-    return null;
-  }
 
   return (
     <select

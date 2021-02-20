@@ -6,7 +6,6 @@ import {
   selectDate,
   selectRangeType,
   selectLocaleForWeekStart,
-  selectSelectedCalendar,
 } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
@@ -14,9 +13,8 @@ const RangeDisplay = () => {
   const currentDate = useSelector(selectDate);
   const currentRangeType = useSelector(selectRangeType);
   const localeForWeekStart = useSelector(selectLocaleForWeekStart);
-  const selectedCalendar = useSelector(selectSelectedCalendar);
 
-  if (currentRangeType === RANGE_TYPE.TOTAL || !selectedCalendar) {
+  if (currentRangeType === RANGE_TYPE.TOTAL) {
     return null;
   }
 

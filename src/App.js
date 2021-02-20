@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import CalendarsList from './features/CalendarsList';
@@ -11,6 +11,8 @@ import Events from './features/Events';
 import WeekStart from './features/WeekStart';
 import Headline from './Headline';
 import { selectHasToken } from './stores/authentication';
+import { selectSelectedCalendar } from './stores/viewState';
+import { selectCalendarEvents } from './stores/calendarEvents';
 import logo from './google_auth.png';
 
 import styles from './App.module.css';
@@ -22,6 +24,10 @@ const getURLParameter = (name, searchOrHash) =>
 
 const App = () => {
   const hasToken = useSelector(selectHasToken);
+  const selectedCalendar = useSelector(selectSelectedCalendar);
+  const events = useSelector((state) =>
+    selectCalendarEvents(state, selectedCalendar)
+  );
 
   useEffect(() => {
     const accessToken = getURLParameter(
@@ -85,13 +91,17 @@ const App = () => {
       <header className={styles.appHeader}>
         <Headline />
         <CalendarsList />
-        <Range />
-        <RangeChanger />
-        <CustomRange />
-        <Hours />
-        <WeekStart />
-        <RangeDisplay />
-        <Events />
+        {events && (
+          <Fragment>
+            <Range />
+            <RangeChanger />
+            <CustomRange />
+            <Hours />
+            <WeekStart />
+            <RangeDisplay />
+            <Events />
+          </Fragment>
+        )}
       </header>
     </div>
   );
