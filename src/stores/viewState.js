@@ -164,13 +164,12 @@ export const setSelectedCalendar = ({ calendarId }) => async (
   dispatch,
   getState
 ) => {
-  const state = getState();
-  const calendarEvents = selectCalendarEvents(state, calendarId);
-  if (!calendarEvents) {
-    await dispatch(loadCalendarEvents({ calendarId }));
-  }
   dispatch(setSelectedCalendarId(calendarId));
   updateConfig({ selectedCalendarId: calendarId });
+  const calendarEvents = selectCalendarEvents(getState(), calendarId);
+  if (!calendarEvents) {
+    dispatch(loadCalendarEvents({ calendarId }));
+  }
 };
 
 export const changeRangeType = ({ range }) => async (dispatch, getState) => {
