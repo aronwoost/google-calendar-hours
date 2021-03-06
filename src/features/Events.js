@@ -5,6 +5,7 @@ import { orderBy } from 'lodash';
 import cx from 'classnames';
 
 import {
+  selectHours,
   selectSelectedCalendar,
   selectEventsByRange,
   selectDate,
@@ -27,7 +28,9 @@ const Events = () => {
   const calendars = useSelector(selectCalendars);
   const date = useSelector(selectDate);
 
-  if (!events) {
+  const rangeHours = useSelector(selectHours);
+
+  if (!rangeHours) {
     return null;
   }
 

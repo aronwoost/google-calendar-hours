@@ -2,12 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import cx from 'classnames';
 
-import {
-  selectSelectedCalendar,
-  changeRange,
-  resetRange,
-  selectRangeType,
-} from '../stores/viewState';
+import { changeRange, resetRange, selectRangeType } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
 import bootstrap from '../bootstrap.module.css';
@@ -15,11 +10,9 @@ import bootstrap from '../bootstrap.module.css';
 const RangeChanger = () => {
   const dispatch = useDispatch();
 
-  const selectedCalendar = useSelector(selectSelectedCalendar);
   const currentRangeType = useSelector(selectRangeType);
 
   if (
-    !selectedCalendar ||
     currentRangeType === RANGE_TYPE.TOTAL ||
     currentRangeType === RANGE_TYPE.CUSTOM
   ) {

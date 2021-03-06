@@ -163,6 +163,41 @@ it('renders "loading" without calendars', () => {
   expect(screen.getByText('loading')).toBeInTheDocument();
 });
 
+it('renders without UI elements when calendars are loading but viewState values are set', () => {
+  renderAppWithStore({
+    calendars: { list: null },
+    viewState: {
+      selectedCalendarId: 'test-id',
+      selectedRangeType: 'week',
+    },
+  });
+
+  expect(screen.queryByTestId('RangeSelectList')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
+  expect(screen.queryByText('Week starts on:')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('RangeDisplay')).not.toBeInTheDocument();
+});
+
+it('renders "loading" when events are loading', async () => {
+  renderAppWithStore({
+    viewState: {
+      selectedCalendarId: 'test-id-2',
+    },
+    calendars: {
+      list: [
+        { id: 'test-id', label: 'test-name' },
+        { id: 'test-id-2', label: 'test-name-2' },
+      ],
+    },
+  });
+
+  fireEvent.change(screen.getByTestId('CalendarsList'), {
+    target: { value: 'test-id' },
+  });
+
+  expect(screen.getByText('loading')).toBeInTheDocument();
+});
+
 it('renders static content', () => {
   renderAppWithStore();
 
@@ -328,7 +363,7 @@ describe('localStorage', () => {
 
     renderAppWithStore({
       viewState: {
-        selectedCalendarId: null,
+        ...getInitialState(),
       },
       calendars: {
         list: null,
@@ -370,7 +405,7 @@ describe('localStorage', () => {
 
     renderAppWithStore({
       viewState: {
-        selectedCalendarId: null,
+        ...getInitialState(),
       },
       calendars: {
         list: null,
@@ -401,6 +436,8 @@ describe('calculate hours', () => {
     });
 
     expect(screen.getByText('0h')).toBeInTheDocument();
+
+    expect(screen.queryByText('show details')).not.toBeInTheDocument();
   });
 
   it('renders hours for day', () => {
@@ -1115,10 +1152,21 @@ describe('display time range in human readable format', () => {
 
 describe('display events', () => {
   it('renders events collapsed', () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
     renderAppWithStore({
       viewState: { selectedRangeType: 'month' },
       calendarEvents: {
-        map: { 'test-id': [] },
+        map: {
+          'test-id': [
+            {
+              id: '1',
+              summary: 'event-1',
+              start: { dateTime: '2018-01-01T10:00:00Z' },
+              end: { dateTime: '2018-01-01T12:00:00Z' },
+            },
+          ],
+        },
       },
     });
 
