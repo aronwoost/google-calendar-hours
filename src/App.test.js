@@ -180,6 +180,9 @@ it('renders without UI elements when calendars are loading but viewState values 
 
 it('renders "loading" when events are loading', async () => {
   renderAppWithStore({
+    viewState: {
+      selectedCalendarId: 'test-id-2',
+    },
     calendars: {
       list: [
         { id: 'test-id', label: 'test-name' },
@@ -189,7 +192,7 @@ it('renders "loading" when events are loading', async () => {
   });
 
   fireEvent.change(screen.getByTestId('CalendarsList'), {
-    target: { value: 'test-id-2' },
+    target: { value: 'test-id' },
   });
 
   expect(screen.getByText('loading')).toBeInTheDocument();
