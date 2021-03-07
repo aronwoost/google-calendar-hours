@@ -56,7 +56,7 @@ const App = () => {
 
   if (!hasToken) {
     return (
-      <div>
+      <div className={styles.appWrapper}>
         <div className={styles.app}>
           <Headline />
           <p>
@@ -91,7 +91,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className={styles.appWrapper}>
       <div className={styles.app}>
         <Headline />
         <CalendarsList />

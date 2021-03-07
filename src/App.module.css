@@ -1,3 +1,9 @@
+.appWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .app {
   width: 380px;
   margin: 8px;
