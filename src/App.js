@@ -56,8 +56,8 @@ const App = () => {
 
   if (!hasToken) {
     return (
-      <div>
-        <header className={styles.appHeader}>
+      <div className={styles.appWrapper}>
+        <div className={styles.app}>
           <Headline />
           <p>
             This web app lets you see how many hours you spend on a Google
@@ -85,14 +85,14 @@ const App = () => {
             Google the next time you visit the page.
           </p>
           <p>This app only has read-only access to your calendar data.</p>
-        </header>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
-      <header className={styles.appHeader}>
+    <div className={styles.appWrapper}>
+      <div className={styles.app}>
         <Headline />
         <CalendarsList />
         {eventsLoading && 'loading'}
@@ -107,7 +107,7 @@ const App = () => {
             <Events />
           </Fragment>
         )}
-      </header>
+      </div>
     </div>
   );
 };
