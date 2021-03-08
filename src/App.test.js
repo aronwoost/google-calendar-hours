@@ -122,14 +122,14 @@ it('renders auth screen', () => {
   ).toBeInTheDocument();
   expect(screen.getByTestId('AuthLink')).toHaveAttribute(
     'href',
-    'https://accounts.google.com/o/oauth2/auth?client_id=502172359025.apps.googleusercontent.com&redirect_uri=http://test.com/testpathauth.html&scope=https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly&response_type=token'
+    'https://accounts.google.com/o/oauth2/auth?client_id=502172359025.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Ftest.com%2Ftestpathauth.html&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events.readonly&response_type=token'
   );
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
 });
 
 it('writes access token to sessionStorage and does redirect', () => {
   window.location = new URL(
-    'https://www.example.com/hello#access_token=ABC123'
+    'https://www.example.com/hello#access_token=ABC123&foo=bar'
   );
 
   renderAppWithStore({
