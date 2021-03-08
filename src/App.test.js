@@ -225,7 +225,7 @@ it('requests calendars and display placeholder', async () => {
   expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
 });
 
-it('renders range select list and hours (happy path)', () => {
+it('renders default state (happy path)', () => {
   renderAppWithStore({
     calendarEvents: {
       map: { 'test-id': testEvents },
@@ -234,7 +234,7 @@ it('renders range select list and hours (happy path)', () => {
 
   expect(screen.getByText('Total')).toBeInTheDocument();
   expect(screen.getByText('Week')).toBeInTheDocument();
-  expect(screen.getByText('2h')).toBeInTheDocument();
+  expect(screen.getByText('1h')).toBeInTheDocument();
 });
 
 it('renders correctly after user changes calendar', () => {
@@ -254,7 +254,7 @@ it('renders correctly after user changes calendar', () => {
     target: { value: 'test-id-2' },
   });
 
-  expect(screen.getByText('2h')).toBeInTheDocument();
+  expect(screen.getByText('1h')).toBeInTheDocument();
 });
 
 it('requests events, display hours and sets localStorage when loaded', async () => {
@@ -264,7 +264,7 @@ it('requests events, display hours and sets localStorage when loaded', async () 
     target: { value: 'test-id' },
   });
 
-  expect(await screen.findByText('2h')).toBeInTheDocument();
+  expect(await screen.findByText('1h')).toBeInTheDocument();
 
   expect(window.localStorage.getItem('config')).toEqual(
     '{"selectedCalendarId":"test-id"}'
