@@ -20,6 +20,11 @@ import logo from './google_auth.png';
 
 import styles from './App.module.css';
 
+const getURLParameter = (name, searchOrHash) =>
+  decodeURI(
+    (RegExp(`${name}=(.+?)(&|$)`).exec(searchOrHash) || [null, null])[1]
+  );
+
 const App = () => {
   const hasToken = useSelector(selectHasToken);
   const selectedCalendar = useSelector(selectSelectedCalendar);
@@ -29,10 +34,11 @@ const App = () => {
   const eventsLoading = useSelector(selectIsEventsLoading);
 
   useEffect(() => {
-    const hash = window.location?.hash ?? '';
-    const accessToken = hash.split('#access_token=')?.[1];
-
-    if (accessToken) {
+    const accessToken = getURLParameter(
+      'access_token',
+      window.location && window.location.hash
+    );
+    if (accessToken !== 'null') {
       sessionStorage.setItem('accessToken', accessToken);
       window.location = '/';
     }
