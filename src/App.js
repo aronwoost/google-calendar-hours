@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { encode } from 'qss';
 
 import CalendarsList from './features/CalendarsList';
 import Range from './features/Range';
@@ -20,6 +21,10 @@ import logo from './google_auth.png';
 
 import styles from './App.module.css';
 
+const googleClientId = '502172359025.apps.googleusercontent.com';
+const googleScope =
+  'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly';
+
 const App = () => {
   const hasToken = useSelector(selectHasToken);
   const selectedCalendar = useSelector(selectSelectedCalendar);
@@ -39,13 +44,14 @@ const App = () => {
   }, []);
 
   const getGoogleAuthUrl = () => {
-    const clientId = '502172359025.apps.googleusercontent.com';
-    const callbackUrl = `${window.location.origin}${window.location.pathname}auth.html`;
-    const scope =
-      'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly';
-    const reqUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${callbackUrl}&scope=${scope}&response_type=token`;
+    const params = encode({
+      client_id: googleClientId,
+      redirect_uri: `${window.location.origin}${window.location.pathname}auth.html`,
+      scope: googleScope,
+      response_type: 'token',
+    });
 
-    return reqUrl;
+    return `https://accounts.google.com/o/oauth2/auth?${params}`;
   };
 
   if (!hasToken) {
