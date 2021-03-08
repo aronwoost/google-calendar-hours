@@ -129,7 +129,7 @@ it('renders auth screen', () => {
 
 it('writes access token to sessionStorage and does redirect', () => {
   window.location = new URL(
-    'https://www.example.com/hello#access_token=ABC123'
+    'https://www.example.com/hello#access_token=ABC123&foo=bar'
   );
 
   renderAppWithStore({

@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { encode } from 'qss';
+import { encode, decode } from 'qss';
 
 import CalendarsList from './features/CalendarsList';
 import Range from './features/Range';
@@ -34,11 +34,10 @@ const App = () => {
   const eventsLoading = useSelector(selectIsEventsLoading);
 
   useEffect(() => {
-    const hash = window.location?.hash ?? '';
-    const accessToken = hash.split('#access_token=')?.[1];
+    const hashParams = decode(window.location?.hash?.slice(1) ?? '');
 
-    if (accessToken) {
-      sessionStorage.setItem('accessToken', accessToken);
+    if (hashParams.access_token) {
+      sessionStorage.setItem('accessToken', hashParams.access_token);
       window.location = '/';
     }
   }, []);
