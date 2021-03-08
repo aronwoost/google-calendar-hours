@@ -29,13 +29,13 @@ export const loadCalendarEvents = ({ calendarId }) => async (
   const accessToken = selectAccessToken(state);
   try {
     dispatch(setLoading(true));
-    const data = await fetchCalendarEvents({ accessToken, calendarId });
+    const { items } = await fetchCalendarEvents({ accessToken, calendarId });
     dispatch(setLoading(false));
     dispatch(
       setCalendarEvents({
         calendarId,
         // take only fields we need
-        events: data.items.map(({ id, summary, start, end }) => ({
+        events: items.map(({ id, summary, start, end }) => ({
           id,
           summary,
           start,
