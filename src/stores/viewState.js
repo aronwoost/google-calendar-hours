@@ -11,7 +11,7 @@ dayjs.extend(weekday);
 
 export const getInitialState = () => ({
   selectedCalendarId: getConfig()?.selectedCalendarId ?? null,
-  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.TOTAL,
+  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.MONTH,
   currentDatePointerStart:
     getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
       ? getConfig().start
