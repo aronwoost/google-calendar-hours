@@ -7,6 +7,7 @@
     "classnames": "^2.2.6",
     "dayjs": "^1.8.36",
     "lodash": "^4.17.20",
+    "qss": "^2.0.3",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
