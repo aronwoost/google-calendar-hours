@@ -1,4 +1,5 @@
 import queryString from 'query-string';
+import dayjs from 'dayjs';
 
 const API_BASE_PATH = 'https://www.googleapis.com/calendar/v3/';
 
@@ -27,5 +28,6 @@ export const fetchCalendarEvents = ({ accessToken, calendarId }) =>
     params: {
       singleEvents: true,
       maxResults: 2500,
+      timeMax: dayjs().add(1, 'year').toJSON(),
     },
   });

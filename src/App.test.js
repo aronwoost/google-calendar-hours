@@ -86,7 +86,7 @@ const server = setupServer(
     }
   ),
   rest.get(
-    'https://www.googleapis.com/calendar/v3/calendars/test-id/events?maxResults=2500&singleEvents=true',
+    'https://www.googleapis.com/calendar/v3/calendars/test-id/events',
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
       if (accessToken !== 'ABC123') {
