@@ -237,6 +237,23 @@ it('renders range select list and hours (happy path)', () => {
   expect(screen.getByText('2h')).toBeInTheDocument();
 });
 
+it('renders hours rounded', () => {
+  renderAppWithStore({
+    calendarEvents: {
+      map: {
+        'test-id': [
+          {
+            start: { dateTime: '2018-01-02T09:00:00Z' },
+            end: { dateTime: '2018-01-02T09:05:00Z' },
+          },
+        ],
+      },
+    },
+  });
+
+  expect(screen.getByText('0.08h')).toBeInTheDocument();
+});
+
 it('renders correctly after user changes calendar', () => {
   renderAppWithStore({
     calendars: {

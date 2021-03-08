@@ -157,7 +157,7 @@ export const selectHours = (state) => {
     hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
   });
 
-  return hours;
+  return Math.round(hours * 100) / 100;
 };
 
 export const setSelectedCalendar = ({ calendarId }) => async (
