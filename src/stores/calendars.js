@@ -21,16 +21,26 @@ const { setCalendars } = calendars.actions;
 export const loadCalendars = () => async (dispatch, getState) => {
   const accessToken = selectAccessToken(getState());
   try {
-    const data = await fetchCalendars({ accessToken });
-    dispatch(
-      setCalendars(
-        data.items.map(({ id, summary }) => ({ id, label: summary }))
-      )
-    );
+    const { items } = await fetchCalendars({ accessToken });
+    const calendarList = items.map(({ id, summary }) => ({
+      id,
+      label: summary,
+    }));
+
+    dispatch(setCalendars(calendarList));
+
     const { selectedCalendarId } = getState().viewState;
 
+    const calendarExists = calendarList?.find(
+      (calendar) => calendar.id === selectedCalendarId
+    );
+
     if (selectedCalendarId) {
-      dispatch(setSelectedCalendar({ calendarId: selectedCalendarId }));
+      if (calendarExists) {
+        dispatch(setSelectedCalendar({ calendarId: selectedCalendarId }));
+      } else {
+        dispatch(setSelectedCalendar({ calendarId: null }));
+      }
     }
   } catch (e) {
     // return null;

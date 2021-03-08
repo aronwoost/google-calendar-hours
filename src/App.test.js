@@ -414,6 +414,32 @@ describe('localStorage', () => {
 
     expect(await screen.findByText('2h')).toBeInTheDocument();
   });
+
+  it('clears selectedCalendarId when id is not part of the server response', async () => {
+    window.localStorage.setItem(
+      'config',
+      JSON.stringify({
+        selectedCalendarId: 'not-existing-calendar-id',
+      })
+    );
+
+    renderAppWithStore({
+      viewState: {
+        ...getInitialState(),
+      },
+      calendars: {
+        list: null,
+      },
+    });
+
+    expect(
+      await screen.findByText('Please select calendar')
+    ).toBeInTheDocument();
+
+    expect(window.localStorage.getItem('config')).toEqual(
+      '{"selectedCalendarId":null}'
+    );
+  });
 });
 
 describe('calculate hours', () => {
