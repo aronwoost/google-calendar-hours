@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { loadCalendars, selectCalendars } from '../stores/calendars';
 import {
   selectSelectedCalendar,
   setSelectedCalendar,
 } from '../stores/viewState';
-
-import bootstrap from '../bootstrap.module.css';
 
 const CalendarsList = () => {
   const dispatch = useDispatch();

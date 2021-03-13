@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { orderBy } from 'lodash';
 import cx from 'classnames';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import {
   selectHours,
@@ -14,7 +15,6 @@ import { selectCalendars } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
 import { SORT_BY } from '../constants';
 
-import bootstrap from '../bootstrap.module.css';
 import styles from './Events.module.css';
 
 const Events = () => {
