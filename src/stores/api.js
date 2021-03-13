@@ -21,13 +21,28 @@ const fetchGoogle = ({ url, accessToken, params }) =>
 export const fetchCalendars = ({ accessToken }) =>
   fetchGoogle({ url: `${API_BASE_PATH}users/me/calendarList`, accessToken });
 
-export const fetchCalendarEvents = ({ accessToken, calendarId }) =>
+const fetchEvents = ({ accessToken, calendarId, pageToken, acc }) =>
   fetchGoogle({
     url: `${API_BASE_PATH}calendars/${calendarId}/events`,
     accessToken,
     params: {
       singleEvents: true,
       maxResults: 2500,
+      pageToken,
       timeMax: dayjs().add(1, 'year').toJSON(),
     },
+  }).then(({ items, nextPageToken }) => {
+    if (!nextPageToken) {
+      return [...acc, ...items];
+    }
+
+    return fetchEvents({
+      accessToken,
+      calendarId,
+      pageToken: nextPageToken,
+      acc: [...acc, ...items],
+    });
   });
+
+export const fetchCalendarEvents = async ({ accessToken, calendarId }) =>
+  fetchEvents({ accessToken, calendarId, acc: [] });
