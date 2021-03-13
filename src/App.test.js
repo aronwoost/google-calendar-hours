@@ -89,6 +89,20 @@ const server = setupServer(
     'https://www.googleapis.com/calendar/v3/calendars/test-id/events',
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
+      const pageToken = req.url.searchParams.get('pageToken');
+
+      if (accessToken === 'withNextPageToken') {
+        if (!pageToken) {
+          // first request (w/o pageToken)
+          return res(
+            ctx.json({ items: testEvents, nextPageToken: 'nextPageToken' })
+          );
+        }
+
+        // second request (with pageToken)
+        return res(ctx.json({ items: testEvents }));
+      }
+
       if (accessToken !== 'ABC123') {
         return res((_res) => {
           _res.status = 403;
@@ -286,6 +300,16 @@ it('requests events, display hours and sets localStorage when loaded', async () 
   expect(window.localStorage.getItem('config')).toEqual(
     '{"selectedCalendarId":"test-id"}'
   );
+});
+
+it('makes multiple event requests (when response contains nextPageToken)', async () => {
+  renderAppWithStore({ authentication: { accessToken: 'withNextPageToken' } });
+
+  fireEvent.change(screen.getByTestId('CalendarsList'), {
+    target: { value: 'test-id' },
+  });
+
+  expect(await screen.findByText('2h')).toBeInTheDocument();
 });
 
 describe('localStorage', () => {
