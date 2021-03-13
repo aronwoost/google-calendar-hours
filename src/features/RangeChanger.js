@@ -1,11 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import cx from 'classnames';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { changeRange, resetRange, selectRangeType } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
-
-import bootstrap from '../bootstrap.module.css';
 
 const RangeChanger = () => {
   const dispatch = useDispatch();

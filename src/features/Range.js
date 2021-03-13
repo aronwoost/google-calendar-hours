@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { changeRangeType, selectRangeType } from '../stores/viewState';
-
-import bootstrap from '../bootstrap.module.css';
 
 const Range = () => {
   const dispatch = useDispatch();

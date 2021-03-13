@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import cx from 'classnames';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import {
   selectRangeType,
@@ -11,7 +12,6 @@ import {
 } from '../stores/viewState';
 import { RANGE_TYPE } from '../constants';
 
-import bootstrap from '../bootstrap.module.css';
 import styles from './CustomRange.module.css';
 
 const CustomRange = () => {

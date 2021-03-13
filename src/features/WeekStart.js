@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import cx from 'classnames';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import {
   selectRangeType,
@@ -10,7 +11,6 @@ import {
 import { RANGE_TYPE, WEEK_START } from '../constants';
 
 import styles from './WeekStart.module.css';
-import bootstrap from '../bootstrap.module.css';
 
 const WeekStart = () => {
   const dispatch = useDispatch();
