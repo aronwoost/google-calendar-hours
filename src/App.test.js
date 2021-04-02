@@ -221,7 +221,7 @@ it('renders correctly after user changes calendar', async () => {
     { id: 'test-id', label: 'test-name' },
     { id: 'test-id-2', label: 'test-name-2' },
   ]);
-  mockEventsResponse.mockReturnValue(testEvents).mockReturnValue(testEvents);
+  mockEventsResponse.mockReturnValue(testEvents);
 
   renderApp();
 
