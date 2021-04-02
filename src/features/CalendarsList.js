@@ -31,7 +31,7 @@ const CalendarsList = () => {
       onChange={(event) => {
         dispatch(setSelectedCalendar({ calendarId: event.target.value }));
       }}
-      value={selectedCalendar || ''}
+      value={selectedCalendar ?? ''}
     >
       {!selectedCalendar && (
         <option key="default">Please select calendar</option>

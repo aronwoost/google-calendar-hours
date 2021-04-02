@@ -50,7 +50,7 @@ export const loadCalendarEvents = ({ calendarId }) => async (
 };
 
 export const selectCalendarEvents = (state, calendarId) =>
-  state.calendarEvents?.map[calendarId] || null;
+  state.calendarEvents?.map[calendarId] ?? null;
 
 export const selectIsEventsLoading = (state) => state.calendarEvents?.loading;
 

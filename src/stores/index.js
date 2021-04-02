@@ -22,13 +22,13 @@ const getAccessToken = () => {
 };
 
 const getViewState = () => ({
-  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.MONTH,
+  selectedRangeType: getConfig()?.selectedRangeType ?? RANGE_TYPE.MONTH,
   currentDatePointerStart:
     getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
       ? getConfig().start
       : dayjs().startOf('day').toJSON(),
   currentDatePointerEnd: getConfig()?.end,
-  weekStart: getConfig()?.weekStart || WEEK_START.MONDAY,
+  weekStart: getConfig()?.weekStart ?? WEEK_START.MONDAY,
 });
 
 const store = () =>
