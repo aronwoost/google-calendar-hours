@@ -31,6 +31,7 @@ export const loadCalendars = () => async (dispatch, getState) => {
     dispatch(setCalendars(calendarList));
 
     const { selectedCalendarId } = getConfig() ?? {};
+
     if (selectedCalendarId) {
       const calendarExists = calendarList?.find(
         ({ id }) => id === selectedCalendarId
