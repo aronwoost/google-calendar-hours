@@ -21,7 +21,7 @@ const getAccessToken = () => {
   return null;
 };
 
-const getInitialState = () => ({
+const getViewState = () => ({
   selectedCalendarId: getConfig()?.selectedCalendarId ?? null,
   selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.MONTH,
   currentDatePointerStart:
@@ -42,7 +42,7 @@ const store = () =>
     },
     preloadedState: {
       authentication: { accessToken: getAccessToken() },
-      viewState: getInitialState(),
+      viewState: getViewState(),
     },
   });
 
