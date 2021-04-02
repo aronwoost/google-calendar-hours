@@ -5,46 +5,13 @@ import timekeeper from 'timekeeper';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
-import { store } from './stores';
+import store from './stores';
 import App from './App';
-import { getInitialState } from './stores/viewState';
 
 jest.mock('./utils/createBlobUrl', () => (content) => content);
 
-const createTestStore = ({ viewState, calendars, calendarEvents }) =>
-  store({
-    initialState: {
-      viewState: {
-        ...getInitialState(),
-        selectedCalendarId: 'test-id',
-        ...viewState,
-      },
-      calendars: {
-        list: [{ id: 'test-id', label: 'test-name' }],
-        ...calendars,
-      },
-      calendarEvents,
-    },
-  });
-
-const renderAppWithStore = ({ viewState, calendars, calendarEvents } = {}) =>
-  render(
-    <Provider
-      store={createTestStore({
-        viewState,
-        calendars,
-        calendarEvents,
-      })}
-    >
-      <App />
-    </Provider>
-  );
-
-beforeEach(() => {
-  timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
-  window.localStorage.removeItem('config');
-  window.sessionStorage.setItem('accessToken', 'ABC123');
-});
+const mockCalendarResponse = jest.fn();
+const mockEventsResponse = jest.fn();
 
 const testEvents = [
   {
@@ -57,25 +24,46 @@ const testEvents = [
   },
 ];
 
+const renderAppWithStore = () =>
+  render(
+    <Provider store={store()}>
+      <App />
+    </Provider>
+  );
+
+beforeEach(() => {
+  timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+  window.localStorage.setItem(
+    'config',
+    JSON.stringify({
+      selectedCalendarId: 'test-id',
+    })
+  );
+
+  window.sessionStorage.setItem('accessToken', 'ABC123');
+  mockCalendarResponse.mockReturnValue([
+    { id: 'test-id', summary: 'test-name' },
+  ]);
+  mockEventsResponse.mockReturnValue(testEvents);
+});
+
 const server = setupServer(
   rest.get(
     'https://www.googleapis.com/calendar/v3/users/me/calendarList',
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
-      if (accessToken !== 'ABC123') {
+      if (accessToken !== 'ABC123' && accessToken !== 'withNextPageToken') {
         return res((_res) => {
           _res.status = 403;
           return _res;
         });
       }
 
-      return res(
-        ctx.json({ items: [{ id: 'test-id', summary: 'test-name' }] })
-      );
+      return res(ctx.json({ items: mockCalendarResponse() }));
     }
   ),
   rest.get(
-    'https://www.googleapis.com/calendar/v3/calendars/test-id/events',
+    'https://www.googleapis.com/calendar/v3/calendars/:calendarId/events',
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
       const pageToken = req.url.searchParams.get('pageToken');
@@ -99,7 +87,7 @@ const server = setupServer(
         });
       }
 
-      return res(ctx.json({ items: testEvents }));
+      return res(ctx.json({ items: mockEventsResponse() }));
     }
   )
 );
@@ -144,11 +132,7 @@ it('writes access token to sessionStorage and does redirect', () => {
 it('delete access token from sessionStorage and does redirect when API returns non-200', async () => {
   window.sessionStorage.setItem('accessToken', 'def456');
 
-  renderAppWithStore({
-    calendars: {
-      list: null,
-    },
-  });
+  renderAppWithStore();
 
   await waitFor(() =>
     expect(window.sessionStorage.getItem('accessToken')).toEqual(null)
@@ -158,19 +142,23 @@ it('delete access token from sessionStorage and does redirect when API returns n
 });
 
 it('renders "loading" without calendars', () => {
-  renderAppWithStore({ calendars: { list: null } });
+  renderAppWithStore();
 
   expect(screen.getByText('loading')).toBeInTheDocument();
 });
 
-it('renders without UI elements when calendars are loading but viewState values are set', () => {
-  renderAppWithStore({
-    calendars: { list: null },
-    viewState: {
+it('renders without UI elements when calendars are loading but viewState values are set', async () => {
+  window.localStorage.setItem(
+    'config',
+    JSON.stringify({
       selectedCalendarId: 'test-id',
       selectedRangeType: 'week',
-    },
-  });
+    })
+  );
+
+  renderAppWithStore();
+
+  expect(await screen.findByTestId('CalendarsList')).toBeInTheDocument();
 
   expect(screen.queryByTestId('RangeSelectList')).not.toBeInTheDocument();
   expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
@@ -179,20 +167,10 @@ it('renders without UI elements when calendars are loading but viewState values 
 });
 
 it('renders "loading" when events are loading', async () => {
-  renderAppWithStore({
-    viewState: {
-      selectedCalendarId: 'test-id-2',
-    },
-    calendars: {
-      list: [
-        { id: 'test-id', label: 'test-name' },
-        { id: 'test-id-2', label: 'test-name-2' },
-      ],
-    },
-  });
+  renderAppWithStore();
 
-  fireEvent.change(screen.getByTestId('CalendarsList'), {
-    target: { value: 'test-id' },
+  fireEvent.change(await screen.findByTestId('CalendarsList'), {
+    target: { value: 'test-id-2' },
   });
 
   expect(screen.getByText('loading')).toBeInTheDocument();
@@ -213,10 +191,9 @@ it('renders calendars list', () => {
 });
 
 it('requests calendars and display placeholder', async () => {
-  renderAppWithStore({
-    viewState: { selectedCalendarId: null },
-    calendars: { list: null },
-  });
+  window.localStorage.removeItem('config');
+
+  renderAppWithStore();
 
   expect(await screen.findByText('Please select calendar')).toBeInTheDocument();
   expect(await screen.findByText('test-name')).toBeInTheDocument();
@@ -225,59 +202,47 @@ it('requests calendars and display placeholder', async () => {
   expect(screen.queryByTestId('RangeChanger')).not.toBeInTheDocument();
 });
 
-it('renders default state (happy path)', () => {
-  renderAppWithStore({
-    calendarEvents: {
-      map: { 'test-id': testEvents },
-    },
-  });
+it('renders default state (happy path)', async () => {
+  renderAppWithStore();
 
-  expect(screen.getByText('Total')).toBeInTheDocument();
+  expect(await screen.findByText('Total')).toBeInTheDocument();
   expect(screen.getByText('Week')).toBeInTheDocument();
   expect(screen.getByText('1h')).toBeInTheDocument();
 });
 
-it('renders hours rounded', () => {
-  renderAppWithStore({
-    calendarEvents: {
-      map: {
-        'test-id': [
-          {
-            start: { dateTime: '2018-01-02T09:00:00Z' },
-            end: { dateTime: '2018-01-02T09:05:00Z' },
-          },
-        ],
-      },
+it('renders hours rounded', async () => {
+  mockEventsResponse.mockReturnValue([
+    {
+      start: { dateTime: '2018-01-02T09:00:00Z' },
+      end: { dateTime: '2018-01-02T09:05:00Z' },
     },
-  });
+  ]);
 
-  expect(screen.getByText('0.08h')).toBeInTheDocument();
+  renderAppWithStore();
+
+  expect(await screen.findByText('0.08h')).toBeInTheDocument();
 });
 
-it('renders correctly after user changes calendar', () => {
-  renderAppWithStore({
-    calendars: {
-      list: [
-        { id: 'test-id', label: 'test-name' },
-        { id: 'test-id-2', label: 'test-name-2' },
-      ],
-    },
-    calendarEvents: {
-      map: { 'test-id': [], 'test-id-2': testEvents },
-    },
-  });
+it('renders correctly after user changes calendar', async () => {
+  mockCalendarResponse.mockReturnValue([
+    { id: 'test-id', label: 'test-name' },
+    { id: 'test-id-2', label: 'test-name-2' },
+  ]);
+  mockEventsResponse.mockReturnValue(testEvents).mockReturnValue(testEvents);
 
-  fireEvent.change(screen.getByTestId('CalendarsList'), {
+  renderAppWithStore();
+
+  fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id-2' },
   });
 
-  expect(screen.getByText('1h')).toBeInTheDocument();
+  expect(await screen.findByText('1h')).toBeInTheDocument();
 });
 
 it('requests events, display hours and sets localStorage when loaded', async () => {
   renderAppWithStore();
 
-  fireEvent.change(screen.getByTestId('CalendarsList'), {
+  fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id' },
   });
 
@@ -292,7 +257,7 @@ it('makes multiple event requests (when response contains nextPageToken)', async
   window.sessionStorage.setItem('accessToken', 'withNextPageToken');
   renderAppWithStore();
 
-  fireEvent.change(screen.getByTestId('CalendarsList'), {
+  fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id' },
   });
 
@@ -300,18 +265,14 @@ it('makes multiple event requests (when response contains nextPageToken)', async
 });
 
 describe('localStorage', () => {
-  it('saves user selection', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: { 'test-id': testEvents },
-      },
-    });
+  it('saves user selection', async () => {
+    renderAppWithStore();
 
-    fireEvent.change(screen.getByTestId('CalendarsList'), {
+    fireEvent.change(await screen.findByTestId('CalendarsList'), {
       target: { value: 'test-id' },
     });
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -322,18 +283,14 @@ describe('localStorage', () => {
     );
   });
 
-  it('saves start and end when user changes from week to custom', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: { 'test-id': testEvents },
-      },
-    });
+  it('saves start and end when user changes from week to custom', async () => {
+    renderAppWithStore();
 
-    fireEvent.change(screen.getByTestId('CalendarsList'), {
+    fireEvent.change(await screen.findByTestId('CalendarsList'), {
       target: { value: 'test-id' },
     });
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -346,18 +303,14 @@ describe('localStorage', () => {
     );
   });
 
-  it('saves custom start and end', () => {
-    const { container } = renderAppWithStore({
-      calendarEvents: {
-        map: { 'test-id': testEvents },
-      },
-    });
+  it('saves custom start and end', async () => {
+    const { container } = renderAppWithStore();
 
-    fireEvent.change(screen.getByTestId('CalendarsList'), {
+    fireEvent.change(await screen.findByTestId('CalendarsList'), {
       target: { value: 'test-id' },
     });
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'custom' },
     });
 
@@ -389,32 +342,22 @@ describe('localStorage', () => {
       })
     );
 
-    renderAppWithStore({
-      viewState: {
-        ...getInitialState(),
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-07T10:00:00Z' },
+        end: { dateTime: '2018-01-07T11:00:00Z' },
       },
-      calendars: {
-        list: null,
+      {
+        start: { dateTime: '2018-01-08T13:00:00Z' },
+        end: { dateTime: '2018-01-08T14:00:00Z' },
       },
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-07T10:00:00Z' },
-              end: { dateTime: '2018-01-07T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-08T13:00:00Z' },
-              end: { dateTime: '2018-01-08T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-09T10:00:00Z' },
-              end: { dateTime: '2018-01-09T11:00:00Z' },
-            },
-          ],
-        },
+      {
+        start: { dateTime: '2018-01-09T10:00:00Z' },
+        end: { dateTime: '2018-01-09T11:00:00Z' },
       },
-    });
+    ]);
+
+    renderAppWithStore();
 
     // without {weekStart: 'sunday'} result would be 2h
     expect(await screen.findByText('3h')).toBeInTheDocument();
@@ -431,14 +374,7 @@ describe('localStorage', () => {
       })
     );
 
-    renderAppWithStore({
-      viewState: {
-        ...getInitialState(),
-      },
-      calendars: {
-        list: null,
-      },
-    });
+    renderAppWithStore();
 
     expect(await screen.findByText('2h')).toBeInTheDocument();
   });
@@ -451,14 +387,7 @@ describe('localStorage', () => {
       })
     );
 
-    renderAppWithStore({
-      viewState: {
-        ...getInitialState(),
-      },
-      calendars: {
-        list: null,
-      },
-    });
+    renderAppWithStore();
 
     expect(
       await screen.findByText('Please select calendar')
@@ -471,21 +400,17 @@ describe('localStorage', () => {
 });
 
 describe('calculate hours', () => {
-  it('renders 0h hours (if not matching events)', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-20T10:00:00Z' },
-              end: { dateTime: '2018-01-20T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders 0h hours (if not matching events)', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-20T10:00:00Z' },
+        end: { dateTime: '2018-01-20T11:00:00Z' },
       },
-    });
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -494,29 +419,25 @@ describe('calculate hours', () => {
     expect(screen.queryByText('show details')).not.toBeInTheDocument();
   });
 
-  it('renders hours for day', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-10T10:00:00Z' },
-              end: { dateTime: '2018-01-10T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for day', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-10T10:00:00Z' },
+        end: { dateTime: '2018-01-10T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
@@ -526,31 +447,27 @@ describe('calculate hours', () => {
     expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
-  it('renders hours for day when user changes to previous day', () => {
+  it('renders hours for day when user changes to previous day', async () => {
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-02T10:00:00Z' },
-              end: { dateTime: '2018-01-02T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-02T10:00:00Z' },
+        end: { dateTime: '2018-01-02T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
@@ -559,29 +476,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for day when user changes to next day', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-02T10:00:00Z' },
-              end: { dateTime: '2018-01-02T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for day when user changes to next day', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-02T10:00:00Z' },
+        end: { dateTime: '2018-01-02T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
@@ -590,29 +503,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
-  it('renders hours for day when user resets', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-02T10:00:00Z' },
-              end: { dateTime: '2018-01-02T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for day when user resets', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-02T10:00:00Z' },
+        end: { dateTime: '2018-01-02T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
     });
 
@@ -623,31 +532,27 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for week', () => {
+  it('renders hours for week', async () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
 
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-07T10:00:00Z' },
-              end: { dateTime: '2018-01-07T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-08T13:00:00Z' },
-              end: { dateTime: '2018-01-08T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-09T10:00:00Z' },
-              end: { dateTime: '2018-01-09T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-07T10:00:00Z' },
+        end: { dateTime: '2018-01-07T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-08T13:00:00Z' },
+        end: { dateTime: '2018-01-08T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-09T10:00:00Z' },
+        end: { dateTime: '2018-01-09T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -660,31 +565,27 @@ describe('calculate hours', () => {
     expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
-  it('renders hours for week when user changes to previous week', () => {
+  it('renders hours for week when user changes to previous week', async () => {
     timekeeper.freeze(new Date('2018-01-12T10:00:00Z'));
 
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-12T10:00:00Z' },
-              end: { dateTime: '2018-01-12T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-12T10:00:00Z' },
+        end: { dateTime: '2018-01-12T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -693,29 +594,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for week when user changes to next week', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-12T10:00:00Z' },
-              end: { dateTime: '2018-01-12T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for week when user changes to next week', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-12T10:00:00Z' },
+        end: { dateTime: '2018-01-12T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -724,29 +621,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
-  it('renders hours for week when user resets', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-12T10:00:00Z' },
-              end: { dateTime: '2018-01-12T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for week when user resets', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-12T10:00:00Z' },
+        end: { dateTime: '2018-01-12T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -757,31 +650,27 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for week when user sets week start to Sunday', () => {
+  it('renders hours for week when user sets week start to Sunday', async () => {
     timekeeper.freeze(new Date('2018-01-08T13:00:00Z'));
 
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-07T10:00:00Z' },
-              end: { dateTime: '2018-01-07T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-08T13:00:00Z' },
-              end: { dateTime: '2018-01-08T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-09T10:00:00Z' },
-              end: { dateTime: '2018-01-09T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-07T10:00:00Z' },
+        end: { dateTime: '2018-01-07T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-08T13:00:00Z' },
+        end: { dateTime: '2018-01-08T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-01-09T10:00:00Z' },
+        end: { dateTime: '2018-01-09T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
     });
 
@@ -791,29 +680,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('3h')).toBeInTheDocument();
   });
 
-  it('renders hours for month', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-14T13:00:00Z' },
-              end: { dateTime: '2018-01-14T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for month', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-14T13:00:00Z' },
+        end: { dateTime: '2018-01-14T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
@@ -823,31 +708,27 @@ describe('calculate hours', () => {
     expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
-  it('renders hours for month when user changes to previous month', () => {
+  it('renders hours for month when user changes to previous month', async () => {
     timekeeper.freeze(new Date('2018-02-01T10:00:00Z'));
 
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
@@ -856,29 +737,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for month when user changes to next month', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for month when user changes to next month', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
@@ -887,29 +764,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
-  it('renders hours for month when user resets', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for month when user resets', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
     });
 
@@ -920,29 +793,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for year', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2017-01-01T10:00:00Z' },
-              end: { dateTime: '2017-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-14T13:00:00Z' },
-              end: { dateTime: '2018-01-14T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for year', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2017-01-01T10:00:00Z' },
+        end: { dateTime: '2017-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-14T13:00:00Z' },
+        end: { dateTime: '2018-01-14T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
@@ -952,31 +821,27 @@ describe('calculate hours', () => {
     expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
-  it('renders hours for year when user changes to previous year', () => {
+  it('renders hours for year when user changes to previous year', async () => {
     timekeeper.freeze(new Date('2019-01-01T10:00:00Z'));
 
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2019-01-01T10:00:00Z' },
-              end: { dateTime: '2019-01-01T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2019-01-01T10:00:00Z' },
+        end: { dateTime: '2019-01-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
@@ -985,29 +850,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for year when user changes to next year', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2019-01-01T10:00:00Z' },
-              end: { dateTime: '2019-01-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for year when user changes to next year', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2019-01-01T10:00:00Z' },
+        end: { dateTime: '2019-01-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
@@ -1016,29 +877,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('1h')).toBeInTheDocument();
   });
 
-  it('renders hours for year when user resets', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-01-01T13:00:00Z' },
-              end: { dateTime: '2018-01-01T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2019-01-01T10:00:00Z' },
-              end: { dateTime: '2019-01-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for year when user resets', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2018-01-01T13:00:00Z' },
+        end: { dateTime: '2018-01-01T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2019-01-01T10:00:00Z' },
+        end: { dateTime: '2019-01-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
     });
 
@@ -1049,29 +906,25 @@ describe('calculate hours', () => {
     expect(screen.getByText('2h')).toBeInTheDocument();
   });
 
-  it('renders hours for total', () => {
-    renderAppWithStore({
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2004-01-01T10:00:00Z' },
-              end: { dateTime: '2004-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2010-01-14T13:00:00Z' },
-              end: { dateTime: '2010-01-14T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+  it('renders hours for total', async () => {
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2004-01-01T10:00:00Z' },
+        end: { dateTime: '2004-01-01T11:00:00Z' },
       },
-    });
+      {
+        start: { dateTime: '2010-01-14T13:00:00Z' },
+        end: { dateTime: '2010-01-14T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
 
-    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'total' },
     });
 
@@ -1081,30 +934,29 @@ describe('calculate hours', () => {
     expect(screen.queryByTestId('CustomRange')).not.toBeInTheDocument();
   });
 
-  it('renders hours for custom', () => {
+  it('renders hours for custom', async () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2004-01-01T10:00:00Z'));
 
-    const { container } = renderAppWithStore({
-      viewState: { selectedRangeType: 'week' },
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              start: { dateTime: '2004-01-01T10:00:00Z' },
-              end: { dateTime: '2004-01-01T11:00:00Z' },
-            },
-            {
-              start: { dateTime: '2010-01-14T13:00:00Z' },
-              end: { dateTime: '2010-01-14T14:00:00Z' },
-            },
-            {
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        start: { dateTime: '2004-01-01T10:00:00Z' },
+        end: { dateTime: '2004-01-01T11:00:00Z' },
       },
+      {
+        start: { dateTime: '2010-01-14T13:00:00Z' },
+        end: { dateTime: '2010-01-14T14:00:00Z' },
+      },
+      {
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
+
+    const { container } = renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'week' },
     });
 
     fireEvent.change(screen.getByTestId('RangeSelectList'), {
@@ -1141,34 +993,37 @@ describe('calculate hours', () => {
 });
 
 describe('display time range in human readable format', () => {
-  it('renders current day', () => {
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'day' },
-      calendarEvents: { map: { 'test-id': [] } },
+  it('renders current day', async () => {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'day' },
     });
 
     expect(screen.getByText('Monday, January 1, 2018')).toBeInTheDocument();
   });
 
-  it('renders current week', () => {
+  it('renders current week', async () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'week' },
-      calendarEvents: { map: { 'test-id': [] } },
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'week' },
     });
 
     expect(screen.getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
   });
 
-  it('renders current week with week start sunday', () => {
+  it('renders current week with week start sunday', async () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'week' },
-      calendarEvents: { map: { 'test-id': [] } },
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'week' },
     });
 
     fireEvent.click(screen.getByLabelText('Sunday'));
@@ -1176,28 +1031,33 @@ describe('display time range in human readable format', () => {
     expect(screen.getByText('31.12.2017 - 07.01.2018')).toBeInTheDocument();
   });
 
-  it('renders current month', () => {
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'month' },
-      calendarEvents: { map: { 'test-id': [] } },
+  it('renders current month', async () => {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
     });
 
     expect(screen.getByText('January, 2018')).toBeInTheDocument();
   });
 
-  it('renders current year', () => {
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'year' },
-      calendarEvents: { map: { 'test-id': [] } },
+  it('renders current year', async () => {
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'year' },
     });
 
     expect(screen.getByText('2018')).toBeInTheDocument();
   });
 
-  it('renders without RangeDisplay ("total")', () => {
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'total' },
-      calendarEvents: { map: { 'test-id': [] } },
+  it('renders without RangeDisplay ("total")', async () => {
+    renderAppWithStore();
+
+    expect(await screen.findByTestId('RangeDisplay')).toBeInTheDocument();
+
+    fireEvent.change(screen.getByTestId('RangeSelectList'), {
+      target: { value: 'total' },
     });
 
     expect(screen.queryByTestId('RangeDisplay')).not.toBeInTheDocument();
@@ -1205,23 +1065,22 @@ describe('display time range in human readable format', () => {
 });
 
 describe('display events', () => {
-  it('renders events collapsed', () => {
+  it('renders events collapsed', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'month' },
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              id: '1',
-              summary: 'event-1',
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T12:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'event-1',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T12:00:00Z' },
       },
+    ]);
+
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
     });
 
     expect(screen.getByText('show details')).toBeInTheDocument();
@@ -1229,35 +1088,34 @@ describe('display events', () => {
     expect(screen.queryByText('event-1')).not.toBeInTheDocument();
   });
 
-  it('renders events', () => {
+  it('renders events', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'month' },
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              id: '1',
-              summary: 'event-1',
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T12:00:00Z' },
-            },
-            {
-              id: '2',
-              summary: 'event-2',
-              start: { dateTime: '2018-01-05T13:00:00Z' },
-              end: { dateTime: '2018-01-05T18:00:00Z' },
-            },
-            {
-              id: '3',
-              summary: 'event-3',
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'event-1',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T12:00:00Z' },
       },
+      {
+        id: '2',
+        summary: 'event-2',
+        start: { dateTime: '2018-01-05T13:00:00Z' },
+        end: { dateTime: '2018-01-05T18:00:00Z' },
+      },
+      {
+        id: '3',
+        summary: 'event-3',
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
+
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
     });
 
     fireEvent.click(screen.getByText('show details'));
@@ -1286,35 +1144,34 @@ describe('display events', () => {
     expect(screen.queryByText('event-3')).not.toBeInTheDocument();
   });
 
-  it('renders events by amount', () => {
+  it('renders events by amount', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'month' },
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              id: '1',
-              summary: 'event-1',
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T12:00:00Z' },
-            },
-            {
-              id: '2',
-              summary: 'event-2',
-              start: { dateTime: '2018-01-05T13:00:00Z' },
-              end: { dateTime: '2018-01-05T18:00:00Z' },
-            },
-            {
-              id: '3',
-              summary: 'event-3',
-              start: { dateTime: '2018-02-01T10:00:00Z' },
-              end: { dateTime: '2018-02-01T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'event-1',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T12:00:00Z' },
       },
+      {
+        id: '2',
+        summary: 'event-2',
+        start: { dateTime: '2018-01-05T13:00:00Z' },
+        end: { dateTime: '2018-01-05T18:00:00Z' },
+      },
+      {
+        id: '3',
+        summary: 'event-3',
+        start: { dateTime: '2018-02-01T10:00:00Z' },
+        end: { dateTime: '2018-02-01T11:00:00Z' },
+      },
+    ]);
+
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
     });
 
     fireEvent.click(screen.getByText('show details'));
@@ -1331,35 +1188,34 @@ describe('display events', () => {
     expect(items[1]).toHaveTextContent('event-1');
   });
 
-  it('renders with events with same summary added together', () => {
+  it('renders with events with same summary added together', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
-    renderAppWithStore({
-      viewState: { selectedRangeType: 'month' },
-      calendarEvents: {
-        map: {
-          'test-id': [
-            {
-              id: '1',
-              summary: 'test summary',
-              start: { dateTime: '2018-01-01T10:00:00Z' },
-              end: { dateTime: '2018-01-01T12:00:00Z' },
-            },
-            {
-              id: '2',
-              summary: 'test summary',
-              start: { dateTime: '2018-01-05T13:00:00Z' },
-              end: { dateTime: '2018-01-05T18:00:00Z' },
-            },
-            {
-              id: '3',
-              summary: 'some other event',
-              start: { dateTime: '2018-01-06T10:00:00Z' },
-              end: { dateTime: '2018-01-06T11:00:00Z' },
-            },
-          ],
-        },
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'test summary',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T12:00:00Z' },
       },
+      {
+        id: '2',
+        summary: 'test summary',
+        start: { dateTime: '2018-01-05T13:00:00Z' },
+        end: { dateTime: '2018-01-05T18:00:00Z' },
+      },
+      {
+        id: '3',
+        summary: 'some other event',
+        start: { dateTime: '2018-01-06T10:00:00Z' },
+        end: { dateTime: '2018-01-06T11:00:00Z' },
+      },
+    ]);
+
+    renderAppWithStore();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
     });
 
     fireEvent.click(screen.getByText('show details'));

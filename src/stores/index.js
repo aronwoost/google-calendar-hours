@@ -1,8 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
+import dayjs from 'dayjs';
+import weekday from 'dayjs/plugin/weekday';
+
 import authentication from './authentication';
 import calendars from './calendars';
 import viewState from './viewState';
 import calendarEvents from './calendarEvents';
+import { getConfig } from './storage';
+import { RANGE_TYPE, WEEK_START } from '../constants';
+
+dayjs.extend(weekday);
 
 const getAccessToken = () => {
   try {
@@ -14,8 +21,18 @@ const getAccessToken = () => {
   return null;
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const store = ({ initialState } = {}) =>
+const getInitialState = () => ({
+  selectedCalendarId: getConfig()?.selectedCalendarId ?? null,
+  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.MONTH,
+  currentDatePointerStart:
+    getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
+      ? getConfig().start
+      : dayjs().startOf('day').toJSON(),
+  currentDatePointerEnd: getConfig()?.end,
+  weekStart: getConfig()?.weekStart || WEEK_START.MONDAY,
+});
+
+const store = () =>
   configureStore({
     reducer: {
       authentication,
@@ -24,7 +41,9 @@ export const store = ({ initialState } = {}) =>
       calendarEvents,
     },
     preloadedState: {
-      ...initialState,
       authentication: { accessToken: getAccessToken() },
+      viewState: getInitialState(),
     },
   });
+
+export default store;
