@@ -1,28 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
-import weekday from 'dayjs/plugin/weekday';
 
 import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
-import { getConfig, updateConfig } from './storage';
+import { updateConfig } from './storage';
 import { RANGE_TYPE, WEEK_START } from '../constants';
-
-dayjs.extend(weekday);
-
-export const getInitialState = () => ({
-  selectedCalendarId: getConfig()?.selectedCalendarId ?? null,
-  selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.MONTH,
-  currentDatePointerStart:
-    getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
-      ? getConfig().start
-      : dayjs().startOf('day').toJSON(),
-  currentDatePointerEnd: getConfig()?.end,
-  weekStart: getConfig()?.weekStart || WEEK_START.MONDAY,
-});
 
 export const viewState = createSlice({
   name: 'viewState',
-  initialState: getInitialState(),
+  initialState: null,
   reducers: {
     setSelectedCalendarId: (state, { payload }) => {
       state.selectedCalendarId = payload;
@@ -65,12 +51,7 @@ const {
   setEnd,
 } = viewState.actions;
 
-export const doesCalendarExists = (state, calendarId) =>
-  !!state.calendars.list?.find((calendar) => calendar.id === calendarId) ||
-  null;
-
 export const selectSelectedCalendar = (state) =>
-  doesCalendarExists(state, state.viewState.selectedCalendarId) &&
   state.viewState.selectedCalendarId;
 
 export const selectDate = (state) => state.viewState.currentDatePointerStart;

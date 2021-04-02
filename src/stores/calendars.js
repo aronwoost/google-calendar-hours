@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { selectAccessToken } from './authentication';
 import { fetchCalendars } from './api';
 import { setSelectedCalendar } from './viewState';
+import { getConfig } from './storage';
 
 export const calendars = createSlice({
   name: 'calendars',
@@ -29,16 +30,17 @@ export const loadCalendars = () => async (dispatch, getState) => {
 
     dispatch(setCalendars(calendarList));
 
-    const { selectedCalendarId } = getState().viewState;
-
-    const calendarExists = calendarList?.find(
-      (calendar) => calendar.id === selectedCalendarId
-    );
+    const { selectedCalendarId } = getConfig() ?? {};
 
     if (selectedCalendarId) {
+      const calendarExists = calendarList?.find(
+        ({ id }) => id === selectedCalendarId
+      );
+
       if (calendarExists) {
         dispatch(setSelectedCalendar({ calendarId: selectedCalendarId }));
       } else {
+        // dispatch null, so that it's removed from localStorage config
         dispatch(setSelectedCalendar({ calendarId: null }));
       }
     }

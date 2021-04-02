@@ -25,8 +25,7 @@ export const loadCalendarEvents = ({ calendarId }) => async (
   dispatch,
   getState
 ) => {
-  const state = getState();
-  const accessToken = selectAccessToken(state);
+  const accessToken = selectAccessToken(getState());
   try {
     dispatch(setLoading(true));
     const items = await fetchCalendarEvents({ accessToken, calendarId });
