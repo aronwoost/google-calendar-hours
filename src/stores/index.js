@@ -22,7 +22,6 @@ const getAccessToken = () => {
 };
 
 const getViewState = () => ({
-  selectedCalendarId: getConfig()?.selectedCalendarId ?? null,
   selectedRangeType: getConfig()?.selectedRangeType || RANGE_TYPE.MONTH,
   currentDatePointerStart:
     getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM

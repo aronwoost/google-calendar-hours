@@ -51,12 +51,7 @@ const {
   setEnd,
 } = viewState.actions;
 
-export const doesCalendarExists = (state, calendarId) =>
-  !!state.calendars.list?.find((calendar) => calendar.id === calendarId) ||
-  null;
-
 export const selectSelectedCalendar = (state) =>
-  doesCalendarExists(state, state.viewState.selectedCalendarId) &&
   state.viewState.selectedCalendarId;
 
 export const selectDate = (state) => state.viewState.currentDatePointerStart;
