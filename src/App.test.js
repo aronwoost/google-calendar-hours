@@ -52,7 +52,7 @@ const server = setupServer(
     'https://www.googleapis.com/calendar/v3/users/me/calendarList',
     (req, res, ctx) => {
       const accessToken = req.url.searchParams.get('access_token');
-      if (accessToken !== 'ABC123' && accessToken !== 'withNextPageToken') {
+      if (accessToken === 'return-403') {
         return res((_res) => {
           _res.status = 403;
           return _res;
@@ -78,13 +78,6 @@ const server = setupServer(
 
         // second request (with pageToken)
         return res(ctx.json({ items: testEvents }));
-      }
-
-      if (accessToken !== 'ABC123') {
-        return res((_res) => {
-          _res.status = 403;
-          return _res;
-        });
       }
 
       return res(ctx.json({ items: mockEventsResponse() }));
@@ -130,7 +123,7 @@ it('writes access token to sessionStorage and does redirect', () => {
 });
 
 it('delete access token from sessionStorage and does redirect when API returns non-200', async () => {
-  window.sessionStorage.setItem('accessToken', 'def456');
+  window.sessionStorage.setItem('accessToken', 'return-403');
 
   renderAppWithStore();
 
