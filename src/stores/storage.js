@@ -15,12 +15,10 @@ export const updateConfig = (rest) => {
 };
 
 export const getConfig = () => {
-  let existingConfig;
   try {
-    existingConfig = JSON.parse(window.localStorage.getItem('config'));
+    return JSON.parse(window.localStorage.getItem('config'));
   } catch (err) {
     // don't handle
   }
-
-  return existingConfig;
+  return undefined;
 };

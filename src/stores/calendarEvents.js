@@ -29,7 +29,6 @@ export const loadCalendarEvents = ({ calendarId }) => async (
   try {
     dispatch(setLoading(true));
     const items = await fetchCalendarEvents({ accessToken, calendarId });
-    dispatch(setLoading(false));
     dispatch(
       setCalendarEvents({
         calendarId,
@@ -44,14 +43,16 @@ export const loadCalendarEvents = ({ calendarId }) => async (
     );
     return Promise.resolve();
   } catch (e) {
-    dispatch(setLoading(false));
     return Promise.reject();
+  } finally {
+    dispatch(setLoading(false));
   }
 };
 
 export const selectCalendarEvents = (state, calendarId) =>
-  state.calendarEvents?.map[calendarId] || null;
+  state.calendarEvents?.map[calendarId] ?? null;
 
-export const selectIsEventsLoading = (state) => state.calendarEvents?.loading;
+export const selectIsEventsLoading = (state) =>
+  state.calendarEvents?.loading ?? false;
 
 export default calendarEvents.reducer;
