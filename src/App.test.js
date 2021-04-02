@@ -24,7 +24,7 @@ const testEvents = [
   },
 ];
 
-const renderAppWithStore = () =>
+const renderApp = () =>
   render(
     <Provider store={store()}>
       <App />
@@ -99,7 +99,7 @@ it('renders auth screen', () => {
 
   window.sessionStorage.removeItem('accessToken');
 
-  renderAppWithStore();
+  renderApp();
 
   expect(
     screen.getByText('Google Calendar Hours Calculator')
@@ -116,7 +116,7 @@ it('writes access token to sessionStorage and does redirect', () => {
     'https://www.example.com/hello#access_token=ABC123&foo=bar'
   );
 
-  renderAppWithStore();
+  renderApp();
 
   expect(window.sessionStorage.getItem('accessToken')).toEqual('ABC123');
   expect(window.location).toBe('/');
@@ -125,7 +125,7 @@ it('writes access token to sessionStorage and does redirect', () => {
 it('delete access token from sessionStorage and does redirect when API returns non-200', async () => {
   window.sessionStorage.setItem('accessToken', 'return-403');
 
-  renderAppWithStore();
+  renderApp();
 
   await waitFor(() =>
     expect(window.sessionStorage.getItem('accessToken')).toEqual(null)
@@ -135,7 +135,7 @@ it('delete access token from sessionStorage and does redirect when API returns n
 });
 
 it('renders "loading" without calendars', () => {
-  renderAppWithStore();
+  renderApp();
 
   expect(screen.getByText('loading')).toBeInTheDocument();
 });
@@ -149,7 +149,7 @@ it('renders without UI elements when calendars are loading but viewState values 
     })
   );
 
-  renderAppWithStore();
+  renderApp();
 
   expect(await screen.findByTestId('CalendarsList')).toBeInTheDocument();
 
@@ -160,7 +160,7 @@ it('renders without UI elements when calendars are loading but viewState values 
 });
 
 it('renders "loading" when events are loading', async () => {
-  renderAppWithStore();
+  renderApp();
 
   fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id-2' },
@@ -170,7 +170,7 @@ it('renders "loading" when events are loading', async () => {
 });
 
 it('renders static content', () => {
-  renderAppWithStore();
+  renderApp();
 
   expect(
     screen.getByText('Google Calendar Hours Calculator')
@@ -178,7 +178,7 @@ it('renders static content', () => {
 });
 
 it('renders calendars list', () => {
-  renderAppWithStore();
+  renderApp();
 
   expect(screen.queryByText('Please select calendar')).not.toBeInTheDocument();
 });
@@ -186,7 +186,7 @@ it('renders calendars list', () => {
 it('requests calendars and display placeholder', async () => {
   window.localStorage.removeItem('config');
 
-  renderAppWithStore();
+  renderApp();
 
   expect(await screen.findByText('Please select calendar')).toBeInTheDocument();
   expect(await screen.findByText('test-name')).toBeInTheDocument();
@@ -196,7 +196,7 @@ it('requests calendars and display placeholder', async () => {
 });
 
 it('renders default state (happy path)', async () => {
-  renderAppWithStore();
+  renderApp();
 
   expect(await screen.findByText('Total')).toBeInTheDocument();
   expect(screen.getByText('Week')).toBeInTheDocument();
@@ -211,7 +211,7 @@ it('renders hours rounded', async () => {
     },
   ]);
 
-  renderAppWithStore();
+  renderApp();
 
   expect(await screen.findByText('0.08h')).toBeInTheDocument();
 });
@@ -223,7 +223,7 @@ it('renders correctly after user changes calendar', async () => {
   ]);
   mockEventsResponse.mockReturnValue(testEvents).mockReturnValue(testEvents);
 
-  renderAppWithStore();
+  renderApp();
 
   fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id-2' },
@@ -233,7 +233,7 @@ it('renders correctly after user changes calendar', async () => {
 });
 
 it('requests events, display hours and sets localStorage when loaded', async () => {
-  renderAppWithStore();
+  renderApp();
 
   fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id' },
@@ -248,7 +248,7 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 
 it('makes multiple event requests (when response contains nextPageToken)', async () => {
   window.sessionStorage.setItem('accessToken', 'withNextPageToken');
-  renderAppWithStore();
+  renderApp();
 
   fireEvent.change(await screen.findByTestId('CalendarsList'), {
     target: { value: 'test-id' },
@@ -259,7 +259,7 @@ it('makes multiple event requests (when response contains nextPageToken)', async
 
 describe('localStorage', () => {
   it('saves user selection', async () => {
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('CalendarsList'), {
       target: { value: 'test-id' },
@@ -277,7 +277,7 @@ describe('localStorage', () => {
   });
 
   it('saves start and end when user changes from week to custom', async () => {
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('CalendarsList'), {
       target: { value: 'test-id' },
@@ -297,7 +297,7 @@ describe('localStorage', () => {
   });
 
   it('saves custom start and end', async () => {
-    const { container } = renderAppWithStore();
+    const { container } = renderApp();
 
     fireEvent.change(await screen.findByTestId('CalendarsList'), {
       target: { value: 'test-id' },
@@ -350,7 +350,7 @@ describe('localStorage', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     // without {weekStart: 'sunday'} result would be 2h
     expect(await screen.findByText('3h')).toBeInTheDocument();
@@ -367,7 +367,7 @@ describe('localStorage', () => {
       })
     );
 
-    renderAppWithStore();
+    renderApp();
 
     expect(await screen.findByText('2h')).toBeInTheDocument();
   });
@@ -380,7 +380,7 @@ describe('localStorage', () => {
       })
     );
 
-    renderAppWithStore();
+    renderApp();
 
     expect(
       await screen.findByText('Please select calendar')
@@ -401,7 +401,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -428,7 +428,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
@@ -458,7 +458,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
@@ -485,7 +485,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
@@ -512,7 +512,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
@@ -543,7 +543,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -576,7 +576,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -603,7 +603,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -630,7 +630,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -661,7 +661,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -689,7 +689,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -719,7 +719,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -746,7 +746,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -773,7 +773,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -802,7 +802,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
@@ -832,7 +832,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
@@ -859,7 +859,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
@@ -886,7 +886,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
@@ -915,7 +915,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'total' },
@@ -946,7 +946,7 @@ describe('calculate hours', () => {
       },
     ]);
 
-    const { container } = renderAppWithStore();
+    const { container } = renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -987,7 +987,7 @@ describe('calculate hours', () => {
 
 describe('display time range in human readable format', () => {
   it('renders current day', async () => {
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'day' },
@@ -1000,7 +1000,7 @@ describe('display time range in human readable format', () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -1013,7 +1013,7 @@ describe('display time range in human readable format', () => {
     // set to a tuesday
     timekeeper.freeze(new Date('2018-01-02T10:00:00Z'));
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'week' },
@@ -1025,7 +1025,7 @@ describe('display time range in human readable format', () => {
   });
 
   it('renders current month', async () => {
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -1035,7 +1035,7 @@ describe('display time range in human readable format', () => {
   });
 
   it('renders current year', async () => {
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'year' },
@@ -1045,7 +1045,7 @@ describe('display time range in human readable format', () => {
   });
 
   it('renders without RangeDisplay ("total")', async () => {
-    renderAppWithStore();
+    renderApp();
 
     expect(await screen.findByTestId('RangeDisplay')).toBeInTheDocument();
 
@@ -1070,7 +1070,7 @@ describe('display events', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -1105,7 +1105,7 @@ describe('display events', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -1161,7 +1161,7 @@ describe('display events', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
@@ -1205,7 +1205,7 @@ describe('display events', () => {
       },
     ]);
 
-    renderAppWithStore();
+    renderApp();
 
     fireEvent.change(await screen.findByTestId('RangeSelectList'), {
       target: { value: 'month' },
