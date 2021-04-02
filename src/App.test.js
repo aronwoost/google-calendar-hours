@@ -11,15 +11,9 @@ import { getInitialState } from './stores/viewState';
 
 jest.mock('./utils/createBlobUrl', () => (content) => content);
 
-const createTestStore = ({
-  authentication,
-  viewState,
-  calendars,
-  calendarEvents,
-}) =>
+const createTestStore = ({ viewState, calendars, calendarEvents }) =>
   store({
     initialState: {
-      authentication: { accessToken: 'ABC123', ...authentication },
       viewState: {
         ...getInitialState(),
         selectedCalendarId: 'test-id',
@@ -33,16 +27,10 @@ const createTestStore = ({
     },
   });
 
-const renderAppWithStore = ({
-  authentication,
-  viewState,
-  calendars,
-  calendarEvents,
-} = {}) =>
+const renderAppWithStore = ({ viewState, calendars, calendarEvents } = {}) =>
   render(
     <Provider
       store={createTestStore({
-        authentication,
         viewState,
         calendars,
         calendarEvents,
@@ -55,6 +43,7 @@ const renderAppWithStore = ({
 beforeEach(() => {
   timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
   window.localStorage.removeItem('config');
+  window.sessionStorage.setItem('accessToken', 'ABC123');
 });
 
 const testEvents = [
@@ -127,9 +116,9 @@ it('renders auth screen', () => {
     pathname: '/testpath',
   };
 
-  renderAppWithStore({
-    authentication: { accessToken: null },
-  });
+  window.sessionStorage.removeItem('accessToken');
+
+  renderAppWithStore();
 
   expect(
     screen.getByText('Google Calendar Hours Calculator')
@@ -146,9 +135,7 @@ it('writes access token to sessionStorage and does redirect', () => {
     'https://www.example.com/hello#access_token=ABC123&foo=bar'
   );
 
-  renderAppWithStore({
-    authentication: { accessToken: null },
-  });
+  renderAppWithStore();
 
   expect(window.sessionStorage.getItem('accessToken')).toEqual('ABC123');
   expect(window.location).toBe('/');
@@ -158,7 +145,6 @@ it('delete access token from sessionStorage and does redirect when API returns n
   window.sessionStorage.setItem('accessToken', 'def456');
 
   renderAppWithStore({
-    authentication: { accessToken: 'def456' },
     calendars: {
       list: null,
     },
@@ -303,7 +289,8 @@ it('requests events, display hours and sets localStorage when loaded', async () 
 });
 
 it('makes multiple event requests (when response contains nextPageToken)', async () => {
-  renderAppWithStore({ authentication: { accessToken: 'withNextPageToken' } });
+  window.sessionStorage.setItem('accessToken', 'withNextPageToken');
+  renderAppWithStore();
 
   fireEvent.change(screen.getByTestId('CalendarsList'), {
     target: { value: 'test-id' },

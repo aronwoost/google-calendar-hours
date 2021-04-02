@@ -1,18 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-let accessToken;
-
-try {
-  accessToken = sessionStorage.getItem('accessToken');
-} catch (e) {
-  // don't handle
-}
-
 export const authentication = createSlice({
   name: 'authentication',
-  initialState: {
-    accessToken,
-  },
+  initialState: null,
   reducers: {},
 });
 

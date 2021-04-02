@@ -4,6 +4,16 @@ import calendars from './calendars';
 import viewState from './viewState';
 import calendarEvents from './calendarEvents';
 
+const getAccessToken = () => {
+  try {
+    return sessionStorage.getItem('accessToken');
+  } catch (e) {
+    // don't handle
+  }
+
+  return null;
+};
+
 // eslint-disable-next-line import/prefer-default-export
 export const store = ({ initialState } = {}) =>
   configureStore({
@@ -13,5 +23,8 @@ export const store = ({ initialState } = {}) =>
       viewState,
       calendarEvents,
     },
-    preloadedState: initialState,
+    preloadedState: {
+      ...initialState,
+      authentication: { accessToken: getAccessToken() },
+    },
   });
