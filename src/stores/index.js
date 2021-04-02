@@ -21,15 +21,18 @@ const getAccessToken = () => {
   return null;
 };
 
-const getViewState = () => ({
-  selectedRangeType: getConfig()?.selectedRangeType ?? RANGE_TYPE.MONTH,
-  currentDatePointerStart:
-    getConfig()?.selectedRangeType === RANGE_TYPE.CUSTOM
-      ? getConfig().start
-      : dayjs().startOf('day').toJSON(),
-  currentDatePointerEnd: getConfig()?.end,
-  weekStart: getConfig()?.weekStart ?? WEEK_START.MONDAY,
-});
+const getViewState = () => {
+  const config = getConfig() ?? {};
+  return {
+    selectedRangeType: config.selectedRangeType ?? RANGE_TYPE.MONTH,
+    currentDatePointerStart:
+      config.selectedRangeType === RANGE_TYPE.CUSTOM
+        ? config.start
+        : dayjs().startOf('day').toJSON(),
+    currentDatePointerEnd: config.end,
+    weekStart: config.weekStart ?? WEEK_START.MONDAY,
+  };
+};
 
 const store = () =>
   configureStore({
