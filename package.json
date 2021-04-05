@@ -90,6 +90,7 @@
     "postcss-normalize": "^8.0.1",
     "postcss-preset-env": "^6.7.0",
     "postcss-safe-parser": "^4.0.1",
+    "prerender-loader": "^1.3.0",
     "prettier": "^2.1.1",
     "prettier-eslint-cli": "^5.0.0",
     "react-app-polyfill": "^1.0.6",

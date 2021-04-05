@@ -514,7 +514,7 @@ module.exports = function(webpackEnv) {
           {},
           {
             inject: true,
-            template: paths.appHtml,
+            template: `!!prerender-loader?string!${paths.appHtml}`,
           },
           isEnvProduction
             ? {
