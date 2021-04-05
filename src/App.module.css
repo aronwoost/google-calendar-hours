@@ -12,8 +12,8 @@ p {
 .appWrapper {
   display: flex;
   width: 100%;
-  justify-content: center;
   height: 100%;
+  justify-content: center;
 }
 
 .app {
@@ -30,8 +30,8 @@ p {
 
 .sticky {
   display: flex;
-  flex-direction: column;
   height: 100%;
+  flex-direction: column;
 }
 
 .content {
