@@ -1,11 +1,11 @@
-import queryString from 'query-string';
+import { encode } from 'qss';
 import dayjs from 'dayjs';
 
 const API_BASE_PATH = 'https://www.googleapis.com/calendar/v3/';
 
 const fetchGoogle = async ({ url, accessToken, params }) => {
   const response = await fetch(
-    `${url}?${queryString.stringify({
+    `${url}?${encode({
       access_token: accessToken,
       ...params,
     })}`
