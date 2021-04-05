@@ -1,7 +1,14 @@
 {
-  "name": "test",
-  "version": "0.1.0",
-  "private": true,
+  "name": "google-calendar-hours",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aronwoost/google-calendar-hours.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aronwoost/google-calendar-hours/issues"
+  },
+  "homepage": "https://google-calendar-hours.com/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.1.0",
     "bootstrap": "^5.0.0-beta2",
