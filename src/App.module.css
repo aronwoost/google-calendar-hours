@@ -1,23 +1,24 @@
+html,
+body {
+  height: 100%;
+}
+
+p {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
 .appWrapper {
   display: flex;
   width: 100%;
   justify-content: center;
+  height: 100%;
 }
 
 .app {
   width: 380px;
-  margin: 8px;
-}
-
-.app > * {
-  width: 100%;
-  margin-bottom: 8px;
-}
-
-.app p {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  line-height: 18px;
+  margin: 8px 8px 0 8px;
 }
 
 .app h3 {
@@ -25,4 +26,14 @@
   color: grey;
   font-size: 18px;
   font-weight: bold;
+}
+
+.sticky {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content {
+  flex: 1 0 auto;
 }

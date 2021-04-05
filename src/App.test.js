@@ -109,6 +109,10 @@ it('renders auth screen', () => {
     'https://accounts.google.com/o/oauth2/auth?client_id=502172359025.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Ftest.com%2Fauth.html&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events.readonly&response_type=token'
   );
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
+  expect(
+    screen.getByText('© 2011 - 2021. This app is open source.')
+  ).toBeInTheDocument();
+  expect(screen.getByText('Check it on GitHub')).toBeInTheDocument();
 });
 
 it('writes access token to sessionStorage and does redirect', () => {
@@ -175,6 +179,10 @@ it('renders static content', () => {
   expect(
     screen.getByText('Google Calendar Hours Calculator')
   ).toBeInTheDocument();
+  expect(
+    screen.getByText('© 2011 - 2021. This app is open source.')
+  ).toBeInTheDocument();
+  expect(screen.getByText('Check it on GitHub')).toBeInTheDocument();
 });
 
 it('renders calendars list', () => {
