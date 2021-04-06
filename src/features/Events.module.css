@@ -5,18 +5,24 @@
 }
 
 .eventDate {
+  flex: 1 0;
   padding-right: 0;
   font-variant-numeric: tabular-nums lining-nums;
 }
 
 .eventName {
   overflow: hidden;
+  flex: 1 0;
   flex-grow: 1000;
   padding-right: 0;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-break: unset;
+}
+
+.eventHours {
+  flex: 1 0;
 }
 
 .sortByLabel {

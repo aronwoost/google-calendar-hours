@@ -117,7 +117,9 @@ const Events = () => {
                 >
                   {event.summary}
                 </span>
-                <span className={bootstrap['col-sm']}>{`${event.hours}h`}</span>
+                <span
+                  className={cx(bootstrap['col-sm'], styles.eventHours)}
+                >{`${event.hours}h`}</span>
               </li>
             ))}
           </ul>
