@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { decode } from 'qss';
 
-import Headline from './Headline';
-import Footer from './Footer';
 import { selectHasToken } from './stores/authentication';
 
 import AuthScreen from './AuthScreen';
@@ -28,11 +26,25 @@ const App = () => {
       <div className={styles.app}>
         <div className={styles.sticky}>
           <div className={styles.content}>
-            <Headline />
+            <h1 className={styles.headline}>
+              Google Calendar Hours Calculator
+            </h1>
             {!hasToken && <AuthScreen />}
             {hasToken && <Interface />}
           </div>
-          <Footer />
+          <footer className={styles.footer}>
+            <p>
+              <span>© 2011 - 2021. This app is open source. </span>
+              <a
+                href="https://github.com/aronwoost/google-calendar-hours"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Check it on GitHub
+              </a>
+              <span>.</span>
+            </p>
+          </footer>
         </div>
       </div>
     </div>

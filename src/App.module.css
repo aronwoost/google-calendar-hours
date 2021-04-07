@@ -37,3 +37,20 @@ p {
 .content {
   flex: 1 0 auto;
 }
+
+.headline {
+  color: grey;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 36px;
+  text-rendering: optimizeLegibility;
+}
+
+.footer {
+  padding-bottom: 8px;
+}
+
+.footer p {
+  margin-bottom: 0;
+}
