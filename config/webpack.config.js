@@ -2,10 +2,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const glob = require('glob-all');
 const webpack = require('webpack');
 const resolve = require('resolve');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin')
+  .default;
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -100,6 +103,15 @@ module.exports = function(webpackEnv) {
               },
               stage: 3,
             }),
+            require('@fullhuman/postcss-purgecss')({
+              content: [
+                paths.appHtml,
+                ...glob.sync(path.join(paths.appSrc, '/**/*.{js,jsx}'), {
+                  nodir: true,
+                }),
+              ],
+            }),
+
             // Adds PostCSS Normalize as the reset css with default options,
             // so that it honors browserslist config in package.json
             // which in turn let's users customize the target behavior as per their needs.
@@ -582,6 +594,7 @@ module.exports = function(webpackEnv) {
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
+      new HTMLInlineCSSWebpackPlugin(),
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: paths.publicUrlOrPath,
