@@ -46,5 +46,5 @@ const fetchEvents = async ({ accessToken, calendarId, pageToken, acc }) => {
   });
 };
 
-export const fetchCalendarEvents = async ({ accessToken, calendarId }) =>
+export const fetchCalendarEvents = ({ accessToken, calendarId }) =>
   fetchEvents({ accessToken, calendarId, acc: [] });

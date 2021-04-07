@@ -141,10 +141,7 @@ export const selectHours = (state) => {
   return Math.round(hours * 100) / 100;
 };
 
-export const setSelectedCalendar = ({ calendarId }) => async (
-  dispatch,
-  getState
-) => {
+export const setSelectedCalendar = ({ calendarId }) => (dispatch, getState) => {
   dispatch(setSelectedCalendarId(calendarId));
   updateConfig({ selectedCalendarId: calendarId });
   const calendarEvents = selectCalendarEvents(getState(), calendarId);
@@ -153,7 +150,7 @@ export const setSelectedCalendar = ({ calendarId }) => async (
   }
 };
 
-export const changeRangeType = ({ range }) => async (dispatch, getState) => {
+export const changeRangeType = ({ range }) => (dispatch, getState) => {
   if (range === RANGE_TYPE.CUSTOM) {
     const { start, end } = selectCurrentDatePointers(getState());
     dispatch(setStart(start.toJSON()));
@@ -164,17 +161,17 @@ export const changeRangeType = ({ range }) => async (dispatch, getState) => {
   updateConfig({ selectedRangeType: range });
 };
 
-export const changeWeekStart = (weekStart) => async (dispatch) => {
+export const changeWeekStart = (weekStart) => (dispatch) => {
   dispatch(setWeekStart(weekStart));
   updateConfig({ weekStart });
 };
 
-export const changeStart = (start) => async (dispatch) => {
+export const changeStart = (start) => (dispatch) => {
   dispatch(setStart(start));
   updateConfig({ start });
 };
 
-export const changeEnd = (end) => async (dispatch) => {
+export const changeEnd = (end) => (dispatch) => {
   dispatch(setEnd(end));
   updateConfig({ end });
 };
