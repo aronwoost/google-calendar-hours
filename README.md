@@ -16,11 +16,3 @@ npm start
 ```
 npm test
 ```
-
-## Contributors
-
-[Philipp Kyeck](https://github.com/pkyeck)
-
-## License
-
-MIT
