@@ -20,5 +20,5 @@ export const getConfig = () => {
   } catch (err) {
     // don't handle
   }
-  return undefined;
+  return null;
 };
