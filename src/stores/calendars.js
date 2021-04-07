@@ -45,7 +45,7 @@ export const loadCalendars = () => async (dispatch, getState) => {
       }
     }
   } catch (e) {
-    // return null;
+    // do nothing
   }
 };
 
