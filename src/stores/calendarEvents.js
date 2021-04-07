@@ -41,9 +41,8 @@ export const loadCalendarEvents = ({ calendarId }) => async (
         })),
       })
     );
-    return Promise.resolve();
   } catch (e) {
-    return Promise.reject();
+    // do nothing
   } finally {
     dispatch(setLoading(false));
   }
