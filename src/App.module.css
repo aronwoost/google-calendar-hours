@@ -1,14 +1,3 @@
-html,
-body {
-  height: 100%;
-}
-
-p {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  line-height: 18px;
-}
-
 .appWrapper {
   display: flex;
   width: 100%;
