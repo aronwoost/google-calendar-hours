@@ -13,6 +13,8 @@ jobs:
   build:
     name: Node.js CI
     runs-on: ubuntu-latest
+    env:
+      RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup timezone
