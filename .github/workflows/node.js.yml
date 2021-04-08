@@ -29,3 +29,5 @@ jobs:
       - run: npm run lint:css
       - run: npx prettier-eslint --list-different $PWD'/src/**/*.{js,md}'
       - run: npm run build
+        env:
+          RELATIVE_CI_KEY: ${{ secrets.RELATIVE_CI_KEY }}
