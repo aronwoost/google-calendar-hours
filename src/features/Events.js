@@ -1,11 +1,11 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useSelector } from 'react-redux';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { selectHours } from '../stores/viewState';
 
-const EventsList = lazy(() => import('./EventsList'));
+import EventsList from './EventsListLazy';
 
 const Events = () => {
   const [isOpen, setIsOpen] = useState(false);

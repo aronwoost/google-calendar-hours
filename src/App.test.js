@@ -9,6 +9,8 @@ import store from './stores';
 import App from './App';
 
 jest.mock('./utils/createBlobUrl', () => (content) => content);
+// eslint-disable-next-line global-require
+jest.mock('./features/EventsListLazy', () => require('./features/EventsList'));
 
 const mockCalendarResponse = jest.fn();
 const mockEventsResponse = jest.fn();
