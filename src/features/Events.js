@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { useSelector } from 'react-redux';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { selectHours } from '../stores/viewState';
 
-import EventsList from './EventsList';
+const EventsList = lazy(() => import('./EventsList'));
 
 const Events = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +31,11 @@ const Events = () => {
           {isOpen ? 'hide details' : 'show details'}
         </button>
       </div>
-      {isOpen && <EventsList />}
+      {isOpen && (
+        <Suspense fallback={() => null}>
+          <EventsList />
+        </Suspense>
+      )}
     </div>
   );
 };
