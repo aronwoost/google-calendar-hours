@@ -16,7 +16,6 @@
     "bootstrap": "^5.0.0-beta3",
     "classnames": "^2.2.6",
     "dayjs": "^1.8.36",
-    "lodash": "^4.17.20",
     "qss": "^2.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
