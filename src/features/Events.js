@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { orderBy } from 'lodash';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
@@ -69,7 +68,16 @@ const Events = () => {
       hours: value,
       id: key,
     }));
-    eventsToRender = orderBy(newArray, 'hours', 'desc');
+    eventsToRender = newArray.sort(({ hours: hoursA }, { hours: hoursB }) => {
+      if (hoursA > hoursB) {
+        return -1;
+      }
+      if (hoursA < hoursB) {
+        return 1;
+      }
+
+      return 0;
+    });
   } else {
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
