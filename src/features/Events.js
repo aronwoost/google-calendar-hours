@@ -105,7 +105,7 @@ const Events = () => {
         <Fragment>
           <ul className={styles.list}>
             {eventsToRender.map((event) => (
-              <li key={event.id} className={bootstrap.row}>
+              <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
                 {sortBy === SORT_BY.DATE && (
                   <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
                     {dayjs(event.start.dateTime).format('DD.MM.')}
