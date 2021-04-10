@@ -4,6 +4,18 @@
   margin-left: 0;
 }
 
+.listItem {
+  margin: 0;
+}
+
+.listItem > *:first-child {
+  padding-left: 0;
+}
+
+.listItem > *:last-child {
+  padding-right: 0;
+}
+
 .eventDate {
   flex: 1 0;
   padding-right: 0;
