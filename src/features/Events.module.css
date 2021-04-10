@@ -12,6 +12,7 @@
 
 .eventName {
   overflow: hidden;
+  width: 0;
   flex: 1 0;
   flex-grow: 1000;
   padding-right: 0;
