@@ -43,7 +43,8 @@ const Events = () => {
     const itemDateStart = new Date(event.start.dateTime);
     const itemDateEnd = new Date(event.end.dateTime);
 
-    const hours = (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
+    const hours =
+      Math.round(((itemDateEnd - itemDateStart) / 1000 / 60 / 60) * 100) / 100;
 
     return {
       ...event,
