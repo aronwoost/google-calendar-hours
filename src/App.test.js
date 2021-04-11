@@ -1145,6 +1145,29 @@ describe('display events', () => {
     expect(screen.queryByText('event-3')).not.toBeInTheDocument();
   });
 
+  it('renders with rounded hours', async () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'event-1',
+        start: { dateTime: '2018-01-02T09:00:00Z' },
+        end: { dateTime: '2018-01-02T09:05:00Z' },
+      },
+    ]);
+
+    renderApp();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
+    });
+
+    fireEvent.click(screen.getByText('show details'));
+
+    expect(screen.getAllByText('0.08h')).toHaveLength(2);
+  });
+
   it('renders events by amount', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
