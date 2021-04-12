@@ -1145,6 +1145,40 @@ describe('display events', () => {
     expect(screen.queryByText('event-3')).not.toBeInTheDocument();
   });
 
+  it('renders events sorted by date', async () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'event-1',
+        start: { dateTime: '2018-01-05T10:00:00Z' },
+        end: { dateTime: '2018-01-05T12:00:00Z' },
+      },
+      {
+        id: '2',
+        summary: 'event-2',
+        start: { dateTime: '2018-01-05T09:00:00Z' },
+        end: { dateTime: '2018-01-05T09:30:00Z' },
+      },
+    ]);
+
+    renderApp();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
+    });
+
+    fireEvent.click(screen.getByText('show details'));
+
+    const items = screen.queryAllByText(/event-[1-3]/);
+
+    expect(items).toHaveLength(2);
+    // confirm correct order
+    expect(items[0]).toHaveTextContent('event-2');
+    expect(items[1]).toHaveTextContent('event-1');
+  });
+
   it('renders with rounded hours', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
