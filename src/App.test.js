@@ -1145,7 +1145,7 @@ describe('display events', () => {
     expect(screen.queryByText('event-3')).not.toBeInTheDocument();
   });
 
-  it.only('renders events sorted by date', async () => {
+  it('renders events sorted by date', async () => {
     timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
 
     mockEventsResponse.mockReturnValue([
