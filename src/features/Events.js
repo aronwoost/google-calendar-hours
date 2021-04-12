@@ -80,6 +80,19 @@ const Events = () => {
       return 0;
     });
   } else {
+    eventsToRender = eventsToRender.sort(
+      ({ start: startA }, { start: startB }) => {
+        if (startA.dateTime < startB.dateTime) {
+          return -1;
+        }
+        if (startA.dateTime > startB.dateTime) {
+          return 1;
+        }
+
+        return 0;
+      }
+    );
+
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
         `${dayjs(start.dateTime).format(EXPORT_DATE_FORMAT)},${dayjs(
