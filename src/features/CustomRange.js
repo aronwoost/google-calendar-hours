@@ -42,7 +42,7 @@ const CustomRange = () => {
         id="dateStart"
         value={dayjs(start).format('YYYY-MM-DD')}
         onChange={({ target }) =>
-          dispatch(changeStart(new Date(target.value).toJSON()))
+          dispatch(changeStart(dayjs(target.value).toJSON()))
         }
       />
       <label htmlFor="dateEnd" className={bootstrap['input-group-text']}>
@@ -54,7 +54,7 @@ const CustomRange = () => {
         id="dateEnd"
         value={dayjs(end).format('YYYY-MM-DD')}
         onChange={({ target }) =>
-          dispatch(changeEnd(new Date(target.value).toJSON()))
+          dispatch(changeEnd(dayjs(target.value).toJSON()))
         }
       />
     </div>

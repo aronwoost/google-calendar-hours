@@ -328,7 +328,7 @@ describe('localStorage', () => {
     });
 
     expect(window.localStorage.getItem('config')).toEqual(
-      '{"selectedCalendarId":"test-id","start":"2004-01-01T00:00:00.000Z","end":"2018-02-02T00:00:00.000Z","selectedRangeType":"custom"}'
+      '{"selectedCalendarId":"test-id","start":"2003-12-31T23:00:00.000Z","end":"2018-02-01T23:00:00.000Z","selectedRangeType":"custom"}'
     );
   });
 
