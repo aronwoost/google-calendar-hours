@@ -11,8 +11,6 @@
   "homepage": "https://google-calendar-hours.com/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.1.0",
-    "@sentry/react": "^6.2.5",
-    "@sentry/tracing": "^6.2.5",
     "bootstrap": "^5.0.0-beta3",
     "classnames": "^2.2.6",
     "dayjs": "^1.8.36",
