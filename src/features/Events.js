@@ -16,8 +16,6 @@ import { SORT_BY } from '../constants';
 
 import styles from './Events.module.css';
 
-const EXPORT_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
-
 const Events = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
@@ -95,9 +93,9 @@ const Events = () => {
 
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
-        `${dayjs(start.dateTime).format(EXPORT_DATE_FORMAT)},${dayjs(
+        `${dayjs(start.dateTime).toJSON()},${dayjs(
           end.dateTime
-        ).format(EXPORT_DATE_FORMAT)},"${summary}",${hours}`
+        ).toJSON()},"${summary}",${hours}`
     );
 
     downloadBlob = createBlobUrl(
