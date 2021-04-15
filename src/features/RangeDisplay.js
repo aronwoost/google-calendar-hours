@@ -30,17 +30,18 @@ const RangeDisplay = () => {
       year: 'numeric',
     });
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
-    const startOfWeek = date.locale(localeForWeekStart).weekday(0);
-    const nextWeek = startOfWeek.add(1, 'week');
-    range = `${formatDate(startOfWeek, {
+    const startOfWeek = formatDate(date.locale(localeForWeekStart).weekday(0));
+    const start = formatDate(startOfWeek, {
       day: 'numeric',
       month: 'numeric',
       year: 'numeric',
-    })} - ${formatDate(nextWeek, {
+    });
+    const end = formatDate(startOfWeek.add(1, 'week'), {
       day: 'numeric',
       month: 'numeric',
       year: 'numeric',
-    })}`;
+    });
+    range = `${start} - ${end}`;
   } else if (currentRangeType === RANGE_TYPE.MONTH) {
     range = formatDate(date, {
       month: 'long',
