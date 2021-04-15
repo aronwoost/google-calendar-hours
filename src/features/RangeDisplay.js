@@ -43,14 +43,9 @@ const RangeDisplay = () => {
     });
     range = `${start} - ${end}`;
   } else if (currentRangeType === RANGE_TYPE.MONTH) {
-    range = formatDate(date, {
-      month: 'long',
-      year: 'numeric',
-    });
+    range = formatDate(date, { month: 'long', year: 'numeric' });
   } else if (currentRangeType === RANGE_TYPE.YEAR) {
-    range = formatDate(date, {
-      year: 'numeric',
-    });
+    range = formatDate(date, { year: 'numeric' });
   }
 
   return <div data-testid="RangeDisplay">{range}</div>;
