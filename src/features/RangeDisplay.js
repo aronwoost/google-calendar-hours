@@ -22,17 +22,36 @@ const RangeDisplay = () => {
   const date = dayjs(currentDate);
 
   if (currentRangeType === RANGE_TYPE.DAY) {
-    range = date.locale('en').format('dddd, MMMM D, YYYY');
+    range = new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
     const startOfWeek = date.locale(localeForWeekStart).weekday(0);
     const nextWeek = startOfWeek.add(1, 'week');
-    range = `${startOfWeek
-      .locale('en')
-      .format('DD.MM.YYYY')} -  ${nextWeek.locale('en').format('DD.MM.YYYY')}`;
+    range = `${new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    }).format(startOfWeek)} - ${new Intl.DateTimeFormat(
+      [navigator.language, 'en-US'],
+      {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+      }
+    ).format(nextWeek)}`;
   } else if (currentRangeType === RANGE_TYPE.MONTH) {
-    range = date.locale('en').format('MMMM, YYYY');
+    range = new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
   } else if (currentRangeType === RANGE_TYPE.YEAR) {
-    range = date.locale('en').format('YYYY');
+    range = new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+      year: 'numeric',
+    }).format(date);
   }
 
   return <div data-testid="RangeDisplay">{range}</div>;
