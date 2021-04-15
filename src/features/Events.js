@@ -128,7 +128,10 @@ const Events = () => {
               <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
                 {sortBy === SORT_BY.DATE && (
                   <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
-                    {dayjs(event.start.dateTime).format('DD.MM.')}
+                    {new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+                      day: '2-digit',
+                      month: '2-digit',
+                    }).format(dayjs(event.start.dateTime))}
                   </span>
                 )}
                 <span
