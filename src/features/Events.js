@@ -12,6 +12,7 @@ import {
 } from '../stores/viewState';
 import { selectCalendars } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
+import formatDate from '../utils/formatDate';
 import { SORT_BY } from '../constants';
 
 import styles from './Events.module.css';
@@ -128,10 +129,10 @@ const Events = () => {
               <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
                 {sortBy === SORT_BY.DATE && (
                   <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
-                    {new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+                    {formatDate(dayjs(event.start.dateTime), {
                       day: '2-digit',
                       month: '2-digit',
-                    }).format(dayjs(event.start.dateTime))}
+                    })}
                   </span>
                 )}
                 <span

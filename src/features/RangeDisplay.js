@@ -7,6 +7,7 @@ import {
   selectRangeType,
   selectLocaleForWeekStart,
 } from '../stores/viewState';
+import formatDate from '../utils/formatDate';
 import { RANGE_TYPE } from '../constants';
 
 const RangeDisplay = () => {
@@ -22,36 +23,33 @@ const RangeDisplay = () => {
   const date = dayjs(currentDate);
 
   if (currentRangeType === RANGE_TYPE.DAY) {
-    range = new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+    range = formatDate(dayjs(date), {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(date);
+    });
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
     const startOfWeek = date.locale(localeForWeekStart).weekday(0);
     const nextWeek = startOfWeek.add(1, 'week');
-    range = `${new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+    range = `${formatDate(startOfWeek, {
       day: 'numeric',
       month: 'numeric',
       year: 'numeric',
-    }).format(startOfWeek)} - ${new Intl.DateTimeFormat(
-      [navigator.language, 'en-US'],
-      {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-      }
-    ).format(nextWeek)}`;
+    })} - ${formatDate(nextWeek, {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+    })}`;
   } else if (currentRangeType === RANGE_TYPE.MONTH) {
-    range = new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+    range = formatDate(date, {
       month: 'long',
       year: 'numeric',
-    }).format(date);
+    });
   } else if (currentRangeType === RANGE_TYPE.YEAR) {
-    range = new Intl.DateTimeFormat([navigator.language, 'en-US'], {
+    range = formatDate(date, {
       year: 'numeric',
-    }).format(date);
+    });
   }
 
   return <div data-testid="RangeDisplay">{range}</div>;
