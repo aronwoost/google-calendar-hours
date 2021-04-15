@@ -1014,7 +1014,7 @@ describe('display time range in human readable format', () => {
       target: { value: 'week' },
     });
 
-    expect(screen.getByText('01.01.2018 - 08.01.2018')).toBeInTheDocument();
+    expect(screen.getByText('1/1/2018 - 1/8/2018')).toBeInTheDocument();
   });
 
   it('renders current week with week start sunday', async () => {
@@ -1029,7 +1029,7 @@ describe('display time range in human readable format', () => {
 
     fireEvent.click(screen.getByLabelText('Sunday'));
 
-    expect(screen.getByText('31.12.2017 - 07.01.2018')).toBeInTheDocument();
+    expect(screen.getByText('12/31/2017 - 1/7/2018')).toBeInTheDocument();
   });
 
   it('renders current month', async () => {
@@ -1039,7 +1039,7 @@ describe('display time range in human readable format', () => {
       target: { value: 'month' },
     });
 
-    expect(screen.getByText('January, 2018')).toBeInTheDocument();
+    expect(screen.getByText('January 2018')).toBeInTheDocument();
   });
 
   it('renders current year', async () => {
@@ -1126,11 +1126,11 @@ describe('display events', () => {
     expect(screen.getByText('Date')).toBeInTheDocument();
     expect(screen.getByText('Amount')).toBeInTheDocument();
 
-    expect(screen.getByText('01.01.')).toBeInTheDocument();
+    expect(screen.getByText('01/01')).toBeInTheDocument();
     expect(screen.getByText('event-1')).toBeInTheDocument();
     expect(screen.getByText('2h')).toBeInTheDocument();
 
-    expect(screen.getByText('05.01.')).toBeInTheDocument();
+    expect(screen.getByText('01/05')).toBeInTheDocument();
     expect(screen.getByText('event-2')).toBeInTheDocument();
     expect(screen.getByText('5h')).toBeInTheDocument();
 
