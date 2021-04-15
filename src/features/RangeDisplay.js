@@ -30,7 +30,7 @@ const RangeDisplay = () => {
       year: 'numeric',
     });
   } else if (currentRangeType === RANGE_TYPE.WEEK) {
-    const startOfWeek = formatDate(date.locale(localeForWeekStart).weekday(0));
+    const startOfWeek = date.locale(localeForWeekStart).weekday(0);
     const start = formatDate(startOfWeek, {
       day: 'numeric',
       month: 'numeric',
