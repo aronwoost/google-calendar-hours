@@ -949,8 +949,8 @@ describe('calculate hours', () => {
         end: { dateTime: '2010-01-14T14:00:00Z' },
       },
       {
-        start: { dateTime: '2018-02-01T10:00:00Z' },
-        end: { dateTime: '2018-02-01T11:00:00Z' },
+        start: { dateTime: '2018-02-02T10:00:00Z' },
+        end: { dateTime: '2018-02-02T11:00:00Z' },
       },
     ]);
 

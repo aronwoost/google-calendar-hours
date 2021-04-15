@@ -72,7 +72,9 @@ export const selectCurrentDatePointers = (state) => {
   if (selectedRangeType === RANGE_TYPE.CUSTOM) {
     return {
       start: dayjs(currentDatePointerStart),
-      end: dayjs(currentDatePointerEnd),
+      // The selected end day should be included in the calculation, so we
+      // need to add an extra day.
+      end: dayjs(currentDatePointerEnd).add(1, 'day'),
     };
   }
 
