@@ -9,12 +9,13 @@ import Hours from './features/Hours';
 import RangeDisplay from './features/RangeDisplay';
 import Events from './features/Events';
 import WeekStart from './features/WeekStart';
-import { selectSelectedCalendar } from './stores/viewState';
+import { selectSelectedCalendar, selectRangeType } from './stores/viewState';
 import {
   selectCalendarEvents,
   selectIsEventsLoading,
 } from './stores/calendarEvents';
 import { loadCalendars, selectCalendars } from './stores/calendars';
+import { RANGE_TYPE } from './constants';
 
 import styles from './Interface.module.css';
 
@@ -34,6 +35,7 @@ const Interface = () => {
     selectCalendarEvents(state, selectedCalendar)
   );
   const eventsLoading = useSelector(selectIsEventsLoading);
+  const currentRangeType = useSelector(selectRangeType);
 
   if (!calendars) {
     return <div>loading</div>;
@@ -48,7 +50,7 @@ const Interface = () => {
         <Fragment>
           <Range />
           <RangeChanger />
-          <CustomRange />
+          {currentRangeType === RANGE_TYPE.CUSTOM && <CustomRange />}
           <Hours />
           <WeekStart />
           <RangeDisplay />
