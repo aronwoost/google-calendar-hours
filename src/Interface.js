@@ -17,7 +17,7 @@ import {
 
 import styles from './Interface.module.css';
 
-const App = () => {
+const Interface = () => {
   const selectedCalendar = useSelector(selectSelectedCalendar);
   const events = useSelector((state) =>
     selectCalendarEvents(state, selectedCalendar)
@@ -43,4 +43,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Interface;
