@@ -45,10 +45,6 @@ const Interface = () => {
   const rangeType = useSelector(selectRangeType);
   const hours = useSelector(selectHours);
 
-  if (!calendars) {
-    return <div>loading</div>;
-  }
-
   return (
     <div className={styles.interface}>
       {calendars ? <CalendarsList /> : <div>loading</div>}
