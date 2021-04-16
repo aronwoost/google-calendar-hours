@@ -1,5 +1,7 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import cx from 'classnames';
+import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import CalendarsList from './features/CalendarsList';
 import Range from './features/Range';
@@ -9,7 +11,11 @@ import Hours from './features/Hours';
 import RangeDisplay from './features/RangeDisplay';
 import Events from './features/Events';
 import WeekStart from './features/WeekStart';
-import { selectSelectedCalendar, selectRangeType } from './stores/viewState';
+import {
+  selectSelectedCalendar,
+  selectRangeType,
+  selectHours,
+} from './stores/viewState';
 import {
   selectCalendarEvents,
   selectIsEventsLoading,
@@ -21,6 +27,7 @@ import styles from './Interface.module.css';
 
 const Interface = () => {
   const dispatch = useDispatch();
+  const [isEventsOpen, setIsEventsOpen] = useState(false);
 
   const calendars = useSelector(selectCalendars);
 
@@ -36,6 +43,7 @@ const Interface = () => {
   );
   const eventsLoading = useSelector(selectIsEventsLoading);
   const currentRangeType = useSelector(selectRangeType);
+  const rangeHours = useSelector(selectHours);
 
   if (!calendars) {
     return <div>loading</div>;
@@ -54,7 +62,22 @@ const Interface = () => {
           <Hours />
           <WeekStart />
           <RangeDisplay />
-          <Events />
+          {!!rangeHours && (
+            <div>
+              <button
+                type="button"
+                className={cx(
+                  bootstrap.btn,
+                  bootstrap['btn-outline-secondary'],
+                  bootstrap['btn-sm']
+                )}
+                onClick={() => setIsEventsOpen(!isEventsOpen)}
+              >
+                {isEventsOpen ? 'hide details' : 'show details'}
+              </button>
+            </div>
+          )}
+          {!!rangeHours && isEventsOpen && <Events />}
         </Fragment>
       )}
     </div>
