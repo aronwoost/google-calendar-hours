@@ -22,9 +22,7 @@ const Events = () => {
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
 
   const selectedCalendar = useSelector(selectSelectedCalendar);
-  const events = useSelector((state) =>
-    selectEventsByRange(state, selectedCalendar)
-  );
+  const events = useSelector(selectEventsByRange);
   const calendars = useSelector(selectCalendars);
   const date = useSelector(selectDate);
 
