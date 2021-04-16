@@ -52,7 +52,9 @@ const CustomRange = () => {
         className={cx(bootstrap['form-control'], styles.inputDate)}
         type="date"
         id="dateEnd"
-        value={dayjs(end).format('YYYY-MM-DD')}
+        // We need to subtract a day here, because a day was added to `end`
+        // in order to have the selected day in the calculation.
+        value={dayjs(end).subtract(1, 'day').format('YYYY-MM-DD')}
         onChange={({ target }) =>
           dispatch(changeEnd(dayjs(target.value).toJSON()))
         }

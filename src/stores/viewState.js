@@ -72,7 +72,9 @@ export const selectCurrentDatePointers = (state) => {
   if (selectedRangeType === RANGE_TYPE.CUSTOM) {
     return {
       start: dayjs(currentDatePointerStart),
-      end: dayjs(currentDatePointerEnd),
+      // The selected end day should be included in the calculation, so we
+      // need to add an extra day.
+      end: dayjs(currentDatePointerEnd).add(1, 'day'),
     };
   }
 
@@ -153,9 +155,12 @@ export const setSelectedCalendar = ({ calendarId }) => (dispatch, getState) => {
 export const changeRangeType = ({ range }) => (dispatch, getState) => {
   if (range === RANGE_TYPE.CUSTOM) {
     const { start, end } = selectCurrentDatePointers(getState());
+    // We need to subtract a day here, because a day was added to `end`
+    // in order to have the selected end day in the calculation.
+    const correctedEnd = end.subtract(1, 'day');
     dispatch(setStart(start.toJSON()));
-    dispatch(setEnd(end.toJSON()));
-    updateConfig({ start: start.toJSON(), end: end.toJSON() });
+    dispatch(setEnd(correctedEnd.toJSON()));
+    updateConfig({ start: start.toJSON(), end: correctedEnd.toJSON() });
   }
   dispatch(setRangeType(range));
   updateConfig({ selectedRangeType: range });

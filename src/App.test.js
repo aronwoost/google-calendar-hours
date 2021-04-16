@@ -300,7 +300,7 @@ describe('localStorage', () => {
     });
 
     expect(window.localStorage.getItem('config')).toEqual(
-      '{"selectedCalendarId":"test-id","selectedRangeType":"custom","start":"2017-12-31T23:00:00.000Z","end":"2018-01-07T23:00:00.000Z"}'
+      '{"selectedCalendarId":"test-id","selectedRangeType":"custom","start":"2017-12-31T23:00:00.000Z","end":"2018-01-06T23:00:00.000Z"}'
     );
   });
 
@@ -949,8 +949,8 @@ describe('calculate hours', () => {
         end: { dateTime: '2010-01-14T14:00:00Z' },
       },
       {
-        start: { dateTime: '2018-02-01T10:00:00Z' },
-        end: { dateTime: '2018-02-01T11:00:00Z' },
+        start: { dateTime: '2018-02-02T10:00:00Z' },
+        end: { dateTime: '2018-02-02T11:00:00Z' },
       },
     ]);
 
@@ -970,7 +970,7 @@ describe('calculate hours', () => {
 
     // inputs should have the value of previously selected range ("week" in this case)
     expect(dateInputs[0].value).toBe('2003-12-29');
-    expect(dateInputs[1].value).toBe('2004-01-05');
+    expect(dateInputs[1].value).toBe('2004-01-04');
 
     fireEvent.change(dateInputs[0], {
       target: { value: '2004-01-01' },
@@ -1014,7 +1014,7 @@ describe('display time range in human readable format', () => {
       target: { value: 'week' },
     });
 
-    expect(screen.getByText('1/1/2018 - 1/8/2018')).toBeInTheDocument();
+    expect(screen.getByText('1/1/2018 - 1/7/2018')).toBeInTheDocument();
   });
 
   it('renders current week with week start sunday', async () => {
@@ -1029,7 +1029,7 @@ describe('display time range in human readable format', () => {
 
     fireEvent.click(screen.getByLabelText('Sunday'));
 
-    expect(screen.getByText('12/31/2017 - 1/7/2018')).toBeInTheDocument();
+    expect(screen.getByText('12/31/2017 - 1/6/2018')).toBeInTheDocument();
   });
 
   it('renders current month', async () => {
