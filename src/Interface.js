@@ -62,7 +62,7 @@ const Interface = () => {
           {currentRangeType === RANGE_TYPE.CUSTOM && <CustomRange />}
           <Hours />
           <WeekStart />
-          <RangeDisplay />
+          {currentRangeType !== RANGE_TYPE.TOTAL && <RangeDisplay />}
           {!!rangeHours && (
             <div>
               <button
