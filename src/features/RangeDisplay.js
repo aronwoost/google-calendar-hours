@@ -36,7 +36,7 @@ const RangeDisplay = () => {
       month: 'numeric',
       year: 'numeric',
     });
-    const end = formatDate(startOfWeek.add(1, 'week'), {
+    const end = formatDate(startOfWeek.add(1, 'week').subtract(1, 'day'), {
       day: 'numeric',
       month: 'numeric',
       year: 'numeric',
