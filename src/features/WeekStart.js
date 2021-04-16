@@ -3,24 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
-import {
-  selectRangeType,
-  selectWeekStart,
-  changeWeekStart,
-} from '../stores/viewState';
-import { RANGE_TYPE, WEEK_START } from '../constants';
+import { selectWeekStart, changeWeekStart } from '../stores/viewState';
+import { WEEK_START } from '../constants';
 
 import styles from './WeekStart.module.css';
 
 const WeekStart = () => {
   const dispatch = useDispatch();
 
-  const currentRangeType = useSelector(selectRangeType);
   const weekStart = useSelector(selectWeekStart);
-
-  if (currentRangeType !== RANGE_TYPE.WEEK) {
-    return null;
-  }
 
   return (
     <div>
