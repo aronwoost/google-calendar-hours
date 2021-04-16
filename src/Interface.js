@@ -57,7 +57,8 @@ const Interface = () => {
       {events && (
         <Fragment>
           <Range />
-          <RangeChanger />
+          {currentRangeType !== RANGE_TYPE.TOTAL &&
+            currentRangeType !== RANGE_TYPE.CUSTOM && <RangeChanger />}
           {currentRangeType === RANGE_TYPE.CUSTOM && <CustomRange />}
           <Hours />
           <WeekStart />
