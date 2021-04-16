@@ -51,8 +51,7 @@ const Interface = () => {
 
   return (
     <div className={styles.interface}>
-      {!calendars && <div>loading</div>}
-      {calendars && <CalendarsList />}
+      {calendars ? <CalendarsList /> : <div>loading</div>}
       {eventsLoading && 'loading'}
       {events && (
         <Fragment>
