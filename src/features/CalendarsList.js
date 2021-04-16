@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
-import { loadCalendars, selectCalendars } from '../stores/calendars';
+import { selectCalendars } from '../stores/calendars';
 import {
   selectSelectedCalendar,
   setSelectedCalendar,
@@ -13,16 +13,6 @@ const CalendarsList = () => {
 
   const calendars = useSelector(selectCalendars);
   const selectedCalendar = useSelector(selectSelectedCalendar);
-
-  useEffect(() => {
-    if (!calendars) {
-      dispatch(loadCalendars());
-    }
-  }, [dispatch, calendars]);
-
-  if (!calendars) {
-    return <div>loading</div>;
-  }
 
   return (
     <select

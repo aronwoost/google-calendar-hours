@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, Fragment } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import CalendarsList from './features/CalendarsList';
 import Range from './features/Range';
@@ -14,19 +14,35 @@ import {
   selectCalendarEvents,
   selectIsEventsLoading,
 } from './stores/calendarEvents';
+import { loadCalendars, selectCalendars } from './stores/calendars';
 
 import styles from './Interface.module.css';
 
 const Interface = () => {
+  const dispatch = useDispatch();
+
+  const calendars = useSelector(selectCalendars);
+
+  useEffect(() => {
+    if (!calendars) {
+      dispatch(loadCalendars());
+    }
+  });
+
   const selectedCalendar = useSelector(selectSelectedCalendar);
   const events = useSelector((state) =>
     selectCalendarEvents(state, selectedCalendar)
   );
   const eventsLoading = useSelector(selectIsEventsLoading);
 
+  if (!calendars) {
+    return <div>loading</div>;
+  }
+
   return (
     <div className={styles.interface}>
-      <CalendarsList />
+      {!calendars && <div>loading</div>}
+      {calendars && <CalendarsList />}
       {eventsLoading && 'loading'}
       {events && (
         <Fragment>
