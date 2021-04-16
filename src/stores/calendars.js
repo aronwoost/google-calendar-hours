@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { selectAccessToken } from './authentication';
 import { fetchCalendars } from './api';
-import { setSelectedCalendar, selectSelectedCalendar } from './viewState';
+import { setSelectedCalendar } from './viewState';
 import { getConfig } from './storage';
 
 export const calendars = createSlice({
@@ -50,12 +50,5 @@ export const loadCalendars = () => async (dispatch, getState) => {
 };
 
 export const selectCalendars = (state) => state.calendars.list;
-
-export const selectSelectedCalendarName = (state) => {
-  const selectedCalendar = selectSelectedCalendar(state);
-  const calendarList = selectCalendars(state);
-
-  return calendarList.find((item) => item.id === selectedCalendar)?.label;
-};
 
 export default calendars.reducer;
