@@ -4,12 +4,8 @@ import dayjs from 'dayjs';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
-import {
-  selectSelectedCalendar,
-  selectEventsByRange,
-  selectDate,
-} from '../stores/viewState';
-import { selectCalendars } from '../stores/calendars';
+import { selectEventsByRange, selectDate } from '../stores/viewState';
+import { selectSelectedCalendarName } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
 import formatDate from '../utils/formatDate';
 import { SORT_BY } from '../constants';
@@ -21,14 +17,9 @@ const EXPORT_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 const Events = () => {
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
 
-  const selectedCalendar = useSelector(selectSelectedCalendar);
+  const currentCalendarName = useSelector(selectSelectedCalendarName);
   const events = useSelector(selectEventsByRange);
-  const calendars = useSelector(selectCalendars);
   const date = useSelector(selectDate);
-
-  const currentCalendarName = calendars.find(
-    (item) => item.id === selectedCalendar
-  )?.label;
 
   let eventsToRender = events.map((event) => {
     const itemDateStart = new Date(event.start.dateTime);
