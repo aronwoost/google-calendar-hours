@@ -42,8 +42,8 @@ const Interface = () => {
     selectCalendarEvents(state, selectedCalendar)
   );
   const eventsLoading = useSelector(selectIsEventsLoading);
-  const currentRangeType = useSelector(selectRangeType);
-  const rangeHours = useSelector(selectHours);
+  const rangeType = useSelector(selectRangeType);
+  const hours = useSelector(selectHours);
 
   if (!calendars) {
     return <div>loading</div>;
@@ -56,13 +56,13 @@ const Interface = () => {
       {events && (
         <Fragment>
           <Range />
-          {currentRangeType !== RANGE_TYPE.TOTAL &&
-            currentRangeType !== RANGE_TYPE.CUSTOM && <RangeChanger />}
-          {currentRangeType === RANGE_TYPE.CUSTOM && <CustomRange />}
+          {rangeType !== RANGE_TYPE.TOTAL &&
+            rangeType !== RANGE_TYPE.CUSTOM && <RangeChanger />}
+          {rangeType === RANGE_TYPE.CUSTOM && <CustomRange />}
           <Hours />
-          {currentRangeType === RANGE_TYPE.WEEK && <WeekStart />}
-          {currentRangeType !== RANGE_TYPE.TOTAL && <RangeDisplay />}
-          {!!rangeHours && (
+          {rangeType === RANGE_TYPE.WEEK && <WeekStart />}
+          {rangeType !== RANGE_TYPE.TOTAL && <RangeDisplay />}
+          {!!hours && (
             <div>
               <button
                 type="button"
@@ -77,7 +77,7 @@ const Interface = () => {
               </button>
             </div>
           )}
-          {!!rangeHours && isEventsOpen && <Events />}
+          {!!hours && isEventsOpen && <Events />}
         </Fragment>
       )}
     </div>
