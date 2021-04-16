@@ -300,7 +300,7 @@ describe('localStorage', () => {
     });
 
     expect(window.localStorage.getItem('config')).toEqual(
-      '{"selectedCalendarId":"test-id","selectedRangeType":"custom","start":"2017-12-31T23:00:00.000Z","end":"2018-01-07T23:00:00.000Z"}'
+      '{"selectedCalendarId":"test-id","selectedRangeType":"custom","start":"2017-12-31T23:00:00.000Z","end":"2018-01-06T23:00:00.000Z"}'
     );
   });
 
@@ -970,7 +970,7 @@ describe('calculate hours', () => {
 
     // inputs should have the value of previously selected range ("week" in this case)
     expect(dateInputs[0].value).toBe('2003-12-29');
-    expect(dateInputs[1].value).toBe('2004-01-05');
+    expect(dateInputs[1].value).toBe('2004-01-04');
 
     fireEvent.change(dateInputs[0], {
       target: { value: '2004-01-01' },
