@@ -15,10 +15,6 @@ const RangeDisplay = () => {
   const currentRangeType = useSelector(selectRangeType);
   const localeForWeekStart = useSelector(selectLocaleForWeekStart);
 
-  if (currentRangeType === RANGE_TYPE.TOTAL) {
-    return null;
-  }
-
   let range;
   const date = dayjs(currentDate);
 

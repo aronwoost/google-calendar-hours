@@ -1,11 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import {
-  selectHours,
   selectSelectedCalendar,
   selectEventsByRange,
   selectDate,
@@ -20,21 +19,12 @@ import styles from './Events.module.css';
 const EXPORT_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 
 const Events = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
 
   const selectedCalendar = useSelector(selectSelectedCalendar);
-  const events = useSelector((state) =>
-    selectEventsByRange(state, selectedCalendar)
-  );
+  const events = useSelector(selectEventsByRange);
   const calendars = useSelector(selectCalendars);
   const date = useSelector(selectDate);
-
-  const rangeHours = useSelector(selectHours);
-
-  if (!rangeHours) {
-    return null;
-  }
 
   const currentCalendarName = calendars.find(
     (item) => item.id === selectedCalendar
@@ -111,102 +101,79 @@ const Events = () => {
 
   return (
     <div>
-      <div>
-        <button
-          type="button"
-          className={cx(
-            bootstrap.btn,
-            bootstrap['btn-outline-secondary'],
-            bootstrap['btn-sm']
-          )}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? 'hide details' : 'show details'}
-        </button>
-      </div>
-      {isOpen && (
-        <Fragment>
-          <ul className={styles.list}>
-            {eventsToRender.map((event) => (
-              <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
-                {sortBy === SORT_BY.DATE && (
-                  <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
-                    {formatDate(dayjs(event.start.dateTime), {
-                      day: '2-digit',
-                      month: '2-digit',
-                    })}
-                  </span>
-                )}
-                <span
-                  className={cx(bootstrap['col-sm'], styles.eventName)}
-                  title={event.summary}
-                >
-                  {event.summary}
-                </span>
-                <span
-                  className={cx(bootstrap['col-sm'], styles.eventHours)}
-                >{`${event.hours}h`}</span>
-              </li>
-            ))}
-          </ul>
-          <div>
-            <span className={styles.sortByLabel}>Sort by:</span>
-            <div
-              className={cx(bootstrap['btn-group'], bootstrap['btn-group-sm'])}
-              role="group"
-            >
-              <input
-                className={bootstrap['btn-check']}
-                type="radio"
-                value="date"
-                id="date"
-                checked={sortBy === SORT_BY.DATE}
-                onChange={({ target }) => setSortBy(target.value)}
-              />
-              <label
-                className={cx(
-                  bootstrap.btn,
-                  bootstrap['btn-outline-secondary']
-                )}
-                htmlFor="date"
-              >
-                Date
-              </label>
-              <input
-                className={bootstrap['btn-check']}
-                type="radio"
-                value="amount"
-                id="amount"
-                checked={sortBy === SORT_BY.AMOUNT}
-                onChange={({ target }) => setSortBy(target.value)}
-              />
-              <label
-                className={cx(
-                  bootstrap.btn,
-                  bootstrap['btn-outline-secondary']
-                )}
-                htmlFor="amount"
-              >
-                Amount
-              </label>
-            </div>
-            {downloadBlob && (
-              <a
-                href={downloadBlob}
-                download={filename}
-                className={cx(
-                  styles.downloadLink,
-                  bootstrap.btn,
-                  bootstrap['btn-outline-secondary'],
-                  bootstrap['btn-sm']
-                )}
-              >
-                Export as CSV
-              </a>
+      <ul className={styles.list}>
+        {eventsToRender.map((event) => (
+          <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
+            {sortBy === SORT_BY.DATE && (
+              <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
+                {formatDate(dayjs(event.start.dateTime), {
+                  day: '2-digit',
+                  month: '2-digit',
+                })}
+              </span>
             )}
-          </div>
-        </Fragment>
-      )}
+            <span
+              className={cx(bootstrap['col-sm'], styles.eventName)}
+              title={event.summary}
+            >
+              {event.summary}
+            </span>
+            <span
+              className={cx(bootstrap['col-sm'], styles.eventHours)}
+            >{`${event.hours}h`}</span>
+          </li>
+        ))}
+      </ul>
+      <div>
+        <span className={styles.sortByLabel}>Sort by:</span>
+        <div
+          className={cx(bootstrap['btn-group'], bootstrap['btn-group-sm'])}
+          role="group"
+        >
+          <input
+            className={bootstrap['btn-check']}
+            type="radio"
+            value="date"
+            id="date"
+            checked={sortBy === SORT_BY.DATE}
+            onChange={({ target }) => setSortBy(target.value)}
+          />
+          <label
+            className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
+            htmlFor="date"
+          >
+            Date
+          </label>
+          <input
+            className={bootstrap['btn-check']}
+            type="radio"
+            value="amount"
+            id="amount"
+            checked={sortBy === SORT_BY.AMOUNT}
+            onChange={({ target }) => setSortBy(target.value)}
+          />
+          <label
+            className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
+            htmlFor="amount"
+          >
+            Amount
+          </label>
+        </div>
+        {downloadBlob && (
+          <a
+            href={downloadBlob}
+            download={filename}
+            className={cx(
+              styles.downloadLink,
+              bootstrap.btn,
+              bootstrap['btn-outline-secondary'],
+              bootstrap['btn-sm']
+            )}
+          >
+            Export as CSV
+          </a>
+        )}
+      </div>
     </div>
   );
 };

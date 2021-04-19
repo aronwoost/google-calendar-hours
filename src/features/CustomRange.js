@@ -5,24 +5,17 @@ import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import {
-  selectRangeType,
   selectCurrentDatePointers,
   changeStart,
   changeEnd,
 } from '../stores/viewState';
-import { RANGE_TYPE } from '../constants';
 
 import styles from './CustomRange.module.css';
 
 const CustomRange = () => {
   const dispatch = useDispatch();
 
-  const currentRangeType = useSelector(selectRangeType);
   const { start, end } = useSelector(selectCurrentDatePointers);
-
-  if (currentRangeType !== RANGE_TYPE.CUSTOM) {
-    return null;
-  }
 
   return (
     <div
