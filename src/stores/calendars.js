@@ -1,23 +1,41 @@
-import { createSlice } from '@reduxjs/toolkit';
+// import { createSlice } from '@reduxjs/toolkit';
 
 import { selectAccessToken } from './authentication';
 import { fetchCalendars } from './api';
 import { setSelectedCalendar } from './viewState';
 import { getConfig } from './storage';
 
-export const calendars = createSlice({
-  name: 'calendars',
-  initialState: {
-    list: null,
-  },
-  reducers: {
-    setCalendars: (state, { payload }) => {
-      state.list = payload;
-    },
-  },
-});
+const SET_CALENDAR = 'SET_CALENDAR';
 
-const { setCalendars } = calendars.actions;
+const initialState = {
+  list: null,
+};
+
+const states = {
+  [SET_CALENDAR]: (state, { payload }) => ({
+    ...state,
+    list: payload,
+  }),
+};
+
+// export const calendars = createSlice({
+//   name: 'calendars',
+//   initialState: {
+//     list: null,
+//   },
+//   reducers: {
+//     setCalendars: (state, { payload }) => {
+//       state.list = payload;
+//     },
+//   },
+// });
+
+// const { setCalendars } = calendars.actions;
+
+const setCalendars = (payload) => ({
+  type: SET_CALENDAR,
+  payload,
+});
 
 export const loadCalendars = () => async (dispatch, getState) => {
   const accessToken = selectAccessToken(getState());
@@ -51,4 +69,7 @@ export const loadCalendars = () => async (dispatch, getState) => {
 
 export const selectCalendars = (state) => state.calendars.list;
 
-export default calendars.reducer;
+// export default calendars.reducer;
+
+export default (state = initialState, { type, ...data } = {}) =>
+  states[type] ? states[type](state, data) : state;

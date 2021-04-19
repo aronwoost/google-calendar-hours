@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+// import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 
@@ -6,50 +6,126 @@ import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { updateConfig } from './storage';
 import { RANGE_TYPE, WEEK_START } from '../constants';
 
-export const viewState = createSlice({
-  name: 'viewState',
-  initialState: null,
-  reducers: {
-    setSelectedCalendarId: (state, { payload }) => {
-      state.selectedCalendarId = payload;
-    },
-    setRangeType: (state, { payload }) => {
-      state.selectedRangeType = payload;
-    },
-    changeRange: (state, { payload }) => {
-      if (payload === 'prev') {
-        state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
-          .subtract(1, state.selectedRangeType)
-          .toJSON();
-      } else if (payload === 'next') {
-        state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
-          .add(1, state.selectedRangeType)
-          .toJSON();
-      }
-    },
-    resetRange: (state) => {
-      state.currentDatePointerStart = dayjs().startOf('day').toJSON();
-    },
-    setWeekStart: (state, { payload }) => {
-      state.weekStart = payload;
-    },
-    setStart: (state, { payload }) => {
-      state.currentDatePointerStart = payload;
-    },
-    setEnd: (state, { payload }) => {
-      state.currentDatePointerEnd = payload;
-    },
-  },
-});
+const SET_SELECTED_CALENDAR_ID = 'SET_SELECTED_CALENDAR_ID';
+const SET_RANGE_TYPE = 'SET_RANGE_TYPE';
+const CHANGE_RANGE = 'CHANGE_RANGE';
+const RESET_RANGE = 'RESET_RANGE';
+const SET_WEEK_START = 'SETSET_WEEK_START';
+const SET_START = 'SET_START';
+const SET_END = 'SET_END';
 
-export const { changeRange, resetRange } = viewState.actions;
-const {
-  setSelectedCalendarId,
-  setRangeType,
-  setWeekStart,
-  setStart,
-  setEnd,
-} = viewState.actions;
+const initialState = null;
+
+const states = {
+  [SET_SELECTED_CALENDAR_ID]: (state, { payload }) => ({
+    ...state,
+    selectedCalendarId: payload,
+  }),
+  [SET_RANGE_TYPE]: (state, { payload }) => ({
+    ...state,
+    selectedRangeType: payload,
+  }),
+  [CHANGE_RANGE]: (state, { payload }) => ({
+    ...state,
+    currentDatePointerStart:
+      payload === 'prev'
+        ? dayjs(state.currentDatePointerStart)
+            .subtract(1, state.selectedRangeType)
+            .toJSON()
+        : dayjs(state.currentDatePointerStart)
+            .add(1, state.selectedRangeType)
+            .toJSON(),
+  }),
+  [RESET_RANGE]: (state) => ({
+    ...state,
+    currentDatePointerStart: dayjs().startOf('day').toJSON(),
+  }),
+  [SET_WEEK_START]: (state, { payload }) => ({
+    ...state,
+    weekStart: payload,
+  }),
+  [SET_START]: (state, { payload }) => ({
+    ...state,
+    currentDatePointerStart: payload,
+  }),
+  [SET_END]: (state, { payload }) => ({
+    ...state,
+    currentDatePointerEnd: payload,
+  }),
+};
+
+// export const viewState = createSlice({
+//   name: 'viewState',
+//   initialState: null,
+//   reducers: {
+//     setSelectedCalendarId: (state, { payload }) => {
+//       state.selectedCalendarId = payload;
+//     },
+//     setRangeType: (state, { payload }) => {
+//       state.selectedRangeType = payload;
+//     },
+//     changeRange: (state, { payload }) => {
+//       if (payload === 'prev') {
+//         state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
+//           .subtract(1, state.selectedRangeType)
+//           .toJSON();
+//       } else if (payload === 'next') {
+//         state.currentDatePointerStart = dayjs(state.currentDatePointerStart)
+//           .add(1, state.selectedRangeType)
+//           .toJSON();
+//       }
+//     },
+//     resetRange: (state) => {
+//       state.currentDatePointerStart = dayjs().startOf('day').toJSON();
+//     },
+//     setWeekStart: (state, { payload }) => {
+//       state.weekStart = payload;
+//     },
+//     setStart: (state, { payload }) => {
+//       state.currentDatePointerStart = payload;
+//     },
+//     setEnd: (state, { payload }) => {
+//       state.currentDatePointerEnd = payload;
+//     },
+//   },
+// });
+
+// export const { changeRange, resetRange } = viewState.actions;
+// const {
+//   setSelectedCalendarId,
+//   setRangeType,
+//   setWeekStart,
+//   setStart,
+//   setEnd,
+// } = viewState.actions;
+
+export const changeRange = (payload) => ({
+  type: CHANGE_RANGE,
+  payload,
+});
+export const resetRange = () => ({
+  type: RESET_RANGE,
+});
+const setSelectedCalendarId = (payload) => ({
+  type: SET_SELECTED_CALENDAR_ID,
+  payload,
+});
+const setRangeType = (payload) => ({
+  type: SET_RANGE_TYPE,
+  payload,
+});
+const setWeekStart = (payload) => ({
+  type: SET_WEEK_START,
+  payload,
+});
+const setStart = (payload) => ({
+  type: SET_START,
+  payload,
+});
+const setEnd = (payload) => ({
+  type: SET_END,
+  payload,
+});
 
 export const selectSelectedCalendar = (state) =>
   state.viewState.selectedCalendarId;
@@ -181,4 +257,7 @@ export const changeEnd = (end) => (dispatch) => {
   updateConfig({ end });
 };
 
-export default viewState.reducer;
+// export default viewState.reducer;
+
+export default (state = initialState, { type, ...data } = {}) =>
+  states[type] ? states[type](state, data) : state;
