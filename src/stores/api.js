@@ -24,7 +24,7 @@ export const fetchCalendars = ({ accessToken }) =>
 
 const fetchEvents = async ({ accessToken, calendarId, pageToken, acc }) => {
   const { items, nextPageToken } = await fetchGoogle({
-    url: `${API_BASE_PATH}calendars/${calendarId}/events`,
+    url: `${API_BASE_PATH}calendars/${encodeURIComponent(calendarId)}/events`,
     accessToken,
     params: {
       singleEvents: true,
