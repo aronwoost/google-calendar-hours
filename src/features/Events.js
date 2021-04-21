@@ -105,7 +105,14 @@ const Events = () => {
         {eventsToRender.map((event) => (
           <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
             {sortBy === SORT_BY.DATE && (
-              <span className={cx(styles.eventDate, bootstrap['col-sm'])}>
+              <span
+                className={cx(styles.eventDate, bootstrap['col-sm'])}
+                title={formatDate(dayjs(event.start.dateTime), {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                })}
+              >
                 {formatDate(dayjs(event.start.dateTime), {
                   day: '2-digit',
                   month: '2-digit',
