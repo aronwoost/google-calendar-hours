@@ -131,12 +131,7 @@ export const selectEventsByRange = (state) => {
         new Date(start) < rangeStart ? rangeStart.toJSON() : start;
       const endTime = new Date(end) > rangeEnd ? rangeEnd.toJSON() : end;
 
-      return {
-        id,
-        summary,
-        start: startTime,
-        end: endTime,
-      };
+      return { id, summary, start: startTime, end: endTime };
     });
 };
 
