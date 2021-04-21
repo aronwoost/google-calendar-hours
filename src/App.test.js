@@ -224,6 +224,23 @@ it('renders hours rounded', async () => {
   expect(await screen.findByText('0.08h')).toBeInTheDocument();
 });
 
+it('renders hours for events that start/end exactly at selected start/end date', async () => {
+  mockEventsResponse.mockReturnValue([
+    {
+      start: { dateTime: '2017-12-31T23:00:00Z' },
+      end: { dateTime: '2018-01-01T00:00:00Z' },
+    },
+    {
+      start: { dateTime: '2018-01-31T22:00:00Z' },
+      end: { dateTime: '2018-01-31T23:00:00Z' },
+    },
+  ]);
+
+  renderApp();
+
+  expect(await screen.findByText('2h')).toBeInTheDocument();
+});
+
 it('renders correctly after user changes calendar', async () => {
   mockCalendarResponse.mockReturnValue([
     { id: 'test-id', label: 'test-name' },

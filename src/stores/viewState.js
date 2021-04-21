@@ -120,7 +120,7 @@ export const selectEventsByRange = (state) => {
     const itemDateStart = new Date(event.start.dateTime);
     const itemDateEnd = new Date(event.end.dateTime);
 
-    return itemDateStart > start && itemDateEnd < end;
+    return itemDateStart >= start && itemDateEnd <= end;
   });
 };
 
