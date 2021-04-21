@@ -118,24 +118,18 @@ export const selectEventsByRange = (state) => {
 
   return events
     .filter(({ start, end }) => {
-      const itemDateStart = new Date(start);
-      const itemDateEnd = new Date(end);
-
       // Filter out all events that end before selected start date or start after
       // selcted end date.
-      if (itemDateEnd < rangeStart || itemDateStart > rangeEnd) {
+      if (new Date(end) < rangeStart || new Date(start) > rangeEnd) {
         return false;
       }
 
       return true;
     })
     .map(({ id, summary, start, end }) => {
-      const itemDateStart = new Date(start);
-      const itemDateEnd = new Date(end);
-
       const startTime =
-        itemDateStart < rangeStart ? rangeStart.toJSON() : start;
-      const endTime = itemDateEnd > rangeEnd ? rangeEnd.toJSON() : end;
+        new Date(start) < rangeStart ? rangeStart.toJSON() : start;
+      const endTime = new Date(end) > rangeEnd ? rangeEnd.toJSON() : end;
 
       return {
         id,
