@@ -1127,11 +1127,13 @@ describe('display events', () => {
     expect(screen.getByText('Amount')).toBeInTheDocument();
 
     expect(screen.getByText('01/01')).toBeInTheDocument();
+    expect(screen.getByTitle('01/01/2018')).toBeInTheDocument();
     expect(screen.getByText('event-1')).toBeInTheDocument();
     expect(screen.getByTitle('event-1')).toBeInTheDocument();
     expect(screen.getByText('2h')).toBeInTheDocument();
 
     expect(screen.getByText('01/05')).toBeInTheDocument();
+    expect(screen.getByTitle('01/05/2018')).toBeInTheDocument();
     expect(screen.getByText('event-2')).toBeInTheDocument();
     expect(screen.getByTitle('event-2')).toBeInTheDocument();
     expect(screen.getByText('5h')).toBeInTheDocument();
