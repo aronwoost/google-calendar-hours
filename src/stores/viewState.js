@@ -132,10 +132,7 @@ export const selectHours = (state) => {
   let hours = 0;
 
   events.forEach(({ start, end }) => {
-    const itemDateStart = new Date(start);
-    const itemDateEnd = new Date(end);
-
-    hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
+    hours += (new Date(end) - new Date(start)) / 1000 / 60 / 60;
   });
 
   return Math.round(hours * 100) / 100;
