@@ -44,8 +44,8 @@ export const loadCalendarEvents = ({ calendarId }) => async (
             return {
               id,
               summary,
-              start,
-              end,
+              start: start.dateTime,
+              end: end.dateTime,
             };
           })
           .filter(Boolean),

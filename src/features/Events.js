@@ -31,8 +31,8 @@ const Events = () => {
   )?.label;
 
   let eventsToRender = events.map((event) => {
-    const itemDateStart = new Date(event.start.dateTime);
-    const itemDateEnd = new Date(event.end.dateTime);
+    const itemDateStart = new Date(event.start);
+    const itemDateEnd = new Date(event.end);
 
     const hours =
       Math.round(((itemDateEnd - itemDateStart) / 1000 / 60 / 60) * 100) / 100;
@@ -73,10 +73,10 @@ const Events = () => {
   } else {
     eventsToRender = eventsToRender.sort(
       ({ start: startA }, { start: startB }) => {
-        if (startA.dateTime < startB.dateTime) {
+        if (startA < startB) {
           return -1;
         }
-        if (startA.dateTime > startB.dateTime) {
+        if (startA > startB) {
           return 1;
         }
 
@@ -86,9 +86,9 @@ const Events = () => {
 
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
-        `${dayjs(start.dateTime).format(EXPORT_DATE_FORMAT)},${dayjs(
-          end.dateTime
-        ).format(EXPORT_DATE_FORMAT)},"${summary}",${hours}`
+        `${dayjs(start).format(EXPORT_DATE_FORMAT)},${dayjs(end).format(
+          EXPORT_DATE_FORMAT
+        )},"${summary}",${hours}`
     );
 
     downloadBlob = createBlobUrl(
@@ -102,18 +102,18 @@ const Events = () => {
   return (
     <div>
       <ul className={styles.list}>
-        {eventsToRender.map((event) => (
-          <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
+        {eventsToRender.map(({ id, start, summary, hours }) => (
+          <li key={id} className={cx(bootstrap.row, styles.listItem)}>
             {sortBy === SORT_BY.DATE && (
               <span
                 className={cx(styles.eventDate, bootstrap['col-sm'])}
-                title={formatDate(dayjs(event.start.dateTime), {
+                title={formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric',
                 })}
               >
-                {formatDate(dayjs(event.start.dateTime), {
+                {formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
                 })}
@@ -121,13 +121,13 @@ const Events = () => {
             )}
             <span
               className={cx(bootstrap['col-sm'], styles.eventName)}
-              title={event.summary}
+              title={summary}
             >
-              {event.summary}
+              {summary}
             </span>
             <span
               className={cx(bootstrap['col-sm'], styles.eventHours)}
-            >{`${event.hours}h`}</span>
+            >{`${hours}h`}</span>
           </li>
         ))}
       </ul>

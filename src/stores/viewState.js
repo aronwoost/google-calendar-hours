@@ -114,14 +114,12 @@ export const selectEventsByRange = (state) => {
     return null;
   }
 
-  const { start, end } = selectCurrentDatePointers(state);
+  const { start: rangeStart, end: rangeEnd } = selectCurrentDatePointers(state);
 
-  return events.filter((event) => {
-    const itemDateStart = new Date(event.start.dateTime);
-    const itemDateEnd = new Date(event.end.dateTime);
-
-    return itemDateStart >= start && itemDateEnd <= end;
-  });
+  return events.filter(
+    ({ start, end }) =>
+      new Date(start) >= rangeStart && new Date(end) <= rangeEnd
+  );
 };
 
 export const selectHours = (state) => {
@@ -133,11 +131,8 @@ export const selectHours = (state) => {
 
   let hours = 0;
 
-  events.forEach((event) => {
-    const itemDateStart = new Date(event.start.dateTime);
-    const itemDateEnd = new Date(event.end.dateTime);
-
-    hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
+  events.forEach(({ start, end }) => {
+    hours += (new Date(end) - new Date(start)) / 1000 / 60 / 60;
   });
 
   return Math.round(hours * 100) / 100;
