@@ -116,12 +116,10 @@ export const selectEventsByRange = (state) => {
 
   const { start: rangeStart, end: rangeEnd } = selectCurrentDatePointers(state);
 
-  return events.filter(({ start, end }) => {
-    const itemDateStart = new Date(start);
-    const itemDateEnd = new Date(end);
-
-    return itemDateStart >= rangeStart && itemDateEnd <= rangeEnd;
-  });
+  return events.filter(
+    ({ start, end }) =>
+      new Date(start) >= rangeStart && new Date(end) <= rangeEnd
+  );
 };
 
 export const selectHours = (state) => {
