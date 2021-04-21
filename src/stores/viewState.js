@@ -114,13 +114,13 @@ export const selectEventsByRange = (state) => {
     return null;
   }
 
-  const { start, end } = selectCurrentDatePointers(state);
+  const { start: rangeStart, end: rangeEnd } = selectCurrentDatePointers(state);
 
-  return events.filter((event) => {
-    const itemDateStart = new Date(event.start);
-    const itemDateEnd = new Date(event.end);
+  return events.filter(({ start, end }) => {
+    const itemDateStart = new Date(start);
+    const itemDateEnd = new Date(end);
 
-    return itemDateStart >= start && itemDateEnd <= end;
+    return itemDateStart >= rangeStart && itemDateEnd <= rangeEnd;
   });
 };
 
@@ -133,9 +133,9 @@ export const selectHours = (state) => {
 
   let hours = 0;
 
-  events.forEach((event) => {
-    const itemDateStart = new Date(event.start);
-    const itemDateEnd = new Date(event.end);
+  events.forEach(({ start, end }) => {
+    const itemDateStart = new Date(start);
+    const itemDateEnd = new Date(end);
 
     hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
   });
