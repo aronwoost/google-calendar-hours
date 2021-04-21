@@ -123,12 +123,12 @@ export const selectEventsByRange = (state) => {
         // selcted end date.
         !(new Date(end) < rangeStart || new Date(start) > rangeEnd)
     )
-    .map(({ id, summary, start, end }) => {
+    .map(({ start, end, ...rest }) => {
       const startTime =
         new Date(start) < rangeStart ? rangeStart.toJSON() : start;
       const endTime = new Date(end) > rangeEnd ? rangeEnd.toJSON() : end;
 
-      return { id, summary, start: startTime, end: endTime };
+      return { ...rest, start: startTime, end: endTime };
     });
 };
 
