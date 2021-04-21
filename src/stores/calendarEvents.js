@@ -33,12 +33,22 @@ export const loadCalendarEvents = ({ calendarId }) => async (
       setCalendarEvents({
         calendarId,
         // take only fields we need
-        events: items.map(({ id, summary, start, end }) => ({
-          id,
-          summary,
-          start,
-          end,
-        })),
+        events: items
+          .map(({ id, summary, start, end }) => {
+            // Filter out events that have no `dateTime`. Those are full day
+            // events, they only have the field `date`.
+            if (!start.dateTime) {
+              return null;
+            }
+
+            return {
+              id,
+              summary,
+              start,
+              end,
+            };
+          })
+          .filter(Boolean),
       })
     );
   } catch (e) {
