@@ -102,18 +102,18 @@ const Events = () => {
   return (
     <div>
       <ul className={styles.list}>
-        {eventsToRender.map((event) => (
-          <li key={event.id} className={cx(bootstrap.row, styles.listItem)}>
+        {eventsToRender.map(({ id, start, summary, hours }) => (
+          <li key={id} className={cx(bootstrap.row, styles.listItem)}>
             {sortBy === SORT_BY.DATE && (
               <span
                 className={cx(styles.eventDate, bootstrap['col-sm'])}
-                title={formatDate(dayjs(event.start), {
+                title={formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric',
                 })}
               >
-                {formatDate(dayjs(event.start), {
+                {formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
                 })}
@@ -121,13 +121,13 @@ const Events = () => {
             )}
             <span
               className={cx(bootstrap['col-sm'], styles.eventName)}
-              title={event.summary}
+              title={summary}
             >
-              {event.summary}
+              {summary}
             </span>
             <span
               className={cx(bootstrap['col-sm'], styles.eventHours)}
-            >{`${event.hours}h`}</span>
+            >{`${hours}h`}</span>
           </li>
         ))}
       </ul>
