@@ -117,8 +117,8 @@ export const selectEventsByRange = (state) => {
   const { start, end } = selectCurrentDatePointers(state);
 
   return events.filter((event) => {
-    const itemDateStart = new Date(event.start.dateTime);
-    const itemDateEnd = new Date(event.end.dateTime);
+    const itemDateStart = new Date(event.start);
+    const itemDateEnd = new Date(event.end);
 
     return itemDateStart >= start && itemDateEnd <= end;
   });
@@ -134,8 +134,8 @@ export const selectHours = (state) => {
   let hours = 0;
 
   events.forEach((event) => {
-    const itemDateStart = new Date(event.start.dateTime);
-    const itemDateEnd = new Date(event.end.dateTime);
+    const itemDateStart = new Date(event.start);
+    const itemDateEnd = new Date(event.end);
 
     hours += (itemDateEnd - itemDateStart) / 1000 / 60 / 60;
   });
