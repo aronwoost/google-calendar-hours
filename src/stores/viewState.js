@@ -116,10 +116,18 @@ export const selectEventsByRange = (state) => {
 
   const { start: rangeStart, end: rangeEnd } = selectCurrentDatePointers(state);
 
-  return events.filter(
-    ({ start, end }) =>
-      new Date(start) >= rangeStart && new Date(end) <= rangeEnd
-  );
+  return events
+    .filter(
+      ({ start, end }) =>
+        // Filter out all events that end before selected start date or start after
+        // selected end date.
+        !(new Date(end) < rangeStart || new Date(start) > rangeEnd)
+    )
+    .map(({ start, end, ...rest }) => ({
+      ...rest,
+      start: new Date(start) < rangeStart ? rangeStart.toJSON() : start,
+      end: new Date(end) > rangeEnd ? rangeEnd.toJSON() : end,
+    }));
 };
 
 export const selectHours = (state) => {
