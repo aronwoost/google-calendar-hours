@@ -120,7 +120,7 @@ export const selectEventsByRange = (state) => {
     .filter(
       ({ start, end }) =>
         // Filter out all events that end before selected start date or start after
-        // selcted end date.
+        // selected end date.
         !(new Date(end) < rangeStart || new Date(start) > rangeEnd)
     )
     .map(({ start, end, ...rest }) => {
