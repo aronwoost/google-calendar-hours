@@ -123,13 +123,11 @@ export const selectEventsByRange = (state) => {
         // selected end date.
         !(new Date(end) < rangeStart || new Date(start) > rangeEnd)
     )
-    .map(({ start, end, ...rest }) => {
-      const startTime =
-        new Date(start) < rangeStart ? rangeStart.toJSON() : start;
-      const endTime = new Date(end) > rangeEnd ? rangeEnd.toJSON() : end;
-
-      return { ...rest, start: startTime, end: endTime };
-    });
+    .map(({ start, end, ...rest }) => ({
+      ...rest,
+      start: new Date(start) < rangeStart ? rangeStart.toJSON() : start,
+      end: new Date(end) > rangeEnd ? rangeEnd.toJSON() : end,
+    }));
 };
 
 export const selectHours = (state) => {
