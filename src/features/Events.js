@@ -70,11 +70,7 @@ const Events = () => {
 
   if (sortBy === SORT_BY.AMOUNT) {
     const eventsObject = eventsToRender.reduce((acc, { summary, hours }) => {
-      if (acc[summary]) {
-        acc[summary] += hours;
-      } else {
-        acc[summary] = hours;
-      }
+      acc[summary] = acc[summary] ? (acc[summary] += hours) : hours;
       return acc;
     }, {});
     eventsToRender = Object.entries(eventsObject)
