@@ -78,11 +78,7 @@ const Events = () => {
       return acc;
     }, {});
     eventsToRender = Object.entries(eventsObject)
-      .map(([key, value]) => ({
-        summary: key,
-        hours: value,
-        id: key,
-      }))
+      .map(([key, value]) => ({ summary: key, hours: value, id: key }))
       .sort(sortByHours);
   } else {
     eventsToRender = eventsToRender.sort(sortByStart);
