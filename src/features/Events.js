@@ -77,12 +77,13 @@ const Events = () => {
       }
       return acc;
     }, {});
-    const newArray = Object.entries(eventsObject).map(([key, value]) => ({
-      summary: key,
-      hours: value,
-      id: key,
-    }));
-    eventsToRender = newArray.sort(sortByHours);
+    eventsToRender = Object.entries(eventsObject)
+      .map(([key, value]) => ({
+        summary: key,
+        hours: value,
+        id: key,
+      }))
+      .sort(sortByHours);
   } else {
     eventsToRender = eventsToRender.sort(sortByStart);
 
