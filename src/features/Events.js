@@ -40,6 +40,8 @@ const sortByStart = ({ start: startA }, { start: startB }) => {
   return 0;
 };
 
+const format = (date) => dayjs(date).format(EXPORT_DATE_FORMAT);
+
 const Events = () => {
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
 
@@ -81,9 +83,7 @@ const Events = () => {
 
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
-        `${dayjs(start).format(EXPORT_DATE_FORMAT)},${dayjs(end).format(
-          EXPORT_DATE_FORMAT
-        )},"${summary}",${hours}`
+        `${format(start)},${format(end)},"${summary}",${hours}`
     );
 
     downloadBlob = createBlobUrl(
