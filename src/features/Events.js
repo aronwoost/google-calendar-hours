@@ -18,6 +18,28 @@ import styles from './Events.module.css';
 
 const EXPORT_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 
+const sortByHours = ({ hours: hoursA }, { hours: hoursB }) => {
+  if (hoursA > hoursB) {
+    return -1;
+  }
+  if (hoursA < hoursB) {
+    return 1;
+  }
+
+  return 0;
+};
+
+const sortByStart = ({ start: startA }, { start: startB }) => {
+  if (startA < startB) {
+    return -1;
+  }
+  if (startA > startB) {
+    return 1;
+  }
+
+  return 0;
+};
+
 const Events = () => {
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
 
@@ -60,29 +82,9 @@ const Events = () => {
       hours: value,
       id: key,
     }));
-    eventsToRender = newArray.sort(({ hours: hoursA }, { hours: hoursB }) => {
-      if (hoursA > hoursB) {
-        return -1;
-      }
-      if (hoursA < hoursB) {
-        return 1;
-      }
-
-      return 0;
-    });
+    eventsToRender = newArray.sort(sortByHours);
   } else {
-    eventsToRender = eventsToRender.sort(
-      ({ start: startA }, { start: startB }) => {
-        if (startA < startB) {
-          return -1;
-        }
-        if (startA > startB) {
-          return 1;
-        }
-
-        return 0;
-      }
-    );
+    eventsToRender = eventsToRender.sort(sortByStart);
 
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
