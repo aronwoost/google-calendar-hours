@@ -69,14 +69,14 @@ const Events = () => {
   let filename;
 
   if (sortBy === SORT_BY.AMOUNT) {
-    const eventsObject = {};
-    eventsToRender.forEach(({ summary, hours }) => {
-      if (eventsObject[summary]) {
-        eventsObject[summary] += hours;
+    const eventsObject = eventsToRender.reduce((acc, { summary, hours }) => {
+      if (acc[summary]) {
+        acc[summary] += hours;
       } else {
-        eventsObject[summary] = hours;
+        acc[summary] = hours;
       }
-    });
+      return acc;
+    }, {});
     const newArray = Object.entries(eventsObject).map(([key, value]) => ({
       summary: key,
       hours: value,
