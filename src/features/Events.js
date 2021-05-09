@@ -57,9 +57,7 @@ const Events = () => {
 
   let eventsToRender = events.map((event) => ({
     ...event,
-    hours: roundHours(
-      (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60
-    ),
+    hours: (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60,
   }));
 
   let downloadBlob;
@@ -78,7 +76,7 @@ const Events = () => {
 
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
-        `${format(start)},${format(end)},"${summary}",${hours}`
+        `${format(start)},${format(end)},"${summary}",${roundHours(hours)}`
     );
 
     downloadBlob = createBlobUrl(
@@ -117,7 +115,7 @@ const Events = () => {
             </span>
             <span
               className={cx(bootstrap['col-sm'], styles.eventHours)}
-            >{`${hours}h`}</span>
+            >{`${roundHours(hours)}h`}</span>
           </li>
         ))}
       </ul>
