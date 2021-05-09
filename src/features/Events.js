@@ -12,11 +12,36 @@ import {
 import { selectCalendars } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
 import formatDate from '../utils/formatDate';
+import roundHours from '../utils/roundHours';
 import { SORT_BY } from '../constants';
 
 import styles from './Events.module.css';
 
 const EXPORT_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
+
+const sortByHours = ({ hours: hoursA }, { hours: hoursB }) => {
+  if (hoursA > hoursB) {
+    return -1;
+  }
+  if (hoursA < hoursB) {
+    return 1;
+  }
+
+  return 0;
+};
+
+const sortByStart = ({ start: startA }, { start: startB }) => {
+  if (startA < startB) {
+    return -1;
+  }
+  if (startA > startB) {
+    return 1;
+  }
+
+  return 0;
+};
+
+const format = (date) => dayjs(date).format(EXPORT_DATE_FORMAT);
 
 const Events = () => {
   const [sortBy, setSortBy] = useState(SORT_BY.DATE);
@@ -30,65 +55,30 @@ const Events = () => {
     (item) => item.id === selectedCalendar
   )?.label;
 
-  let eventsToRender = events.map((event) => {
-    const itemDateStart = new Date(event.start);
-    const itemDateEnd = new Date(event.end);
-
-    const hours =
-      Math.round(((itemDateEnd - itemDateStart) / 1000 / 60 / 60) * 100) / 100;
-
-    return {
-      ...event,
-      hours,
-    };
-  });
+  let eventsToRender = events.map((event) => ({
+    ...event,
+    hours: roundHours(
+      (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60
+    ),
+  }));
 
   let downloadBlob;
   let filename;
 
   if (sortBy === SORT_BY.AMOUNT) {
-    const eventsObject = {};
-    eventsToRender.forEach(({ summary, hours }) => {
-      if (eventsObject[summary]) {
-        eventsObject[summary] += hours;
-      } else {
-        eventsObject[summary] = hours;
-      }
-    });
-    const newArray = Object.entries(eventsObject).map(([key, value]) => ({
-      summary: key,
-      hours: value,
-      id: key,
-    }));
-    eventsToRender = newArray.sort(({ hours: hoursA }, { hours: hoursB }) => {
-      if (hoursA > hoursB) {
-        return -1;
-      }
-      if (hoursA < hoursB) {
-        return 1;
-      }
-
-      return 0;
-    });
+    const eventsObject = eventsToRender.reduce((acc, { summary, hours }) => {
+      acc[summary] = acc[summary] ? (acc[summary] += hours) : hours;
+      return acc;
+    }, {});
+    eventsToRender = Object.entries(eventsObject)
+      .map(([key, value]) => ({ summary: key, hours: value, id: key }))
+      .sort(sortByHours);
   } else {
-    eventsToRender = eventsToRender.sort(
-      ({ start: startA }, { start: startB }) => {
-        if (startA < startB) {
-          return -1;
-        }
-        if (startA > startB) {
-          return 1;
-        }
-
-        return 0;
-      }
-    );
+    eventsToRender = eventsToRender.sort(sortByStart);
 
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
-        `${dayjs(start).format(EXPORT_DATE_FORMAT)},${dayjs(end).format(
-          EXPORT_DATE_FORMAT
-        )},"${summary}",${hours}`
+        `${format(start)},${format(end)},"${summary}",${hours}`
     );
 
     downloadBlob = createBlobUrl(
