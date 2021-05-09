@@ -1319,4 +1319,40 @@ describe('display events', () => {
 
     expect(screen.getByText('7h')).toBeInTheDocument();
   });
+
+  it('renders added events with correctly rounded', async () => {
+    timekeeper.freeze(new Date('2018-01-01T10:00:00Z'));
+
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'test summary',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T17:20:00Z' },
+      },
+      {
+        id: '2',
+        summary: 'test summary',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T17:20:00Z' },
+      },
+      {
+        id: '3',
+        summary: 'test summary',
+        start: { dateTime: '2018-01-01T10:00:00Z' },
+        end: { dateTime: '2018-01-01T11:50:00Z' },
+      },
+    ]);
+
+    renderApp();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
+    });
+
+    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByLabelText('Amount'));
+
+    expect(screen.getAllByText('16.5h')).toHaveLength(2);
+  });
 });
