@@ -12,6 +12,7 @@ import {
 import { selectCalendars } from '../stores/calendars';
 import createBlobUrl from '../utils/createBlobUrl';
 import formatDate from '../utils/formatDate';
+import roundHours from '../utils/roundHours';
 import { SORT_BY } from '../constants';
 
 import styles from './Events.module.css';
@@ -58,8 +59,7 @@ const Events = () => {
     const itemDateStart = new Date(event.start);
     const itemDateEnd = new Date(event.end);
 
-    const hours =
-      Math.round(((itemDateEnd - itemDateStart) / 1000 / 60 / 60) * 100) / 100;
+    const hours = roundHours((itemDateEnd - itemDateStart) / 1000 / 60 / 60);
 
     return {
       ...event,

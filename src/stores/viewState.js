@@ -5,6 +5,7 @@ import 'dayjs/locale/de';
 import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
 import { updateConfig } from './storage';
 import { RANGE_TYPE, WEEK_START } from '../constants';
+import roundHours from '../utils/roundHours';
 
 export const viewState = createSlice({
   name: 'viewState',
@@ -143,7 +144,7 @@ export const selectHours = (state) => {
     hours += (new Date(end) - new Date(start)) / 1000 / 60 / 60;
   });
 
-  return Math.round(hours * 100) / 100;
+  return roundHours(hours);
 };
 
 export const setSelectedCalendar = ({ calendarId }) => (dispatch, getState) => {
