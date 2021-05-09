@@ -55,17 +55,12 @@ const Events = () => {
     (item) => item.id === selectedCalendar
   )?.label;
 
-  let eventsToRender = events.map((event) => {
-    const itemDateStart = new Date(event.start);
-    const itemDateEnd = new Date(event.end);
-
-    const hours = roundHours((itemDateEnd - itemDateStart) / 1000 / 60 / 60);
-
-    return {
-      ...event,
-      hours,
-    };
-  });
+  let eventsToRender = events.map((event) => ({
+    ...event,
+    hours: roundHours(
+      (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60
+    ),
+  }));
 
   let downloadBlob;
   let filename;
