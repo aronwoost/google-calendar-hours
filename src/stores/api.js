@@ -30,7 +30,7 @@ const fetchEvents = async ({ accessToken, calendarId, pageToken, acc }) => {
       singleEvents: true,
       maxResults: 2500,
       pageToken,
-      timeMax: dayjs().add(1, 'year').toJSON(),
+      timeMax: dayjs().add(2, 'year').toJSON(),
     },
   });
 
