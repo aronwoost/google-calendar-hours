@@ -96,34 +96,35 @@ const Events = () => {
           <li key={id} className={cx(bootstrap.row, styles.listItem)}>
             {sortBy === SORT_BY.DATE && (
               <span
-                className={cx(styles.eventDate, bootstrap['col-sm'])}
+                className={cx(bootstrap['col-md'], styles.eventName)}
                 title={formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric',
                 })}
               >
-                {formatDate(dayjs(start), {
+                {`${formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
-                })}
+                })}`}
               </span>
             )}
             <span
               className={cx(bootstrap['col-sm'], styles.eventName)}
               title={summary}
             >
-              {summary}
+              {`${summary}`}
             </span>
             <span
               className={cx(bootstrap['col-md'], styles.eventName)}
               title='Starttime'
             >
-              {`${new Date(start).getHours()}:${new Date(start).getMinutes()} - ${new Date(end).getHours()}:${new Date(end).getMinutes()} `}
+              {`${new Date(start).toTimeString().substr(0, 5)} - ${new Date(end).toTimeString().substr(0, 5)} `}
             </span>
             <span
               className={cx(bootstrap['col-sm'], styles.eventHours)}
-            >{`${roundHours(hours)}h`}</span>
+            >{`${roundHours(hours)}h`}
+            </span>
           </li>
         ))}
       </ul>
