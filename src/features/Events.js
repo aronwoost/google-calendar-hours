@@ -94,7 +94,7 @@ const Events = () => {
           <li key={id} className={cx(bootstrap.row, styles.listItem)}>
             {sortBy === SORT_BY.DATE && (
               <span
-                className={cx(bootstrap['col-md'], styles.eventDate)}
+                className={cx(bootstrap['col-sm'], styles.eventDate)}
                 title={formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
