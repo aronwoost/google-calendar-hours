@@ -101,17 +101,17 @@ const Events = () => {
                   year: 'numeric',
                 })}
               >
-                {`${formatDate(dayjs(start), {
+                {formatDate(dayjs(start), {
                   day: '2-digit',
                   month: '2-digit',
-                })}`}
+                })}
               </span>
             )}
             <span
               className={cx(bootstrap['col-sm'], styles.eventName)}
               title={summary}
             >
-              {`${summary}`}
+              {summary}
             </span>
             <span
               className={cx(bootstrap['col-md'], styles.eventName)}
