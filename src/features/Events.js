@@ -85,12 +85,14 @@ const Events = () => {
     filename = `${currentCalendarName}_${dayjs(date)
       .locale('en')
       .format('MMMM_YYYY')}_(${dayjs().format('YYYYMMDDHHmmss')}).csv`;
+
+    console.log(eventsToRender)
   }
 
   return (
     <div>
       <ul className={styles.list}>
-        {eventsToRender.map(({ id, start, summary, hours }) => (
+        {eventsToRender.map(({ id, start, end, summary, hours }) => (
           <li key={id} className={cx(bootstrap.row, styles.listItem)}>
             {sortBy === SORT_BY.DATE && (
               <span
@@ -112,6 +114,12 @@ const Events = () => {
               title={summary}
             >
               {summary}
+            </span>
+            <span
+              className={cx(bootstrap['col-md'], styles.eventName)}
+              title='Starttime'
+            >
+              {`${new Date(start).getHours()}:${new Date(start).getMinutes()} - ${new Date(end).getHours()}:${new Date(end).getMinutes()} `}
             </span>
             <span
               className={cx(bootstrap['col-sm'], styles.eventHours)}
