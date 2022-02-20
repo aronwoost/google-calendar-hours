@@ -6,7 +6,7 @@ import { fetchCalendarEvents } from './api';
 export const calendarEvents = createSlice({
   name: 'calendarEvents',
   initialState: {
-    loading: false,
+    loading: {},
     map: {},
   },
   reducers: {
@@ -14,20 +14,31 @@ export const calendarEvents = createSlice({
       state.map[payload.calendarId] = payload.events;
     },
     setLoading: (state, { payload }) => {
-      state.loading = payload;
+      state.loading[payload.calendarId] = payload.loading;
     },
   },
 });
 
 const { setCalendarEvents, setLoading } = calendarEvents.actions;
 
-export const loadCalendarEvents = ({ calendarId }) => async (
+export const selectIsEventsLoading = (state) =>
+  Object.values(state.calendarEvents?.loading).some(i => i);
+
+export const selectCalendarEvents = (state, calendarId) => {
+  if (selectIsEventsLoading(state) || !calendarId) return null;
+  const calendarIds = calendarId.split(',');
+  const events = calendarIds.map(id => state.calendarEvents?.map[id] || []).flat();
+  return events.length > 0 ? events : null;
+}
+
+const loadCalendarEvents = ({ calendarId }) => async (
   dispatch,
   getState
 ) => {
+  if (selectCalendarEvents(getState(), calendarId)) return;
   const accessToken = selectAccessToken(getState());
   try {
-    dispatch(setLoading(true));
+    dispatch(setLoading({calendarId, loading: true}));
     const items = await fetchCalendarEvents({ accessToken, calendarId });
     dispatch(
       setCalendarEvents({
@@ -54,15 +65,16 @@ export const loadCalendarEvents = ({ calendarId }) => async (
   } catch (e) {
     // do nothing
   } finally {
-    dispatch(setLoading(false));
+    dispatch(setLoading({calendarId, loading: false}));
   }
 };
 
-export const selectIsEventsLoading = (state) =>
-  state.calendarEvents?.loading ?? false;
-
-export const selectCalendarEvents = (state, calendarId) =>
-  (!selectIsEventsLoading(state) && state.calendarEvents?.map[calendarId]) ??
-  null;
+export const loadCalendarsEvents = ({ calendarIdsString }) => async (
+  dispatch
+) => {
+  if (!calendarIdsString) return;
+  const calendarIds = calendarIdsString.split(',');
+  calendarIds.forEach(calendarId => dispatch(loadCalendarEvents({ calendarId })));
+};
 
 export default calendarEvents.reducer;
