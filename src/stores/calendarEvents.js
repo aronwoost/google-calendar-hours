@@ -22,23 +22,22 @@ export const calendarEvents = createSlice({
 const { setCalendarEvents, setLoading } = calendarEvents.actions;
 
 export const selectIsEventsLoading = (state) =>
-  Object.values(state.calendarEvents?.loading).some(i => i);
+  Object.values(state.calendarEvents?.loading).some((i) => i);
 
 export const selectCalendarEvents = (state, calendarId) => {
   if (selectIsEventsLoading(state) || !calendarId) return null;
   const calendarIds = calendarId.split(',');
-  const events = calendarIds.map(id => state.calendarEvents?.map[id] || []).flat();
+  const events = calendarIds
+    .map((id) => state.calendarEvents?.map[id] || [])
+    .flat();
   return events.length > 0 ? events : null;
-}
+};
 
-const loadCalendarEvents = ({ calendarId }) => async (
-  dispatch,
-  getState
-) => {
+const loadCalendarEvents = ({ calendarId }) => async (dispatch, getState) => {
   if (selectCalendarEvents(getState(), calendarId)) return;
   const accessToken = selectAccessToken(getState());
   try {
-    dispatch(setLoading({calendarId, loading: true}));
+    dispatch(setLoading({ calendarId, loading: true }));
     const items = await fetchCalendarEvents({ accessToken, calendarId });
     dispatch(
       setCalendarEvents({
@@ -65,7 +64,7 @@ const loadCalendarEvents = ({ calendarId }) => async (
   } catch (e) {
     // do nothing
   } finally {
-    dispatch(setLoading({calendarId, loading: false}));
+    dispatch(setLoading({ calendarId, loading: false }));
   }
 };
 
@@ -74,7 +73,9 @@ export const loadCalendarsEvents = ({ calendarIdsString }) => async (
 ) => {
   if (!calendarIdsString) return;
   const calendarIds = calendarIdsString.split(',');
-  calendarIds.forEach(calendarId => dispatch(loadCalendarEvents({ calendarId })));
+  calendarIds.forEach((calendarId) =>
+    dispatch(loadCalendarEvents({ calendarId }))
+  );
 };
 
 export default calendarEvents.reducer;
