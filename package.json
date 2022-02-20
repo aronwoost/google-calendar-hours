@@ -22,7 +22,7 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
+    "test": "TZ=Europe/Berlin node scripts/test.js",
     "lint": "eslint --ext js src",
     "lint:css": "stylelint 'src/**/*.css'",
     "prettier": "prettier-eslint --write $PWD'/src/**/*.{js,md}'"
