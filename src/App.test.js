@@ -274,6 +274,39 @@ it('renders correctly after user changes calendar', async () => {
   expect(await screen.findByText('1h')).toBeInTheDocument();
 });
 
+it('renders correctly when selecting two calendars', async () => {
+  mockCalendarResponse.mockReturnValue([
+    { id: 'test-id', label: 'test-name' },
+    { id: 'test-id-2', label: 'test-name-2' },
+  ]);
+  mockEventsResponse.mockReturnValue(testEvents);
+
+  renderApp();
+
+  fireEvent.change(await screen.findByTestId('CalendarsList'), {
+    target: { value: 'test-id,test-id-2' },
+  });
+
+  expect(await screen.findByText('2h')).toBeInTheDocument();
+});
+
+it('renders correctly when selecting all calendars', async () => {
+  mockCalendarResponse.mockReturnValue([
+    { id: 'test-id', label: 'test-name' },
+    { id: 'test-id-2', label: 'test-name-2' },
+    { id: 'test-id-3', label: 'test-name-3' },
+  ]);
+  mockEventsResponse.mockReturnValue(testEvents);
+
+  renderApp();
+
+  fireEvent.change(await screen.findByTestId('CalendarsList'), {
+    target: { value: 'test-id,test-id-2,test-id-3' },
+  });
+
+  expect(await screen.findByText('3h')).toBeInTheDocument();
+});
+
 it('requests events, display hours and sets localStorage when loaded', async () => {
   renderApp();
 

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 
-import { loadCalendarEvents, selectCalendarEvents } from './calendarEvents';
+import { loadCalendarsEvents, selectCalendarEvents } from './calendarEvents';
 import { updateConfig } from './storage';
 import { RANGE_TYPE, WEEK_START } from '../constants';
 import roundHours from '../utils/roundHours';
@@ -147,13 +147,10 @@ export const selectHours = (state) => {
   return roundHours(hours);
 };
 
-export const setSelectedCalendar = ({ calendarId }) => (dispatch, getState) => {
+export const setSelectedCalendar = ({ calendarId }) => (dispatch) => {
   dispatch(setSelectedCalendarId(calendarId));
   updateConfig({ selectedCalendarId: calendarId });
-  const calendarEvents = selectCalendarEvents(getState(), calendarId);
-  if (!calendarEvents) {
-    dispatch(loadCalendarEvents({ calendarId }));
-  }
+  dispatch(loadCalendarsEvents({ calendarIdsString: calendarId }));
 };
 
 export const changeRangeType = ({ range }) => (dispatch, getState) => {

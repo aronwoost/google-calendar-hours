@@ -31,6 +31,9 @@ const CalendarsList = () => {
           {label}
         </option>
       ))}
+      <option key="all-calendars" value={calendars.map(({ id }) => id)}>
+        All calendars
+      </option>
     </select>
   );
 };
