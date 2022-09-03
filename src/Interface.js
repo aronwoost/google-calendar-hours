@@ -1,7 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import cx from 'classnames';
-import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import CalendarsList from './features/CalendarsList';
 import Range from './features/Range';
@@ -11,11 +9,11 @@ import Hours from './features/Hours';
 import RangeDisplay from './features/RangeDisplay';
 import Events from './features/Events';
 import WeekStart from './features/WeekStart';
+import ShowDetailsButton from './features/ShowDetailsButton';
 import {
   selectSelectedCalendar,
   selectRangeType,
   selectHours,
-  selectNumberOfEvents,
 } from './stores/viewState';
 import {
   selectCalendarEvents,
@@ -45,7 +43,6 @@ const Interface = () => {
   const eventsLoading = useSelector(selectIsEventsLoading);
   const rangeType = useSelector(selectRangeType);
   const hours = useSelector(selectHours);
-  const numberOfEvents = useSelector(selectNumberOfEvents);
 
   return (
     <div className={styles.interface}>
@@ -61,25 +58,10 @@ const Interface = () => {
           {rangeType === RANGE_TYPE.WEEK && <WeekStart />}
           {rangeType !== RANGE_TYPE.TOTAL && <RangeDisplay />}
           {Boolean(hours) && (
-            <div>
-              <button
-                type="button"
-                data-testid={
-                  isEventsOpen ? 'HideEventsButton' : 'ShowEventsButton'
-                }
-                className={cx(
-                  styles.showDetailsButton,
-                  bootstrap.btn,
-                  bootstrap['btn-outline-secondary'],
-                  bootstrap['btn-sm']
-                )}
-                onClick={() => setIsEventsOpen(!isEventsOpen)}
-              >
-                {isEventsOpen
-                  ? `hide details of ${numberOfEvents} events`
-                  : `show details of ${numberOfEvents} events`}
-              </button>
-            </div>
+            <ShowDetailsButton
+              isEventsOpen={isEventsOpen}
+              setIsEventsOpen={setIsEventsOpen}
+            />
           )}
           {!!hours && isEventsOpen && <Events />}
         </Fragment>
