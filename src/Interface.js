@@ -68,6 +68,7 @@ const Interface = () => {
                   isEventsOpen ? 'HideEventsButton' : 'ShowEventsButton'
                 }
                 className={cx(
+                  styles.showDetailsButton,
                   bootstrap.btn,
                   bootstrap['btn-outline-secondary'],
                   bootstrap['btn-sm']
