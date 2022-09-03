@@ -15,6 +15,7 @@ import {
   selectSelectedCalendar,
   selectRangeType,
   selectHours,
+  selectNumberOfEvents,
 } from './stores/viewState';
 import {
   selectCalendarEvents,
@@ -44,6 +45,7 @@ const Interface = () => {
   const eventsLoading = useSelector(selectIsEventsLoading);
   const rangeType = useSelector(selectRangeType);
   const hours = useSelector(selectHours);
+  const numberOfEvents = useSelector(selectNumberOfEvents);
 
   return (
     <div className={styles.interface}>
@@ -62,6 +64,9 @@ const Interface = () => {
             <div>
               <button
                 type="button"
+                data-testid={
+                  isEventsOpen ? 'HideEventsButton' : 'ShowEventsButton'
+                }
                 className={cx(
                   bootstrap.btn,
                   bootstrap['btn-outline-secondary'],
@@ -69,7 +74,9 @@ const Interface = () => {
                 )}
                 onClick={() => setIsEventsOpen(!isEventsOpen)}
               >
-                {isEventsOpen ? 'hide details' : 'show details'}
+                {isEventsOpen
+                  ? `hide details of ${numberOfEvents} events`
+                  : `show details of ${numberOfEvents} events`}
               </button>
             </div>
           )}

@@ -147,6 +147,9 @@ export const selectHours = (state) => {
   return roundHours(hours);
 };
 
+export const selectNumberOfEvents = (state) =>
+  selectEventsByRange(state)?.length || 0;
+
 export const setSelectedCalendar = ({ calendarId }) => (dispatch, getState) => {
   dispatch(setSelectedCalendarId(calendarId));
   updateConfig({ selectedCalendarId: calendarId });
