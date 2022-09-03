@@ -1118,7 +1118,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    expect(screen.getByText('show details')).toBeInTheDocument();
+    expect(screen.getByTestId('ShowEventsButton')).toBeInTheDocument();
 
     expect(screen.queryByText('event-1')).not.toBeInTheDocument();
   });
@@ -1153,9 +1153,9 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByTestId('ShowEventsButton'));
 
-    expect(screen.getByText('hide details')).toBeInTheDocument();
+    expect(screen.getByTestId('HideEventsButton')).toBeInTheDocument();
     expect(screen.getByText('Sort by:')).toBeInTheDocument();
     expect(screen.getByText('Date')).toBeInTheDocument();
     expect(screen.getByText('Amount')).toBeInTheDocument();
@@ -1171,6 +1171,8 @@ describe('display events', () => {
     expect(screen.getByText('event-2')).toBeInTheDocument();
     expect(screen.getByTitle('event-2')).toBeInTheDocument();
     expect(screen.getByText('5h')).toBeInTheDocument();
+
+    expect(screen.getByText('hide details of 2 events')).toBeInTheDocument();
 
     const downloadLink = screen.getByText('Export as CSV');
     expect(downloadLink).toBeInTheDocument();
@@ -1207,7 +1209,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByTestId('ShowEventsButton'));
 
     const items = screen.queryAllByText(/event-[1-3]/);
 
@@ -1235,7 +1237,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByTestId('ShowEventsButton'));
 
     expect(screen.getAllByText('0.08h')).toHaveLength(2);
   });
@@ -1270,7 +1272,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByTestId('ShowEventsButton'));
 
     fireEvent.click(screen.getByLabelText('Amount'));
 
@@ -1314,7 +1316,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByTestId('ShowEventsButton'));
     fireEvent.click(screen.getByLabelText('Amount'));
 
     expect(screen.getByText('7h')).toBeInTheDocument();
@@ -1350,7 +1352,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByTestId('ShowEventsButton'));
     fireEvent.click(screen.getByLabelText('Amount'));
 
     expect(screen.getAllByText('16.5h')).toHaveLength(2);
