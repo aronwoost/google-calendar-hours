@@ -60,7 +60,7 @@ const Interface = () => {
           <Hours />
           {rangeType === RANGE_TYPE.WEEK && <WeekStart />}
           {rangeType !== RANGE_TYPE.TOTAL && <RangeDisplay />}
-          {!!hours && (
+          {Boolean(hours) && (
             <div>
               <button
                 type="button"
