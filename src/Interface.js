@@ -63,7 +63,7 @@ const Interface = () => {
               setIsEventsOpen={setIsEventsOpen}
             />
           )}
-          {!!hours && isEventsOpen && <Events />}
+          {Boolean(hours) && isEventsOpen && <Events />}
         </Fragment>
       )}
     </div>
