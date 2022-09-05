@@ -34,7 +34,7 @@ const App = () => {
           </div>
           <footer className={styles.footer}>
             <p>
-              <span>© 2011 - 2021. This app is open source. </span>
+              <span>© 2011 - 2022. This app is open source. </span>
               <a
                 href="https://github.com/aronwoost/google-calendar-hours"
                 target="_blank"
