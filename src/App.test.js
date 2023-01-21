@@ -1398,7 +1398,7 @@ describe('display events', () => {
       target: { value: 'month' },
     });
 
-    fireEvent.click(screen.getByText('show details'));
+    fireEvent.click(screen.getByText('show details of 4 events'));
 
     expect(screen.getByText('11/01').parentNode).toHaveClass('listItemLight');
     expect(screen.getByText('11/02').parentNode).toHaveClass('listItemLight');
