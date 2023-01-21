@@ -110,7 +110,7 @@ it('renders auth screen', () => {
   );
   expect(screen.getByAltText('Auth with Google')).toBeInTheDocument();
   expect(
-    screen.getByText('© 2011 - 2022. This app is open source.')
+    screen.getByText('© 2011 - 2023. This app is open source.')
   ).toBeInTheDocument();
   expect(screen.getByText('Check it on GitHub')).toBeInTheDocument();
 });
@@ -180,7 +180,7 @@ it('renders static content', () => {
     screen.getByText('Google Calendar Hours Calculator')
   ).toBeInTheDocument();
   expect(
-    screen.getByText('© 2011 - 2022. This app is open source.')
+    screen.getByText('© 2011 - 2023. This app is open source.')
   ).toBeInTheDocument();
   expect(screen.getByText('Check it on GitHub')).toBeInTheDocument();
 });
