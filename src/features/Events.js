@@ -59,30 +59,20 @@ const Events = () => {
   )?.label;
 
   let rowBackground = 'dark';
-  let eventsToRender = events
-    .sort((a, b) => {
-      if (new Date(a.start) < new Date(b.start)) {
-        return -1;
-      }
-      if (new Date(a.start) > new Date(b.start)) {
-        return 1;
-      }
-      return 0;
-    })
-    .map((event, index, array) => {
-      const currentDate = dayjs(event.start).isoWeek();
-      const prevDate =
-        array?.[index - 1]?.start && dayjs(array?.[index - 1]?.start).isoWeek();
-      if (currentDate !== prevDate) {
-        rowBackground = rowBackground === 'dark' ? 'light' : 'dark';
-      }
+  let eventsToRender = events.sort(sortByStart).map((event, index, array) => {
+    const currentDate = dayjs(event.start).isoWeek();
+    const prevDate =
+      array?.[index - 1]?.start && dayjs(array?.[index - 1]?.start).isoWeek();
+    if (currentDate !== prevDate) {
+      rowBackground = rowBackground === 'dark' ? 'light' : 'dark';
+    }
 
-      return {
-        ...event,
-        hours: (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60,
-        background: rowBackground,
-      };
-    });
+    return {
+      ...event,
+      hours: (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60,
+      background: rowBackground,
+    };
+  });
 
   let downloadBlob;
   let filename;
@@ -96,8 +86,6 @@ const Events = () => {
       .map(([key, value]) => ({ summary: key, hours: value, id: key }))
       .sort(sortByHours);
   } else {
-    eventsToRender = eventsToRender.sort(sortByStart);
-
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
         `${format(start)},${format(end)},"${summary}",${roundHours(hours)}`
