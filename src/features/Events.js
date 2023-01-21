@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import cx from 'classnames';
 import bootstrap from 'bootstrap/dist/css/bootstrap.css';
+import isoWeek from 'dayjs/plugin/isoWeek';
 
 import {
   selectSelectedCalendar,
@@ -16,6 +17,8 @@ import roundHours from '../utils/roundHours';
 import { SORT_BY } from '../constants';
 
 import styles from './Events.module.css';
+
+dayjs.extend(isoWeek);
 
 const EXPORT_DATE_FORMAT = 'DD.MM.YYYY HH:mm';
 
@@ -55,10 +58,21 @@ const Events = () => {
     (item) => item.id === selectedCalendar
   )?.label;
 
-  let eventsToRender = events.map((event) => ({
-    ...event,
-    hours: (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60,
-  }));
+  let rowBackground = 'dark';
+  let eventsToRender = events.sort(sortByStart).map((event, index, array) => {
+    const currentDate = dayjs(event.start).isoWeek();
+    const prevDate =
+      array?.[index - 1]?.start && dayjs(array?.[index - 1]?.start).isoWeek();
+    if (currentDate !== prevDate) {
+      rowBackground = rowBackground === 'dark' ? 'light' : 'dark';
+    }
+
+    return {
+      ...event,
+      hours: (new Date(event.end) - new Date(event.start)) / 1000 / 60 / 60,
+      background: rowBackground,
+    };
+  });
 
   let downloadBlob;
   let filename;
@@ -72,8 +86,6 @@ const Events = () => {
       .map(([key, value]) => ({ summary: key, hours: value, id: key }))
       .sort(sortByHours);
   } else {
-    eventsToRender = eventsToRender.sort(sortByStart);
-
     const lines = eventsToRender.map(
       ({ start, end, summary, hours }) =>
         `${format(start)},${format(end)},"${summary}",${roundHours(hours)}`
@@ -90,40 +102,48 @@ const Events = () => {
   return (
     <div>
       <ul className={styles.list}>
-        {eventsToRender.map(({ id, start, end, summary, hours }) => (
-          <li key={id} className={cx(bootstrap.row, styles.listItem)}>
-            {sortBy === SORT_BY.DATE && (
-              <span
-                className={cx(styles.eventDate, bootstrap['col-sm'])}
-                title={`${formatDate(dayjs(start), {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                })}, ${formatDate(dayjs(start), {
-                  minute: '2-digit',
-                  hour: '2-digit',
-                })} - ${formatDate(dayjs(end), {
-                  minute: '2-digit',
-                  hour: '2-digit',
-                })}`}
-              >
-                {formatDate(dayjs(start), {
-                  day: '2-digit',
-                  month: '2-digit',
-                })}
-              </span>
-            )}
-            <span
-              className={cx(bootstrap['col-sm'], styles.eventName)}
-              title={summary}
+        {eventsToRender.map(
+          ({ id, start, end, summary, hours, background }) => (
+            <li
+              key={id}
+              className={cx(bootstrap.row, styles.listItem, {
+                [styles.listItemLight]: background === 'light',
+                [styles.listItemDark]: background === 'dark',
+              })}
             >
-              {summary}
-            </span>
-            <span
-              className={cx(bootstrap['col-sm'], styles.eventHours)}
-            >{`${roundHours(hours)}h`}</span>
-          </li>
-        ))}
+              {sortBy === SORT_BY.DATE && (
+                <span
+                  className={cx(styles.eventDate, bootstrap['col-sm'])}
+                  title={`${formatDate(dayjs(start), {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  })}, ${formatDate(dayjs(start), {
+                    minute: '2-digit',
+                    hour: '2-digit',
+                  })} - ${formatDate(dayjs(end), {
+                    minute: '2-digit',
+                    hour: '2-digit',
+                  })}`}
+                >
+                  {formatDate(dayjs(start), {
+                    day: '2-digit',
+                    month: '2-digit',
+                  })}
+                </span>
+              )}
+              <span
+                className={cx(bootstrap['col-sm'], styles.eventName)}
+                title={summary}
+              >
+                {summary}
+              </span>
+              <span
+                className={cx(bootstrap['col-sm'], styles.eventHours)}
+              >{`${roundHours(hours)}h`}</span>
+            </li>
+          )
+        )}
       </ul>
       <div>
         <span className={styles.sortByLabel}>Sort by:</span>

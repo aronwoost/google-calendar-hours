@@ -5,7 +5,16 @@
 }
 
 .listItem {
+  padding: 0 2px;
   margin: 0;
+}
+
+.listItemDark {
+  background-color: #eee;
+}
+
+.listItemLight {
+  background-color: #fff;
 }
 
 .listItem > *:first-child {
