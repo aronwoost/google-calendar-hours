@@ -1361,4 +1361,48 @@ describe('display events', () => {
 
     expect(screen.getAllByText('16.5h')).toHaveLength(2);
   });
+
+  it('renders events with correct week background color', async () => {
+    timekeeper.freeze(new Date('2022-11-02T10:00:00Z'));
+
+    mockEventsResponse.mockReturnValue([
+      {
+        id: '1',
+        summary: 'event 1',
+        start: { dateTime: '2022-11-01T10:00:00Z' },
+        end: { dateTime: '2022-11-01T11:00:00Z' },
+      },
+      {
+        id: '8',
+        summary: 'event 8',
+        start: { dateTime: '2022-11-08T10:00:00Z' },
+        end: { dateTime: '2022-11-08T11:00:00Z' },
+      },
+      {
+        id: '15',
+        summary: 'event 15',
+        start: { dateTime: '2022-11-15T10:00:00Z' },
+        end: { dateTime: '2022-11-15T11:00:00Z' },
+      },
+      {
+        id: '2',
+        summary: 'event 2',
+        start: { dateTime: '2022-11-02T10:00:00Z' },
+        end: { dateTime: '2022-11-02T11:00:00Z' },
+      },
+    ]);
+
+    renderApp();
+
+    fireEvent.change(await screen.findByTestId('RangeSelectList'), {
+      target: { value: 'month' },
+    });
+
+    fireEvent.click(screen.getByText('show details'));
+
+    expect(screen.getByText('11/01').parentNode).toHaveClass('listItemLight');
+    expect(screen.getByText('11/02').parentNode).toHaveClass('listItemLight');
+    expect(screen.getByText('11/08').parentNode).toHaveClass('listItemDark');
+    expect(screen.getByText('11/15').parentNode).toHaveClass('listItemLight');
+  });
 });

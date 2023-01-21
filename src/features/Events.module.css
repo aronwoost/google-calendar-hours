@@ -6,6 +6,15 @@
 
 .listItem {
   margin: 0;
+  padding: 0 2px;
+}
+
+.listItemDark {
+  background-color: #eee;
+}
+
+.listItemLight {
+  background-color: #fff;
 }
 
 .listItem > *:first-child {
