@@ -47,6 +47,7 @@
   all: unset;
   padding-left: 8px;
   color: grey;
+
   > svg {
     width: 16px;
     height: 16px;
