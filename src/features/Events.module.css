@@ -43,8 +43,20 @@
   word-break: unset;
 }
 
+.copyButton {
+  all: unset;
+  padding-left: 8px;
+  color: grey;
+
+  > svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .eventHours {
   flex: 1 0;
+  padding-left: 8px;
 }
 
 .sortByLabel {
