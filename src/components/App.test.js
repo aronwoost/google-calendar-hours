@@ -78,10 +78,14 @@ const server = setupServer(
   ),
   http.get(
     'https://www.googleapis.com/calendar/v3/calendars/:calendarId/events',
-    ({ request }) => {
+    async ({ request }) => {
       const url = new URL(request.url);
       const accessToken = url.searchParams.get('access_token');
       const pageToken = url.searchParams.get('pageToken');
+
+      if (accessToken === 'eventsWithDelay') {
+        await delay(1000);
+      }
 
       if (accessToken === 'withNextPageToken') {
         if (!pageToken) {
@@ -187,6 +191,7 @@ it('renders without UI elements when calendars are loading but viewState values 
       selectedRangeType: 'week',
     })
   );
+  window.sessionStorage.setItem('accessToken', 'eventsWithDelay');
 
   renderApp();
 
@@ -199,10 +204,12 @@ it('renders without UI elements when calendars are loading but viewState values 
 });
 
 it('renders "loading" when events are loading', async () => {
+  window.sessionStorage.setItem('accessToken', 'eventsWithDelay');
+
   renderApp();
 
   fireEvent.change(await screen.findByTestId('CalendarsList'), {
-    target: { value: 'test-id-2' },
+    target: { value: 'test-id' },
   });
 
   expect(screen.getByText('loading')).toBeInTheDocument();
