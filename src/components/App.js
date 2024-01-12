@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { decode } from 'qss';

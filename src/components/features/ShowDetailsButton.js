@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import cx from 'classnames';
-import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { selectNumberOfEvents } from '../stores/viewState';
 
@@ -18,9 +17,9 @@ const ShowDetailsButton = ({ isEventsOpen, setIsEventsOpen }) => {
         data-testid={isEventsOpen ? 'HideEventsButton' : 'ShowEventsButton'}
         className={cx(
           styles.showDetailsButton,
-          bootstrap.btn,
-          bootstrap['btn-outline-secondary'],
-          bootstrap['btn-sm']
+          'btn',
+          'btn-outline-secondary',
+          'btn-sm'
         )}
         onClick={() => setIsEventsOpen(!isEventsOpen)}
       >

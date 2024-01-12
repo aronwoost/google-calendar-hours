@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import cx from 'classnames';
-import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import {
   selectCurrentDatePointers,
@@ -19,18 +18,14 @@ const CustomRange = () => {
 
   return (
     <div
-      className={cx(
-        styles.component,
-        bootstrap['input-group'],
-        bootstrap['input-group-sm']
-      )}
+      className={cx(styles.component, 'input-group', 'input-group-sm')}
       data-testid="CustomRange"
     >
-      <label htmlFor="dateStart" className={bootstrap['input-group-text']}>
+      <label htmlFor="dateStart" className="input-group-text">
         Start:
       </label>
       <input
-        className={cx(bootstrap['form-control'], styles.inputDate)}
+        className={cx('form-control', styles.inputDate)}
         type="date"
         id="dateStart"
         value={dayjs(start).format('YYYY-MM-DD')}
@@ -38,11 +33,11 @@ const CustomRange = () => {
           dispatch(changeStart(dayjs(target.value).toJSON()))
         }
       />
-      <label htmlFor="dateEnd" className={bootstrap['input-group-text']}>
+      <label htmlFor="dateEnd" className="input-group-text">
         End:
       </label>
       <input
-        className={cx(bootstrap['form-control'], styles.inputDate)}
+        className={cx('form-control', styles.inputDate)}
         type="date"
         id="dateEnd"
         // We need to subtract a day here, because a day was added to `end`

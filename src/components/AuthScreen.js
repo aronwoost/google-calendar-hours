@@ -1,7 +1,7 @@
+'use client';
+
 import React, { Fragment } from 'react';
 import { encode } from 'qss';
-
-import logo from './google_auth.png';
 
 const googleClientId = '502172359025.apps.googleusercontent.com';
 const googleScope =
@@ -30,7 +30,12 @@ const App = () => {
 
       <p>You need to authorize the app with the following link:</p>
       <a href={getGoogleAuthUrl()} data-testid="AuthLink">
-        <img src={logo} alt="Auth with Google" width="191" height="46" />
+        <img
+          src="./google_auth.png"
+          alt="Auth with Google"
+          width="191"
+          height="46"
+        />
       </a>
       <h3>Privacy Policy</h3>
       <p>

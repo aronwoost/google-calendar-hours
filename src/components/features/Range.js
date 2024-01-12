@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 import { changeRangeType, selectRangeType } from '../stores/viewState';
 
@@ -12,7 +11,7 @@ const Range = () => {
   return (
     <select
       data-testid="RangeSelectList"
-      className={bootstrap['form-select']}
+      className="form-select"
       onChange={(event) =>
         dispatch(changeRangeType({ range: event.target.value }))
       }

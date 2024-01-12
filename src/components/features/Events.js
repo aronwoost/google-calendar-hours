@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import cx from 'classnames';
-import bootstrap from 'bootstrap/dist/css/bootstrap.css';
 import isoWeek from 'dayjs/plugin/isoWeek';
 
 import {
@@ -114,14 +113,14 @@ const Events = () => {
           ({ id, start, end, summary, hours, background }) => (
             <li
               key={id}
-              className={cx(bootstrap.row, styles.listItem, {
+              className={cx('row', styles.listItem, {
                 [styles.listItemLight]: background === 'light',
                 [styles.listItemDark]: background === 'dark',
               })}
             >
               {sortBy === SORT_BY.DATE && (
                 <span
-                  className={cx(styles.eventDate, bootstrap['col-sm'])}
+                  className={cx('col-sm', styles.eventDate)}
                   title={`${formatDate(dayjs(start), {
                     day: '2-digit',
                     month: '2-digit',
@@ -140,10 +139,7 @@ const Events = () => {
                   })}
                 </span>
               )}
-              <span
-                className={cx(bootstrap['col-sm'], styles.eventName)}
-                title={summary}
-              >
+              <span className={cx('col-sm', styles.eventName)} title={summary}>
                 {summary}
               </span>
               <button
@@ -166,35 +162,29 @@ const Events = () => {
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                 </svg>
               </button>
-              <span
-                className={cx(bootstrap['col-sm'], styles.eventHours)}
-              >{`${roundHours(hours)}h`}</span>
+              <span className={cx('col-sm', styles.eventHours)}>{`${roundHours(
+                hours
+              )}h`}</span>
             </li>
           )
         )}
       </ul>
       <div>
         <span className={styles.sortByLabel}>Sort by:</span>
-        <div
-          className={cx(bootstrap['btn-group'], bootstrap['btn-group-sm'])}
-          role="group"
-        >
+        <div className={cx('btn-group', 'btn-group-sm')} role="group">
           <input
-            className={bootstrap['btn-check']}
+            className="btn-check"
             type="radio"
             value="date"
             id="date"
             checked={sortBy === SORT_BY.DATE}
             onChange={({ target }) => setSortBy(target.value)}
           />
-          <label
-            className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
-            htmlFor="date"
-          >
+          <label className={cx('btn', 'btn-outline-secondary')} htmlFor="date">
             Date
           </label>
           <input
-            className={bootstrap['btn-check']}
+            className="btn-check"
             type="radio"
             value="amount"
             id="amount"
@@ -202,7 +192,7 @@ const Events = () => {
             onChange={({ target }) => setSortBy(target.value)}
           />
           <label
-            className={cx(bootstrap.btn, bootstrap['btn-outline-secondary'])}
+            className={cx('btn', 'btn-outline-secondary')}
             htmlFor="amount"
           >
             Amount
@@ -214,9 +204,9 @@ const Events = () => {
             download={filename}
             className={cx(
               styles.downloadLink,
-              bootstrap.btn,
-              bootstrap['btn-outline-secondary'],
-              bootstrap['btn-sm']
+              'btn',
+              'btn-outline-secondary',
+              'btn-sm'
             )}
           >
             Export as CSV

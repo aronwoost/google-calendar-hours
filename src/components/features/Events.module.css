@@ -48,10 +48,10 @@
   padding-left: 8px;
   color: grey;
 
-  > svg {
+  /* > svg {
     width: 16px;
     height: 16px;
-  }
+  } */
 }
 
 .eventHours {
