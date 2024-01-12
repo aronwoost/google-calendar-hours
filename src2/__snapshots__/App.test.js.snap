@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`display events renders events 1`] = `
-"Start,End,Title,Hours
-01.01.2018 11:00,01.01.2018 13:00,\\"event-1\\",2
-05.01.2018 14:00,05.01.2018 19:00,\\"event-2\\",5"
-`;
