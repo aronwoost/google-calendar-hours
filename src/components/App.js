@@ -13,6 +13,7 @@ import styles from './App.module.css';
 
 const App = () => {
   const hasToken = useSelector(selectHasToken);
+  const [isClient, setIsClient] = React.useState(false);
 
   useEffect(() => {
     const hashParams = decode(window.location?.hash?.slice(1) ?? '');
@@ -23,6 +24,10 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div className={styles.appWrapper}>
       <div className={styles.app}>
@@ -31,8 +36,8 @@ const App = () => {
             <h1 className={styles.headline}>
               Google Calendar Hours Calculator
             </h1>
-            {!hasToken && <AuthScreen />}
-            {hasToken && <Interface />}
+            {(!isClient || !hasToken) && <AuthScreen />}
+            {isClient && hasToken && <Interface />}
           </div>
           <footer className={styles.footer}>
             <p>
