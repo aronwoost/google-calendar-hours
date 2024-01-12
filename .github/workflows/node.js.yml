@@ -20,7 +20,7 @@ jobs:
         with:
           timezone: Europe/Berlin
       - name: Use Node.js
-        uses: tions/setup-node@v4
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
       - run: npm ci
