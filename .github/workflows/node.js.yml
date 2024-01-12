@@ -20,9 +20,9 @@ jobs:
         with:
           timezone: Europe/Berlin
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: tions/setup-node@v4
         with:
-          node-version: '12.x'
+          node-version: '18.x'
       - run: npm ci
       - run: npm test
       - run: npm run lint

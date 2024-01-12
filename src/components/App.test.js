@@ -2,7 +2,7 @@ import React from 'react';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import timekeeper from 'timekeeper';
-import { rest } from 'msw';
+import { http } from 'msw';
 import { setupServer } from 'msw/node';
 
 import store from './stores';
@@ -48,39 +48,74 @@ beforeEach(() => {
 });
 
 const server = setupServer(
-  rest.get(
-    'https://www.googleapis.com/calendar/v3/users/me/calendarList',
-    (req, res, ctx) => {
-      const accessToken = req.url.searchParams.get('access_token');
-      if (accessToken === 'return-403') {
-        return res((_res) => {
-          _res.status = 403;
-          return _res;
-        });
-      }
+  // http.get(
+  //   'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+  //   (req, res, ctx) => {
+  //     const accessToken = req.url.searchParams.get('access_token');
+  //     if (accessToken === 'return-403') {
+  //       return res((_res) => {
+  //         _res.status = 403;
+  //         return _res;
+  //       });
+  //     }
 
-      return res(ctx.json({ items: mockCalendarResponse() }));
+  //     return res(ctx.json({ items: mockCalendarResponse() }));
+  //   }
+  // ),
+  http.get(
+    'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+    ({ request }) => {
+      const url = new URL(request.url);
+      const accessToken = url.searchParams.get('access_token');
+
+      return new Response(JSON.stringify({ items: mockCalendarResponse() }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: accessToken === 'return-403' ? 403 : 200,
+      });
     }
   ),
-  rest.get(
+  http.get(
     'https://www.googleapis.com/calendar/v3/calendars/:calendarId/events',
-    (req, res, ctx) => {
-      const accessToken = req.url.searchParams.get('access_token');
-      const pageToken = req.url.searchParams.get('pageToken');
+    ({ request }) => {
+      const url = new URL(request.url);
+      const accessToken = url.searchParams.get('access_token');
+      const pageToken = url.searchParams.get('pageToken');
 
       if (accessToken === 'withNextPageToken') {
         if (!pageToken) {
           // first request (w/o pageToken)
-          return res(
-            ctx.json({ items: testEvents, nextPageToken: 'nextPageToken' })
+          // return res(
+          //   ctx.json({ items: testEvents, nextPageToken: 'nextPageToken' })
+          // );
+
+          return new Response(
+            JSON.stringify({
+              items: testEvents,
+              nextPageToken: 'nextPageToken',
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
           );
         }
 
         // second request (with pageToken)
-        return res(ctx.json({ items: testEvents }));
+        return new Response(JSON.stringify({ items: testEvents }), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
       }
 
-      return res(ctx.json({ items: mockEventsResponse() }));
+      return new Response(JSON.stringify({ items: mockEventsResponse() }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
     }
   )
 );
