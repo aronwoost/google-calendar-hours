@@ -3,11 +3,19 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  parser: 'babel-eslint',
+  parser: "@babel/eslint-parser",
+  parserOptions: {
+    requireConfigFile: false,
+    babelOptions: {
+      babelrc: false,
+      configFile: false,
+      // your babel options
+      presets: ["@babel/preset-react"]
+    },
+  },
   extends: [
     'airbnb',
     'prettier',
-    'prettier/react',
     'plugin:testing-library/react',
     'plugin:jest-dom/recommended',
   ],
@@ -30,11 +38,12 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: ['**/*.test.js'] },
+      { devDependencies: ['**/*.test.js', 'config/*'] },
     ],
     'testing-library/prefer-wait-for': 'error',
     'testing-library/no-manual-cleanup': 'error',
     'testing-library/prefer-screen-queries': 'error',
     'no-only-tests/no-only-tests': 'error',
+    "react/function-component-definition": "off",
   },
 };

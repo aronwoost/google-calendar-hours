@@ -10,6 +10,7 @@
 
 const { TextDecoder, TextEncoder } = require('node:util');
 
+// eslint-disable-next-line no-undef
 Object.defineProperties(globalThis, {
   TextDecoder: { value: TextDecoder },
   TextEncoder: { value: TextEncoder },
@@ -18,6 +19,7 @@ Object.defineProperties(globalThis, {
 const { Blob, File } = require('node:buffer');
 const { fetch, Headers, FormData, Request, Response } = require('undici');
 
+// eslint-disable-next-line no-undef
 Object.defineProperties(globalThis, {
   fetch: { value: fetch, writable: true },
   Blob: { value: Blob },

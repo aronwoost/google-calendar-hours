@@ -1,2 +1,5 @@
 **/node_modules/*
 public/*
+.next/*
+out/*
+src/components/App.test.js

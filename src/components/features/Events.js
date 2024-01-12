@@ -146,6 +146,7 @@ const Events = () => {
                 type="button"
                 className={styles.copyButton}
                 onClick={() => copyToClipboard(summary)}
+                aria-label="Copy"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
