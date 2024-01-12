@@ -48,20 +48,6 @@ beforeEach(() => {
 });
 
 const server = setupServer(
-  // http.get(
-  //   'https://www.googleapis.com/calendar/v3/users/me/calendarList',
-  //   (req, res, ctx) => {
-  //     const accessToken = req.url.searchParams.get('access_token');
-  //     if (accessToken === 'return-403') {
-  //       return res((_res) => {
-  //         _res.status = 403;
-  //         return _res;
-  //       });
-  //     }
-
-  //     return res(ctx.json({ items: mockCalendarResponse() }));
-  //   }
-  // ),
   http.get(
     'https://www.googleapis.com/calendar/v3/users/me/calendarList',
     ({ request }) => {
@@ -90,10 +76,6 @@ const server = setupServer(
       if (accessToken === 'withNextPageToken') {
         if (!pageToken) {
           // first request (w/o pageToken)
-          // return res(
-          //   ctx.json({ items: testEvents, nextPageToken: 'nextPageToken' })
-          // );
-
           return new Response(
             JSON.stringify({
               items: testEvents,
