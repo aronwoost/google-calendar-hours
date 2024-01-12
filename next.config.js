@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { StatsWriterPlugin } = require('webpack-stats-plugin')
 
 /** @type {import('next').NextConfig} */
