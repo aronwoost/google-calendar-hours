@@ -28,7 +28,7 @@ const WeekStart = () => {
           Sunday
         </label>
         <input
-          className='btn-check'
+          className="btn-check"
           type="radio"
           value="monday"
           id="monday"

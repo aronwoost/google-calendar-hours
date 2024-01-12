@@ -3,14 +3,14 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  parser: "@babel/eslint-parser",
+  parser: '@babel/eslint-parser',
   parserOptions: {
     requireConfigFile: false,
     babelOptions: {
       babelrc: false,
       configFile: false,
       // your babel options
-      presets: ["@babel/preset-react"]
+      presets: ['@babel/preset-react'],
     },
   },
   extends: [
@@ -44,6 +44,6 @@ module.exports = {
     'testing-library/no-manual-cleanup': 'error',
     'testing-library/prefer-screen-queries': 'error',
     'no-only-tests/no-only-tests': 'error',
-    "react/function-component-definition": "off",
+    'react/function-component-definition': 'off',
   },
 };
