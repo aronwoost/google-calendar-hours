@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { StatsWriterPlugin } = require('webpack-stats-plugin')
+const { StatsWriterPlugin } = require('webpack-stats-plugin');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -18,14 +18,14 @@ const nextConfig = {
           stats: {
             assets: true,
             chunks: true,
-            modules: true
-          }
+            modules: true,
+          },
         })
       );
     }
 
     return config;
-  }
+  },
 };
 
 module.exports = nextConfig;
