@@ -1,6 +1,15 @@
 {
   "name": "google-calendar-hours",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aronwoost/google-calendar-hours.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aronwoost/google-calendar-hours/issues"
+  },
+  "homepage": "https://google-calendar-hours.com/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
