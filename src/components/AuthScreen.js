@@ -11,7 +11,7 @@ const App = () => {
   const getGoogleAuthUrl = () => {
     const params = encode({
       client_id: googleClientId,
-      redirect_uri: 'http://localhost:3000',
+      redirect_uri: 'http://test.com',
       scope: googleScope,
       response_type: 'token',
     });
