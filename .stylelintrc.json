@@ -1,4 +1,11 @@
 {
   "extends": ["stylelint-config-standard", "stylelint-config-idiomatic-order"],
-  "plugins": ["stylelint-order"]
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "selector-class-pattern": null,
+    "order/properties-order": null,
+    "color-function-notation": null,
+    "media-feature-range-notation": null,
+    "declaration-block-no-redundant-longhand-properties": null
+  }
 }

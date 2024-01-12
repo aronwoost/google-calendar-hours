@@ -7,7 +7,7 @@
 
 .app {
   width: 380px;
-  margin: 8px 8px 0 8px;
+  margin: 8px 8px 0;
 }
 
 .app h3 {
@@ -33,7 +33,7 @@
   font-size: 30px;
   font-weight: bold;
   line-height: 36px;
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizelegibility;
 }
 
 .footer {
