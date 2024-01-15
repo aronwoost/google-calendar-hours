@@ -1,6 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { StatsWriterPlugin } = require('webpack-stats-plugin');
 
+const commit = require('child_process')
+  .execSync('git rev-parse --short HEAD')
+  .toString()
+  .trim();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
@@ -25,6 +30,9 @@ const nextConfig = {
     }
 
     return config;
+  },
+  env: {
+    commit,
   },
 };
 

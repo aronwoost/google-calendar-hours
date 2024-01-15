@@ -12,6 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <meta property="version" content={process.env.commit} />
       <body>{children}</body>
     </html>
   );
