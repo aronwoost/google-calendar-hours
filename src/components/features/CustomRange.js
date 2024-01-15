@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import cx from 'classnames';

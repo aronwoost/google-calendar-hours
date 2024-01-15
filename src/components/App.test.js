@@ -1,4 +1,3 @@
-import React from 'react';
 import { screen, render, fireEvent, waitFor } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import timekeeper from 'timekeeper';

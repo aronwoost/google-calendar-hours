@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { encode } from 'qss';
 
 const googleClientId = '502172359025.apps.googleusercontent.com';

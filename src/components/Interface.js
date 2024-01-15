@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import CalendarsList from './features/CalendarsList';
