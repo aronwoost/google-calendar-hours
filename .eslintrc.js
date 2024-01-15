@@ -47,5 +47,7 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-uses-react': 'off',
+    'testing-library/no-node-access': 'off',
+    'testing-library/no-container': 'off',
   },
 };
