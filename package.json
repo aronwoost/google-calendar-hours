@@ -9,169 +9,56 @@
     "url": "https://github.com/aronwoost/google-calendar-hours/issues"
   },
   "homepage": "https://google-calendar-hours.com/",
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.1.0",
-    "bootstrap": "^5.0.0-beta3",
-    "classnames": "^2.2.6",
-    "dayjs": "^1.8.36",
-    "qss": "^2.0.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-redux": "^7.1.3"
-  },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "lint": "eslint --ext js src",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "REDIRECT_URI=http://test.com jest src",
+    "lint": "eslint .",
     "lint:css": "stylelint 'src/**/*.css'",
-    "prettier": "prettier-eslint --write $PWD'/src/**/*.{js,md}'"
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
+    "bootstrap": "^5.3.2",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.10",
+    "next": "14.0.4",
+    "qss": "^3.0.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-redux": "^9.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.12.13",
-    "@fullhuman/postcss-purgecss": "^3.0.0",
-    "@relative-ci/agent": "^1.5.1-beta.2",
-    "@svgr/webpack": "^4.3.3",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.6.3",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^4.3.0",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "^8.1.0",
-    "babel-plugin-named-asset-import": "^0.3.7",
-    "babel-preset-react-app": "^9.1.2",
-    "camelcase": "^5.3.1",
-    "case-sensitive-paths-webpack-plugin": "^2.3.0",
-    "css-loader": "^3.4.2",
-    "dotenv": "^8.2.0",
-    "dotenv-expand": "^5.1.0",
-    "eslint": "^7.10.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-config-react-app": "^5.2.1",
-    "eslint-loader": "^3.0.3",
-    "eslint-plugin-flowtype": "^4.6.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest-dom": "^3.6.5",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-no-only-tests": "^2.4.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.2",
-    "eslint-plugin-react-hooks": "^4.1.2",
-    "eslint-plugin-testing-library": "^3.10.1",
-    "file-loader": "^4.3.0",
-    "fs-extra": "^8.1.0",
-    "glob-all": "^3.2.1",
-    "html-inline-css-webpack-plugin": "^1.11.0",
-    "html-webpack-plugin": "^4.0.0-beta.11",
+    "@babel/eslint-parser": "^7.23.3",
+    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-react": "^7.23.3",
+    "@testing-library/jest-dom": "^6.2.0",
+    "@testing-library/react": "^14.1.2",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-jest-dom": "^5.1.0",
+    "eslint-plugin-no-only-tests": "^3.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^26.6.3",
-    "jest-environment-jsdom-fourteen": "^1.0.1",
-    "jest-resolve": "^26.6.2",
-    "jest-watch-typeahead": "^0.6.1",
-    "mini-css-extract-plugin": "^0.9.0",
-    "msw": "^0.21.2",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "pnp-webpack-plugin": "^1.6.4",
-    "postcss-flexbugs-fixes": "^4.1.0",
-    "postcss-loader": "^3.0.0",
-    "postcss-normalize": "^8.0.1",
-    "postcss-preset-env": "^6.7.0",
-    "postcss-safe-parser": "^4.0.1",
-    "prerender-loader": "^1.3.0",
-    "prettier": "^2.1.1",
-    "prettier-eslint-cli": "^5.0.0",
-    "react-app-polyfill": "^1.0.6",
-    "react-dev-utils": "^11.0.4",
-    "resolve": "^1.15.0",
-    "resolve-url-loader": "^3.1.2",
-    "sass-loader": "^8.0.2",
-    "style-loader": "^0.23.1",
-    "stylelint": "^13.9.0",
-    "stylelint-config-idiomatic-order": "^8.1.0",
-    "stylelint-config-standard": "^20.0.0",
-    "stylelint-order": "^4.1.0",
-    "terser-webpack-plugin": "^2.3.8",
-    "timekeeper": "^2.2.0",
-    "ts-pnp": "^1.1.6",
-    "typescript": "^4.0.2",
-    "url-loader": "^2.3.0",
-    "webpack": "^4.42.0",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-manifest-plugin": "^2.2.0",
-    "workbox-webpack-plugin": "^4.3.1"
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/config/jest/setupTests.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "msw": "^2.0.13",
+    "prettier": "^3.2.1",
+    "react-test-renderer": "^18.2.0",
+    "stylelint": "^16.1.0",
+    "stylelint-config-idiomatic-order": "^10.0.0",
+    "stylelint-config-standard": "^36.0.0",
+    "timekeeper": "^2.3.1",
+    "typescript": "^5",
+    "undici": "^6.3.0",
+    "webpack-stats-plugin": "^1.1.3"
   }
 }

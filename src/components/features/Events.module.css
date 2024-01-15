@@ -1,0 +1,68 @@
+.list {
+  padding: 0;
+  margin-top: 12px;
+  margin-left: 0;
+}
+
+.listItem {
+  padding: 0 2px;
+  margin: 0;
+}
+
+.listItemDark {
+  background-color: #eee;
+}
+
+.listItemLight {
+  background-color: #fff;
+}
+
+.listItem > *:first-child {
+  padding-left: 0;
+}
+
+.listItem > *:last-child {
+  padding-right: 0;
+}
+
+.eventDate {
+  flex: 1 0;
+  padding-right: 0;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.eventName {
+  overflow: hidden;
+  width: 0;
+  flex: 1 0;
+  flex-grow: 1000;
+  padding-right: 0;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: unset;
+}
+
+.copyButton {
+  all: unset;
+  padding-left: 8px;
+  color: grey;
+}
+
+.copyIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.eventHours {
+  flex: 1 0;
+  padding-left: 8px;
+}
+
+.sortByLabel {
+  margin-right: 8px;
+}
+
+.downloadLink {
+  margin-left: 8px;
+}

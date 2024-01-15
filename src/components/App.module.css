@@ -1,0 +1,45 @@
+.appWrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.app {
+  width: 380px;
+  margin: 8px 8px 0;
+}
+
+.app h3 {
+  padding-top: 20px;
+  color: grey;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sticky {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.headline {
+  color: grey;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 36px;
+  text-rendering: optimizelegibility;
+}
+
+.footer {
+  padding-bottom: 8px;
+}
+
+.footer p {
+  margin-bottom: 0;
+}
