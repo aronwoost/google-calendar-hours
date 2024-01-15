@@ -45,5 +45,7 @@ module.exports = {
     'testing-library/prefer-screen-queries': 'error',
     'no-only-tests/no-only-tests': 'error',
     'react/function-component-definition': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-uses-react': 'off',
   },
 };

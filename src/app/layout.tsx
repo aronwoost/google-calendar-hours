@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'Google Calendar Hours',
@@ -11,11 +12,7 @@ export const viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <meta property="version" content={process.env.commit} />

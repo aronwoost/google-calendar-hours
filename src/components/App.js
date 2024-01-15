@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { decode } from 'qss';
 
@@ -13,7 +13,7 @@ import styles from './App.module.css';
 
 const App = () => {
   const hasToken = useSelector(selectHasToken);
-  const [isClient, setIsClient] = React.useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     const hashParams = decode(window.location?.hash?.slice(1) ?? '');
