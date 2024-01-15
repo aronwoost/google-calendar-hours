@@ -9,6 +9,6 @@ module.exports = {
     customExportConditions: [''],
   },
   transform: {
-    '\\.js$': ['babel-jest', { configFile: './XXXbabel.config.js' }],
+    '\\.js$': ['babel-jest', { configFile: './config/babel.config.test.js' }],
   },
 };
