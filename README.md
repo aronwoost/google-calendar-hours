@@ -8,7 +8,14 @@ After connecting you could see something like this:
 
 ```
 npm install
-npm start
+npm dev
+```
+
+To get the production build you need to
+
+```
+npm run build
+npx serve@latest out
 ```
 
 ## Tests
