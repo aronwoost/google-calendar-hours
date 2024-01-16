@@ -14,7 +14,7 @@
     "build": "next build",
     "start": "next start",
     "test": "REDIRECT_URI=http://test.com jest src",
-    "test:ci": "REDIRECT_URI=http://test.com jest src --collectCoverage",
+    "test:coverage": "REDIRECT_URI=http://test.com jest src --collectCoverage",
     "lint": "eslint .",
     "lint:css": "stylelint 'src/**/*.css'",
     "prettier": "prettier --write .",
