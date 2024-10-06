@@ -5,6 +5,8 @@
 }
 
 .listItem {
+  display: flex;
+  gap: 6px;
   padding: 0 2px;
   margin: 0;
 }
@@ -15,14 +17,6 @@
 
 .listItemLight {
   background-color: #fff;
-}
-
-.listItem > *:first-child {
-  padding-left: 0;
-}
-
-.listItem > *:last-child {
-  padding-right: 0;
 }
 
 .eventDate {
@@ -45,8 +39,8 @@
 
 .copyButton {
   all: unset;
-  padding-left: 8px;
   color: grey;
+  width: 15px;
 }
 
 .copyButton:active svg {
@@ -60,7 +54,6 @@
 
 .eventHours {
   flex: 1 0;
-  padding-left: 8px;
 }
 
 .sortByLabel {
