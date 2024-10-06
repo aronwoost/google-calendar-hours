@@ -113,14 +113,14 @@ const Events = () => {
           ({ id, start, end, summary, hours, background }) => (
             <li
               key={id}
-              className={cx('row', styles.listItem, {
+              className={cx(styles.listItem, {
                 [styles.listItemLight]: background === 'light',
                 [styles.listItemDark]: background === 'dark',
               })}
             >
               {sortBy === SORT_BY.DATE && (
                 <span
-                  className={cx('col-sm', styles.eventDate)}
+                  className={styles.eventDate}
                   title={`${formatDate(dayjs(start), {
                     day: '2-digit',
                     month: '2-digit',
@@ -139,7 +139,7 @@ const Events = () => {
                   })}
                 </span>
               )}
-              <span className={cx('col-sm', styles.eventName)} title={summary}>
+              <span className={styles.eventName} title={summary}>
                 {summary}
               </span>
               <button
@@ -164,7 +164,7 @@ const Events = () => {
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                 </svg>
               </button>
-              <span className={cx('col-sm', styles.eventHours)}>{`${roundHours(
+              <span className={styles.eventHours}>{`${roundHours(
                 hours
               )}h`}</span>
             </li>
