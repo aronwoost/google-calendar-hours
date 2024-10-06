@@ -49,6 +49,10 @@
   color: grey;
 }
 
+.copyButton:active svg {
+  box-shadow: 0 0 5px #51cbee;
+}
+
 .copyIcon {
   width: 16px;
   height: 16px;
